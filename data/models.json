@@ -329,9 +329,15 @@
             "name": "Supreme",
             "type": "armchair",
             "tag": "Poltrona",
-            "photo": false,
+            "photo": true,
             "novidade": false,
-            "description": "Poltrona generosa com acabamentos de qualidade."
+            "description": "Poltrona generosa com acabamentos de qualidade.",
+            "configurator": true,
+            "photoCount": 1,
+            "catalogSlot": 1,
+            "photoOrder": [
+                1
+            ]
         },
         {
             "id": "syros",
@@ -351,7 +357,13 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Influência clássica num formato actual e confortável."
+            "description": "Influência clássica num formato actual e confortável.",
+            "configurator": true,
+            "catalogSlot": 2,
+            "photoOrder": [
+                1,
+                2
+            ]
         },
         {
             "id": "adel",
