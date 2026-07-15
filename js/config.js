@@ -1,16 +1,21 @@
 (function (global) {
   var host = location.hostname;
   var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+  var isGithubPreview = host.endsWith('.github.io');
+  var onlineConfigurator = 'https://stoffus.pt/Studio3D/app.html';
 
   // Com ABRIR-CMS.bat (router na raiz): /Studio3D/app.html funciona em local.
-  // Com Five Server / Live Server só na pasta site: usar configurador online.
+  // Pré-visualização GitHub Pages: configurador continua no stoffus.pt.
   function configuratorBase() {
+    if (isGithubPreview) {
+      return onlineConfigurator;
+    }
     if (isLocal) {
       var port = location.port || '';
       if (port === '8080') {
         return '/Studio3D/app.html';
       }
-      return 'https://stoffus.pt/Studio3D/app.html';
+      return onlineConfigurator;
     }
     return '/Studio3D/app.html';
   }
@@ -61,7 +66,8 @@
 
   global.StoffusSite = {
     isLocal: isLocal,
-    siteRoot: isLocal ? (location.origin || '') : 'https://stoffus.pt',
+    isGithubPreview: isGithubPreview,
+    siteRoot: (isLocal || isGithubPreview) ? (location.origin || '') : 'https://stoffus.pt',
     org: {
       name: 'Stoffus',
       legalName: 'Stoffus - Indústria Portuguesa de Sofás',
