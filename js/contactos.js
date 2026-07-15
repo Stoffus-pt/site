@@ -1,46 +1,59 @@
 (function () {
   var form = document.getElementById('contact-form');
   var hint = document.getElementById('contact-form-hint');
+  var successBox = document.getElementById('contact-success');
   if (!form) return;
 
-  var topicLabels = {
-    'info@stoffus.pt': 'Informações gerais',
-    'geral@stoffus.pt': 'Contacto geral',
-    'encomendas@stoffus.pt': 'Encomendas',
-    'lsalgado@stoffus.pt': 'Administração / Stoffus 3D',
-    'salete@stoffus.pt': 'Financeira / Contabilidade',
-    'export@stoffus.pt': 'Exportação'
-  };
+  var submitting = false;
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (submitting) return;
 
     var data = new FormData(form);
-    var name = String(data.get('name') || '').trim();
-    var email = String(data.get('email') || '').trim();
-    var to = String(data.get('topic') || 'info@stoffus.pt');
-    var message = String(data.get('message') || '').trim();
-    var topicLabel = topicLabels[to] || 'Contacto';
+    var payload = {
+      type: 'contact',
+      name: String(data.get('name') || '').trim(),
+      email: String(data.get('email') || '').trim(),
+      topic: String(data.get('topic') || 'info@stoffus.pt'),
+      message: String(data.get('message') || '').trim()
+    };
 
-    if (!name || !email || !message) {
+    if (!payload.name || !payload.email || !payload.message) {
       if (hint) hint.textContent = 'Preencha todos os campos obrigatórios.';
       return;
     }
 
-    var subject = 'Contacto site Stoffus - ' + topicLabel;
-    var body =
-      'Nome: ' + name + '\n' +
-      'Email: ' + email + '\n' +
-      'Assunto: ' + topicLabel + '\n\n' +
-      message;
+    if (!window.StoffusLeads) {
+      if (hint) hint.textContent = 'Envio indisponível. Ligue +351 239 700 799.';
+      return;
+    }
 
-    var mailto =
-      'mailto:' + encodeURIComponent(to) +
-      '?subject=' + encodeURIComponent(subject) +
-      '&body=' + encodeURIComponent(body);
+    submitting = true;
+    var submitBtn = form.querySelector('[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'A enviar…';
+    }
+    if (hint) hint.textContent = '';
+    if (successBox) successBox.hidden = true;
 
-    if (hint) hint.textContent = 'A abrir o seu programa de email…';
-
-    window.location.href = mailto;
+    StoffusLeads.submitLead(payload)
+      .then(function (res) {
+        form.reset();
+        if (successBox) {
+          successBox.hidden = false;
+          successBox.textContent = res.message || 'Mensagem recebida. Responderemos em breve.';
+        }
+        StoffusLeads.showSuccess(form, hint, 'Mensagem enviada com sucesso.');
+      })
+      .catch(function () {
+        submitting = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Enviar mensagem';
+        }
+        if (hint) hint.textContent = 'Não foi possível enviar. Tente geral@stoffus.pt ou +351 239 700 799.';
+      });
   });
 })();

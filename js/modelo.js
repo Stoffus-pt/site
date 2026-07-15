@@ -148,6 +148,16 @@
 
     if (metaDesc) metaDesc.setAttribute('content', model.description || (productLabel + ' - Eleganza Collection Stoffus.'));
 
+    if (window.StoffusSeo) {
+      StoffusSeo.applyPageSeo({
+        title: document.title,
+        description: model.description || (productLabel + ' - Eleganza Collection Stoffus.'),
+        image: primary.png || primary.src,
+        type: 'product',
+        url: StoffusSeo.publicBaseUrl().replace(/\/$/, '') + '/modelo.html?id=' + encodeURIComponent(model.id)
+      });
+    }
+
 
 
     var thumbsHtml = photoSlots.map(function (slot, index) {
@@ -182,7 +192,9 @@
 
       ? (model.description || 'Puff fabricado em Portugal, disponível em centenas de revestimentos. Complemento ideal para a zona de estar.')
 
-      : 'Fabricado em Portugal, com centenas de revestimentos em tecido e pele. Configure módulos, medidas e acabamentos no Stoffus 3D e leve a ideia pronta à visita.';
+      : (showConfig
+        ? 'Fabricado em Portugal, com centenas de revestimentos em tecido e pele. Configure módulos, medidas e acabamentos no Stoffus 3D e leve a ideia pronta à visita.'
+        : 'Fabricado em Portugal, com centenas de revestimentos em tecido e pele. Este modelo está disponível para ver e encomendar através da nossa rede de lojas parceiras — peça indicação de visita.');
 
 
 
@@ -224,11 +236,13 @@
 
       : '<ul class="config-block__list">' +
 
-          '<li>Configuração modular (quando aplicável)</li>' +
-
-          '<li>Tecidos Easy Clean, Pet Friendly e antibacteriano</li>' +
-
-          '<li>Orçamento PDF e partilha por link ou QR</li>' +
+          (showConfig
+            ? '<li>Configuração modular (quando aplicável)</li>' +
+              '<li>Tecidos Easy Clean, Pet Friendly e antibacteriano</li>' +
+              '<li>Orçamento PDF e partilha por link ou QR</li>'
+            : '<li>Disponível em lojas parceiras Stoffus</li>' +
+              '<li>Centenas de tecidos e peles Eleganza</li>' +
+              '<li>Peça indicação de visita na sua zona</li>') +
 
         '</ul>';
 

@@ -24,7 +24,13 @@
     if (label && model.novidade) label.textContent = 'Novidade · Eleganza Collection';
 
     if (img) {
-      img.src = slot.png;
+      var slotNum = slot.slot || slotIndex;
+      var webp = StoffusModels.modelPhotoPath(model, slotNum);
+      var md = StoffusModels.modelPhotoMdPng(model, slotNum);
+      var sm = StoffusModels.modelPhotoSmPng(model, slotNum);
+      img.src = md;
+      img.srcset = sm + ' 480w, ' + md + ' 960w, ' + slot.png + ' 1920w';
+      img.sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 960px';
       img.alt = (model.type === 'pet' ? '' : (model.type === 'banqueta' ? 'Banqueta ' : (model.type === 'pouf' ? 'Puff ' : 'Sofá '))) + model.name + ' — Eleganza Collection';
       img.dataset.fallback = slot.png;
       img.dataset.iconFallback = slot.icon;
@@ -46,8 +52,23 @@
     });
   }
 
+  function initClassic(data) {
+    var grid = document.getElementById('home-colecoes-grid');
+    if (!grid) return;
+
+    var ids = (data && data.featuredClassic) || ['brittany', 'athena', 'bartini', 'enzo', 'fiori'];
+    var models = ids.map(function (id) { return StoffusModels.byId(data, id); }).filter(Boolean);
+
+    models.forEach(function (model, index) {
+      var card = StoffusModels.renderCollectionCard(model);
+      if (index === 0) card.classList.add('collection-card--feature');
+      grid.appendChild(card);
+    });
+  }
+
   StoffusModels.load().then(function (data) {
     initHero(data);
     initNovidades(data);
+    initClassic(data);
   });
 })();

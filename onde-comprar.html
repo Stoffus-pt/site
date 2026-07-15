@@ -176,6 +176,50 @@
 
 
 
+    <section class="section" aria-labelledby="showroom-title">
+
+      <div class="container">
+
+        <div class="section-head section-head--center">
+
+          <span class="label">Showroom</span>
+
+          <h2 id="showroom-title">Visite a fábrica Stoffus</h2>
+
+          <p>Em Montemor-o-Velho pode ver modelos expostos, sentir tecidos e falar com a nossa equipa comercial.</p>
+
+        </div>
+
+        <div id="onde-showroom" class="showroom-wrap"></div>
+
+      </div>
+
+    </section>
+
+
+
+    <section class="section section--warm" aria-labelledby="regioes-title">
+
+      <div class="container">
+
+        <div class="section-head section-head--center">
+
+          <span class="label">Rede em Portugal</span>
+
+          <h2 id="regioes-title">Onde estamos</h2>
+
+          <p>Trabalhamos com lojas parceiras em todo o país. Indique a sua zona e sugerimos o ponto de visita mais conveniente.</p>
+
+        </div>
+
+        <div id="onde-regions" class="visit-regions-grid"></div>
+
+      </div>
+
+    </section>
+
+
+
     <section class="section section--warm" id="localizacao" aria-labelledby="localizacao-title">
 
       <div class="container" data-cms-region="localizacao" data-cms-label="Localização">
@@ -198,7 +242,7 @@
 
             <h2 class="contact-form__title">Pedir indicação de visita</h2>
 
-            <p class="contact-form__lead">Preencha os dados abaixo. Gera uma mensagem pronta a enviar por email ou pode copiar.</p>
+            <p class="contact-form__lead">Preencha os dados abaixo. A nossa equipa responde com uma ou duas opções de loja na sua zona.</p>
 
 
 
@@ -278,7 +322,7 @@
 
               <button type="submit" class="btn btn--brand btn--lg contact-form__submit">
 
-                Gerar mensagem
+                Enviar pedido
 
                 <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
 
@@ -288,15 +332,7 @@
 
               <p class="contact-form__hint" id="onde-hint" role="status" aria-live="polite"></p>
 
-
-
-              <div id="onde-actions" hidden>
-
-                <a class="btn btn--outline btn--lg" id="onde-email" href="#">Abrir email</a>
-
-                <button type="button" class="btn btn--outline btn--lg" id="onde-copy">Copiar texto</button>
-
-              </div>
+              <p class="form-success" id="onde-success" role="status" aria-live="polite" hidden></p>
 
             </form>
 
@@ -421,6 +457,10 @@
 
 
   <script src="js/config.js"></script>
+  <script src="js/seo.js"></script>
+  <script src="js/cookies.js"></script>
+  <script src="js/leads.js"></script>
+
 
   <script src="js/site.js"></script>
 

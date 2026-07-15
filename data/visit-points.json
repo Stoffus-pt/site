@@ -1,0 +1,21 @@
+{
+  "showroom": {
+    "name": "Showroom Stoffus — Fábrica",
+    "address": "Parque de Negócios 7/8, 3140-258 Montemor-o-Velho",
+    "phone": "+351 239 700 799",
+    "email": "geral@stoffus.pt",
+    "maps": "https://www.google.com/maps?q=40.1935615,-8.6607675",
+    "hours": "Segunda a sexta, 9h–12h30 e 14h–17h30 (marcação recomendada)",
+    "note": "Visite a fábrica para ver modelos expostos, experimentar tecidos Eleganza e falar directamente com a nossa equipa."
+  },
+  "regions": [
+    { "id": "norte", "name": "Norte", "districts": ["Braga", "Porto", "Viana do Castelo", "Vila Real", "Bragança", "Aveiro", "Viseu"] },
+    { "id": "centro", "name": "Centro", "districts": ["Coimbra", "Leiria", "Castelo Branco", "Guarda", "Santarém", "Portalegre"] },
+    { "id": "lisboa", "name": "Grande Lisboa", "districts": ["Lisboa", "Setúbal"] },
+    { "id": "alentejo", "name": "Alentejo", "districts": ["Évora", "Beja"] },
+    { "id": "algarve", "name": "Algarve", "districts": ["Faro"] },
+    { "id": "acores", "name": "Açores", "districts": ["Açores"] },
+    { "id": "madeira", "name": "Madeira", "districts": ["Madeira"] },
+    { "id": "export", "name": "Internacional", "districts": [] }
+  ]
+}

@@ -2841,3 +2841,163 @@ body.page-minimal:not(.page-rich) .section--warm {
 }
 
 .s3d-faq__item a:hover { text-decoration: underline; }
+
+/* -- Cookies, formulários, onde ver -- */
+.cookie-banner {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 200;
+  padding: 1rem 0;
+  background: rgba(47, 47, 47, 0.96);
+  color: #fff;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.cookie-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cookie-banner p {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.cookie-banner a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.cookie-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.form-success {
+  margin: 1rem 0 0;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--brand) 12%, #fff);
+  border: 1px solid color-mix(in srgb, var(--brand) 35%, var(--border));
+  color: var(--ink-deep);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.showroom-wrap {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.showroom-card {
+  padding: 1.75rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.showroom-card h3 {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 1.35rem;
+  color: var(--ink-deep);
+}
+
+.showroom-card p {
+  margin: 0 0 1rem;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
+.showroom-card__list {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.showroom-card__list li {
+  padding: 0.35rem 0;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.showroom-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.visit-regions-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.visit-region-card {
+  padding: 1.25rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.visit-region-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  color: var(--ink-deep);
+}
+
+.visit-region-card p {
+  margin: 0 0 0.85rem;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+.visit-region-card__link {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: var(--track-nav);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--brand);
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.footer-legal a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+
+.footer-legal a:hover {
+  color: var(--brand);
+}
+
+.legal-content {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.legal-content h2 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.15rem;
+  color: var(--ink-deep);
+}
+
+.legal-content p,
+.legal-content li {
+  color: var(--ink-muted);
+  line-height: 1.65;
+}

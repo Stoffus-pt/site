@@ -3,6 +3,7 @@ node_modules/
 
 # CMS — credenciais (criar no setup)
 cms/config.php
+cms/data/leads/
 
 # Backups automáticos
 *.bak-*

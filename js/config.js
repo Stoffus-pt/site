@@ -35,6 +35,8 @@
     }
     return '/Studio3D/assets/textures/';
   }
+
+  function encodeCfgState(parts) {
     try {
       return btoa(parts.join('|'));
     } catch (e) {

@@ -26,6 +26,13 @@
         "oasis",
         "verona"
     ],
+    "featuredClassic": [
+        "brittany",
+        "athena",
+        "bartini",
+        "enzo",
+        "fiori"
+    ],
     "heroFeature": {
         "model": "magnum",
         "slot": 2

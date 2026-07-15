@@ -24,6 +24,18 @@
     if (href === path) link.classList.add('is-active');
   });
 
+  document.querySelectorAll('a[href="area-cliente.html"]').forEach(function (link) {
+    if (/Área cliente/i.test(link.textContent)) link.textContent = 'Downloads';
+  });
+
+  document.querySelectorAll('.footer-bottom').forEach(function (el) {
+    if (el.querySelector('.footer-legal')) return;
+    var legal = document.createElement('span');
+    legal.className = 'footer-legal';
+    legal.innerHTML = '<a href="privacidade.html">Privacidade</a>';
+    el.appendChild(legal);
+  });
+
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 })();

@@ -80,7 +80,9 @@
           <a class="hero__frame" id="hero-feature-link" href="modelo.html?id=magnum">
             <img
               id="hero-feature-photo"
-              src="assets/photos/models/magnum-2.png"
+              src="assets/photos/models/magnum-2-md.png"
+              srcset="assets/photos/models/magnum-2-sm.png 480w, assets/photos/models/magnum-2-md.png 960w, assets/photos/models/magnum-2.png 1920w"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 960px"
               alt="Sof&aacute; Magnum pendular em ambiente mediterr&acirc;nico"
               width="1024"
               height="576"
@@ -115,7 +117,7 @@
       <div class="container">
         <div class="config-block">
           <div class="config-block__media">
-            <img src="assets/marketing/configurador-demo.gif" alt="Demonstra&ccedil;&atilde;o do configurador Stoffus 3D" width="720" height="405" loading="lazy">
+            <img src="assets/marketing/configurador-demo.gif" alt="Demonstra&ccedil;&atilde;o do configurador Stoffus 3D" width="720" height="405" loading="lazy" decoding="async">
           </div>
           <div class="config-block__copy" data-cms-region="configurador" data-cms-label="Configurador 3D"><img class="config-block__logo3d" src="assets/brand/logo-stoffus3d.png" alt="Stoffus 3D" width="1040" height="273" loading="lazy">
             <span class="label">Configurador 3D</span>
@@ -156,52 +158,7 @@
           <h2 id="colecoes-title">Eleganza Collection</h2>
           <p>Destaques da gama completa - modelos modulares para cada espa&ccedil;o.</p></div>
 
-        <div class="collections collections--classic">
-          <a class="collection-card collection-card--feature" href="modelo.html?id=brittany">
-            <img src="assets/photos/models/brittany-2.png" alt="Sof&aacute; Brittany em ambiente - Eleganza Collection" loading="lazy">
-            <div class="collection-card__veil"></div>
-            <div class="collection-card__name">
-              <h3>Brittany</h3>
-              <span>Chaise &middot; Contempor&acirc;neo</span>
-            </div>
-          </a>
-
-          <a class="collection-card" href="modelo.html?id=athena">
-            <img src="assets/photos/models/athena-1.png" alt="Sof&aacute; Athena - Eleganza Collection" loading="lazy">
-            <div class="collection-card__veil"></div>
-            <div class="collection-card__name">
-              <h3>Athena</h3>
-              <span>Compacto</span>
-            </div>
-          </a>
-
-          <a class="collection-card" href="modelo.html?id=bartini">
-            <img src="assets/photos/models/bartini-2.png" alt="Sof&aacute; Bartini - Eleganza Collection" loading="lazy">
-            <div class="collection-card__veil"></div>
-            <div class="collection-card__name">
-              <h3>Bartini</h3>
-              <span>De canto</span>
-            </div>
-          </a>
-
-          <a class="collection-card" href="modelo.html?id=enzo">
-            <img src="assets/photos/models/enzo-1.png" alt="Sof&aacute; Enzo - Eleganza Collection" loading="lazy">
-            <div class="collection-card__veil"></div>
-            <div class="collection-card__name">
-              <h3>Enzo</h3>
-              <span>Atemporal</span>
-            </div>
-          </a>
-
-          <a class="collection-card" href="modelo.html?id=fiori">
-            <img src="assets/photos/models/fiori-2.png" alt="Sof&aacute; Fiori - Eleganza Collection" loading="lazy">
-            <div class="collection-card__veil"></div>
-            <div class="collection-card__name">
-              <h3>Fiori</h3>
-              <span>Relax</span>
-            </div>
-          </a>
-        </div>
+        <div class="collections collections--classic" id="home-colecoes-grid"></div>
 
         <p class="text-center mt-2">
           <a class="btn btn--outline btn--lg" href="catalogo.html">
@@ -299,6 +256,10 @@
   </footer>
 
   <script src="js/config.js"></script>
+  <script src="js/seo.js"></script>
+  <script src="js/cookies.js"></script>
+  <script src="js/leads.js"></script>
+
   <script src="js/site.js"></script>
   <script src="js/photo-card-v.js"></script>
   <script src="js/models.js"></script>
