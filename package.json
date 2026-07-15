@@ -1,0 +1,13 @@
+{
+  "name": "stoffus-site",
+  "private": true,
+  "description": "Site público Stoffus + CMS",
+  "type": "module",
+  "scripts": {
+    "photos:publish": "node tools/publish-model-photo.mjs",
+    "photos:rebuild": "node tools/rebuild-card-thumbs.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.34.2"
+  }
+}

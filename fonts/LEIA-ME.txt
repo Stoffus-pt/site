@@ -1,0 +1,9 @@
+Colocar aqui os ficheiros web da Magistral (woff2 ou woff):
+
+  Magistral-Light.woff2
+  Magistral-Book.woff2
+  Magistral-Medium.woff2
+  Magistral-Bold.woff2
+
+Exportar a partir da licença Monotype/ParaType da Stoffus.
+Sem estes ficheiros o browser usa Arial como fallback.

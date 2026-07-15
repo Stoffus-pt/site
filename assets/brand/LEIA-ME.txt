@@ -1,0 +1,21 @@
+Gráficos oficiais Stoffus (manual de marca)
+==========================================
+
+logo-horizontal.png    Logo completo - cabeçalho e rodapé
+logo-stoffus3d.png     Assinatura Stoffus 3D (oficial)
+logo-vertical.png      Versão vertical
+symbol.png             Símbolo (linhas paralelas)
+wordmark-stoffus.png   Tipografia «stoffus»
+slogan-world-design.png  «world design»
+elemento-canto.png     Elemento gráfico de canto
+icon-app.png           Ícone da app / favicon
+variantes-referencia.png  Variantes de cor (consulta)
+cores-referencia.png      Paleta oficial (consulta)
+
+Uso no site
+-----------
+- Cabeçalho claro: logo-horizontal com mix-blend-mode: lighten (remove fundo preto do PNG)
+- Rodapé escuro: logo-horizontal normal
+- Hero: elemento-canto no canto da foto do produto
+
+Não alterar proporções nem cores dos logos.

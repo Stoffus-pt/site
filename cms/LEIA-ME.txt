@@ -1,0 +1,90 @@
+# CMS Stoffus - Editar o site no browser
+
+## O que é
+
+Painel visual em `https://stoffus.pt/cms/` para editar textos das páginas, título SEO e menu - sem precisar do Cursor.
+
+## Requisitos
+
+- Servidor com **PHP 8+** (funciona no alojamento do site; no Windows local pode usar XAMPP ou o script `ABRIR-CMS.bat` se tiver PHP instalado).
+
+## Primeira utilização
+
+1. Abra `https://o-seu-dominio/cms/` no browser.
+2. Na primeira visita, crie utilizador e palavra-passe (mínimo 8 caracteres).
+3. Inicie sessão.
+
+## Editar uma página
+
+1. No painel, clique **Editar** na página desejada.
+2. À esquerda vê a lista de **secções** editáveis.
+3. À direita, a **pré-visualização** da página real.
+4. **Clique** numa secção (contorno laranja) para a seleccionar.
+5. **Duplo-clique** numa secção na pré-visualização para editar texto directamente.
+6. Ajuste **Título** e **Descrição** (SEO) na barra lateral.
+7. Clique **Guardar** - é criada uma cópia `.bak-AAAAAMMDD-HHMMSS` antes de gravar.
+
+## Menu
+
+No separador **Menu** pode alterar as ligações do menu principal. Ao guardar, actualiza automaticamente todas as páginas `.html`.
+
+## Catálogo (modelos e fotos)
+
+No separador **Catálogo**:
+
+| Secção | O que faz |
+|--------|-----------|
+| **Modelos e fotos** | Criar modelos, editar nome/tipo/descrição, **carregar** e **eliminar** fotos |
+| **Capa e galeria** | Escolher capa do catálogo, ordem na página do modelo, trocar slots |
+| **Corte da capa** | Ajustar enquadramento da miniatura nos cartões |
+
+### Fluxo recomendado para um modelo novo
+
+1. **Catálogo → Modelos e fotos → Novo modelo**
+2. Carregue as fotos (slot 1 = ambiente, slot 2 = sem fundo, etc.)
+3. **Capa e galeria** — escolha qual slot é capa e a ordem
+4. **Corte da capa** — ajuste o zoom/foco se necessário
+5. **Publicar no site** (em Capa e galeria ou Corte) e Ctrl+F5 no browser
+
+Requisito: **Node.js** instalado (para processar imagens e miniaturas).
+
+## Criar / apagar páginas
+
+- **Nova página** - escolha um nome (ex: `novidades` → `novidades.html`).
+- **Apagar** - remove o ficheiro (a homepage `index.html` não pode ser apagada).
+
+## Secções editáveis no código
+
+As áreas editáveis estão marcadas no HTML com:
+
+```html
+<div data-cms-region="hero" data-cms-label="Hero">...</div>
+```
+
+Para adicionar novas secções editáveis, peça ao programador ou edite o HTML com estes atributos.
+
+## Ficheiros importantes
+
+| Ficheiro | Função |
+|----------|--------|
+| `cms/config.php` | Credenciais (criado no setup; não partilhar) |
+| `cms/data/nav.json` | Cópia do menu |
+| `site/_template.html` | Modelo para páginas novas |
+
+## Segurança
+
+- Use palavra-passe forte.
+- O ficheiro `config.php` deve estar protegido no servidor (`.htaccess` incluído).
+- O CMS só funciona com sessão autenticada.
+
+## Testar em local
+
+**Recomendado (funciona sempre):** duplo-clique em `site/ABRIR-CMS.bat`  
+Abre automaticamente `http://127.0.0.1:8080/cms/`
+
+Alternativa XAMPP Apache:
+1. Copie a pasta `site` para `C:\xampp\htdocs\stoffus`
+2. Inicie Apache no XAMPP
+3. Abra `http://localhost/stoffus/cms/`
+
+O Five Server pode falhar no CMS (pedidos POST ao PHP). Use o `.bat` acima.

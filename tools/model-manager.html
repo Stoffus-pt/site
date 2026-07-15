@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo — modelos e fotos</title>
+  <link rel="stylesheet" href="../css/fonts.css" />
+  <style>
+    :root { --brand:#e84c26; --ink:#2d2a2c; --muted:#6b6568; --border:#ddd8d4; --bg:#f0eeec; --card:#fff; --danger:#b42318; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width:1100px; margin:0 auto; padding:1rem; }
+    body.is-embedded .wrap { max-width:none; }
+    body.is-embedded h1 { font-size:1.15rem; margin-bottom:.35rem; }
+    body.is-embedded .lead { display:none; }
+    h1 { margin:0 0 .35rem; font-size:1.35rem; }
+    .lead { margin:0 0 1rem; color:var(--muted); line-height:1.5; max-width:52rem; }
+    .layout { display:grid; grid-template-columns:240px 1fr; gap:1rem; align-items:start; }
+    @media (max-width:800px) { .layout { grid-template-columns:1fr; } }
+    .panel { background:var(--card); border:1px solid var(--border); padding:1rem; margin-bottom:1rem; }
+    .panel h2 { margin:0 0 .75rem; font-size:1rem; }
+    label { display:grid; gap:.35rem; margin-bottom:.75rem; font-size:.82rem; font-weight:600; }
+    input[type=text], input[type=number], select, textarea {
+      width:100%; padding:.55rem .65rem; border:1px solid var(--border); font:inherit;
+    }
+    textarea { min-height:4.5rem; resize:vertical; }
+    .btn { border:none; padding:.55rem .85rem; cursor:pointer; font-size:.75rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+    .btn--brand { background:var(--brand); color:#fff; }
+    .btn--outline { background:#fff; border:1px solid var(--ink); color:var(--ink); }
+    .btn--danger { background:#fff; border:1px solid var(--danger); color:var(--danger); }
+    .btn:disabled { opacity:.45; cursor:not-allowed; }
+    .model-list { display:grid; gap:.35rem; max-height:70vh; overflow:auto; }
+    .model-item {
+      display:block; width:100%; text-align:left; padding:.55rem .65rem; border:1px solid var(--border);
+      background:#fff; cursor:pointer; font:inherit;
+    }
+    .model-item.is-active { border-color:var(--brand); box-shadow:0 0 0 1px rgba(232,76,38,.15); }
+    .model-item small { display:block; color:var(--muted); font-size:.75rem; margin-top:.15rem; }
+    .row { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+    .checks { display:flex; flex-wrap:wrap; gap:1rem; margin:.5rem 0 1rem; }
+    .checks label { display:flex; align-items:center; gap:.4rem; margin:0; font-weight:500; }
+    .checks input { width:auto; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+    @media (max-width:640px) { .grid2 { grid-template-columns:1fr; } }
+    .slots { display:grid; gap:.65rem; }
+    .slot-card {
+      display:grid; grid-template-columns:100px 1fr auto; gap:.65rem; align-items:center;
+      border:1px solid var(--border); padding:.65rem; background:#fff;
+      transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+    .slot-card.is-empty { opacity:.85; }
+    .slot-card.is-dragover {
+      border-color: var(--brand);
+      background: rgba(232, 76, 38, 0.07);
+      box-shadow: 0 0 0 2px rgba(232, 76, 38, 0.2);
+    }
+    .slot-card.is-uploading { opacity: .55; pointer-events: none; }
+    .slot-card img, .slot-card .slot-placeholder {
+      width:100px; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--bg);
+    }
+    .slot-placeholder { display:grid; place-items:center; color:var(--muted); font-size:.72rem; text-align:center; padding:.25rem; }
+    .slot-card__meta { font-size:.82rem; line-height:1.4; }
+    .slot-card__meta strong { display:block; font-size:.9rem; }
+    .slot-actions { display:flex; flex-direction:column; gap:.35rem; }
+    .slot-actions input[type=file] { display:none; }
+    .status { margin-top:.75rem; font-size:.85rem; color:var(--brand); min-height:1.2rem; white-space:pre-wrap; }
+    .hint { font-size:.82rem; color:var(--muted); line-height:1.45; margin:.35rem 0 0; }
+    .empty-state { color:var(--muted); padding:1rem 0; }
+    .badge { display:inline-block; margin-top:.2rem; padding:.15rem .4rem; font-size:.62rem; letter-spacing:.06em; text-transform:uppercase; background:rgba(232,76,38,.12); color:var(--brand); }
+    .photos-dropzone {
+      border: 2px dashed var(--border);
+      border-radius: .35rem;
+      padding: .75rem;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .photos-dropzone.is-dragover {
+      border-color: var(--brand);
+      background: rgba(232, 76, 38, 0.06);
+    }
+    .photos-dropzone__label {
+      margin: 0 0 .75rem;
+      font-size: .82rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .photos-dropzone__label strong { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Catálogo — modelos e fotos</h1>
+    <p class="lead">
+      Crie modelos, carregue fotos (PNG/JPG) e elimine imagens — arraste ficheiros directamente para os slots ou para a zona de largagem.
+      Depois use «Capa e galeria» e «Corte da capa» para afinar a capa do catálogo.
+    </p>
+
+    <div class="layout">
+      <aside class="panel">
+        <div class="row" style="margin-bottom:.75rem">
+          <button type="button" class="btn btn--brand" id="new-model-btn">Novo modelo</button>
+        </div>
+        <div class="model-list" id="model-list"></div>
+      </aside>
+
+      <main id="editor">
+        <p class="empty-state">Seleccione um modelo ou crie um novo.</p>
+      </main>
+    </div>
+
+    <p class="status" id="status" role="status"></p>
+  </div>
+  <script src="model-manager.js"></script>
+</body>
+</html>

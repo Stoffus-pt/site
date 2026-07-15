@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="__PAGE_DESCRIPTION__" />
+  <meta name="theme-color" content="#e84c26" />
+  <title>__PAGE_TITLE__</title>
+  <link rel="icon" href="assets/brand/icon-app.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a href="index.html" class="site-logo" aria-label="Stoffus - página inicial">
+        <img class="site-logo__img" src="assets/brand/logo-horizontal.png" alt="Stoffus world design" width="220" height="52" />
+      </a>
+
+      <nav class="site-nav" aria-label="Menu principal">
+        <a href="empresa.html">Empresa</a>
+        <a href="catalogo.html">Coleções</a>
+        <a href="novidades.html">Novidades</a>
+        <a href="tecidos.html">Tecidos</a>
+        <a href="onde-comprar.html">Onde ver</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="stoffus-3d.html">Stoffus 3D</a>
+      </nav>
+
+      <div class="site-header__actions">
+        <a class="btn btn--brand btn--config3d" href="https://stoffus.pt/Studio3D/app.html">
+          <img src="assets/brand/logo-stoffus3d.png" alt="" aria-hidden="true" class="btn__logo3d" width="1040" height="273" />
+          Configurar
+        </a>
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Menu móvel">
+    <a href="empresa.html">Empresa</a>
+    <a href="catalogo.html">Coleções</a>
+    <a href="novidades.html">Novidades</a>
+    <a href="tecidos.html">Tecidos</a>
+    <a href="onde-comprar.html">Onde ver</a>
+    <a href="contactos.html">Contactos</a>
+    <a href="stoffus-3d.html">Stoffus 3D</a>
+    <a class="btn btn--brand btn--lg" href="https://stoffus.pt/Studio3D/app.html">Abrir configurador</a>
+  </nav>
+
+  <main>
+    <section class="catalog-hero" aria-label="Nova página">
+      <div class="container catalog-hero__inner">
+        <img
+          class="catalog-hero__deco"
+          src="assets/brand/elemento-canto.png"
+          alt=""
+          width="72"
+          height="72"
+          aria-hidden="true"
+        />
+        <div class="catalog-hero__copy" data-cms-region="hero" data-cms-label="Cabeçalho">
+          <span class="label">Nova página</span>
+          <h1>__PAGE_TITLE__</h1>
+          <p class="catalog-hero__lead">
+            Edite este texto no painel CMS - clique na secção na pré-visualização ou use a lista à esquerda.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--warm">
+      <div class="container">
+        <div class="section-head section-head--center" data-cms-region="conteudo" data-cms-label="Conteúdo principal">
+          <span class="label">Secção</span>
+          <h2>Conteúdo da página</h2>
+          <p>Adicione parágrafos, listas e ligações. Duplo-clique na pré-visualização para editar texto directamente.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-band" data-cms-region="cta" data-cms-label="Chamada à acção">
+          <h2>Próximo passo</h2>
+          <p>Convide o visitante a explorar o catálogo ou o configurador 3D.</p>
+          <a class="btn btn--brand btn--lg" href="catalogo.html">Ver coleções</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <img class="footer-logo site-logo__img--footer" src="assets/brand/logo-horizontal.png" alt="Stoffus world design" width="200" height="48" />
+          <p>Indústria portuguesa de sofás.<br>Parque de Negócios 7/8 · 3140-258 Montemor-o-Velho</p>
+        </div>
+        <div>
+          <h4>Explorar</h4>
+          <ul>
+            <li><a href="empresa.html">Empresa</a></li>
+            <li><a href="catalogo.html">Catálogo</a></li>
+            <li><a href="novidades.html">Novidades</a></li>
+            <li><a href="tecidos.html">Tecidos</a></li>
+            <li><a href="stoffus-3d.html">Stoffus 3D</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Clientes</h4>
+          <ul>
+            <li><a href="onde-comprar.html">Onde ver</a></li>
+            <li><a href="https://stoffus.pt/Studio3D/app.html">Configurador</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="tel:+351239700799">+351 239 700 799</a></li>
+            <li><a href="mailto:geral@stoffus.pt">geral@stoffus.pt</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Stoffus</span>
+        <span>Made in Portugal</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/site.js"></script>
+  <script src="js/cms-loader.js"></script>
+  </body>
+</html>

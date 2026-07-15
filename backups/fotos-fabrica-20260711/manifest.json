@@ -1,0 +1,16 @@
+﻿{
+    "date":  "2026-07-11",
+    "newPhotos":  [
+                      "costura-detalhe.png",
+                      "costura-atelier.png",
+                      "producao-cnc.png",
+                      "armazem-tecidos.png",
+                      "corte-tecidos.png"
+                  ],
+    "description":  "Integração fotos da fábrica (empresa + tecidos)",
+    "backups":  [
+                    "empresa.html",
+                    "tecidos.html",
+                    "css/site.css"
+                ]
+}

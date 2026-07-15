@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor de corte — fotos catálogo Stoffus</title>
+  <link rel="stylesheet" href="../css/fonts.css" />
+  <style>
+    :root {
+      --brand: #e84c26;
+      --ink: #2d2a2c;
+      --muted: #6b6568;
+      --border: #ddd8d4;
+      --bg: #f0eeec;
+      --card: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    h1 { margin: 0 0 0.35rem; font-size: 1.45rem; }
+    .lead { margin: 0 0 1.25rem; color: var(--muted); max-width: 46rem; line-height: 1.5; }
+    .grid {
+      display: grid;
+      gap: 1.25rem;
+    }
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: 320px 1fr; align-items: start; }
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 1rem;
+    }
+    label {
+      display: grid;
+      gap: 0.35rem;
+      margin-bottom: 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    select, input[type="range"], button, textarea {
+      font: inherit;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .row[hidden] { display: none !important; }
+    body.is-embedded .wrap { max-width: none; padding: 1rem; }
+    body.is-embedded h1 { font-size: 1.15rem; }
+    body.is-embedded .lead { display: none; }
+    body.is-embedded #json-panel { display: none; }
+    .btn {
+      border: none;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .btn--brand { background: var(--brand); color: #fff; }
+    .btn--outline { background: #fff; border: 1px solid var(--ink); color: var(--ink); }
+    .preview-wrap {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+    }
+    .preview-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.65rem;
+    }
+    .stage {
+      position: relative;
+      width: min(100%, 420px);
+      aspect-ratio: 4 / 3;
+      margin: 0 auto;
+      overflow: hidden;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      touch-action: none;
+      cursor: grab;
+    }
+    .stage.is-dragging { cursor: grabbing; }
+    .stage img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: center center;
+      user-select: none;
+      pointer-events: none;
+      max-width: none;
+    }
+    .stage__mask {
+      display: none;
+    }
+    .stage__frame {
+      position: absolute;
+      border: 2px solid var(--brand);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.85);
+      pointer-events: none;
+    }
+    .hint {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    textarea {
+      min-height: 220px;
+      font-family: Consolas, monospace;
+      font-size: 0.78rem;
+    }
+    .status {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--brand);
+      min-height: 1.2rem;
+    }
+    code { font-family: Consolas, monospace; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Editor de corte — miniaturas do catálogo</h1>
+    <p class="lead" id="lead-text">
+      Escolha o modelo e ajuste o enquadramento da miniatura (4:3) usada nos cartões do catálogo.
+      Arraste a imagem para mover o foco, use o zoom e escolha entre <strong>contain</strong> (foto completa) ou <strong>cover</strong> (preenche o cartão).
+    </p>
+
+    <div class="grid">
+      <div class="panel">
+        <label>
+          Modelo
+          <select id="model-select"></select>
+        </label>
+        <label>
+          Foto (slot)
+          <select id="slot-select">
+            <option value="1">1 — cartão catálogo</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </label>
+        <label>
+          Zoom <span id="zoom-val">1.00</span>
+          <input id="zoom-range" type="range" min="1" max="2.5" step="0.01" value="1" />
+        </label>
+        <p class="hint" id="slot-hint" style="margin:0 0 0.85rem"></p>
+        <p class="hint" style="margin:0 0 0.85rem">A miniatura preenche sempre o cartão 4:3 sem margens. Arraste para escolher o foco.</p>
+        <div class="row">
+          <button type="button" class="btn btn--outline" id="reset-entry">Repor predefinição</button>
+        </div>
+        <div class="row" id="cms-actions" hidden>
+          <button type="button" class="btn btn--brand" id="save-rebuild">Publicar no site</button>
+          <button type="button" class="btn btn--outline" id="rebuild-thumb">Só regenerar miniatura</button>
+        </div>
+        <div class="row" id="manual-actions" style="margin-top:0.65rem">
+          <button type="button" class="btn btn--outline" id="download-json">Descarregar JSON</button>
+          <button type="button" class="btn btn--outline" id="copy-json">Copiar JSON</button>
+        </div>
+        <p class="status" id="status" role="status"></p>
+      </div>
+
+      <div class="preview-wrap">
+        <div class="preview-title">Pré-visualização do cartão</div>
+        <div class="stage" id="stage">
+          <img id="stage-img" alt="" draggable="false" hidden />
+          <div class="stage__frame" id="stage-frame"></div>
+          <div class="stage__mask" id="stage-mask"></div>
+        </div>
+        <p class="hint" id="drag-hint">Arraste a imagem para escolher o ponto de foco dentro do cartão.</p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1.25rem" id="json-panel">
+      <label>
+        photo-crops.json (substitua o ficheiro no projecto)
+        <textarea id="json-out" spellcheck="false"></textarea>
+      </label>
+    </div>
+  </div>
+
+  <script src="photo-crop-editor.js"></script>
+</body>
+</html>

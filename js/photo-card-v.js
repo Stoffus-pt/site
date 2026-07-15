@@ -1,0 +1,1 @@
+window.__PHOTO_CARD_V='20260715k';

@@ -1,0 +1,30 @@
+[
+    {
+        "label": "Empresa",
+        "href": "empresa.html"
+    },
+    {
+        "label": "Coleções",
+        "href": "catalogo.html"
+    },
+    {
+        "label": "Novidades",
+        "href": "novidades.html"
+    },
+    {
+        "label": "Tecidos",
+        "href": "tecidos.html"
+    },
+    {
+        "label": "Onde ver",
+        "href": "onde-comprar.html"
+    },
+    {
+        "label": "Contactos",
+        "href": "contactos.html"
+    },
+    {
+        "label": "Área cliente",
+        "href": "area-cliente.html"
+    }
+]

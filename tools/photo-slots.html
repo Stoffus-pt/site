@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capa e galeria — Stoffus</title>
+  <link rel="stylesheet" href="../css/fonts.css" />
+  <style>
+    :root { --brand:#e84c26; --ink:#2d2a2c; --muted:#6b6568; --border:#ddd8d4; --bg:#f0eeec; --card:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width:960px; margin:0 auto; padding:1rem; }
+    body.is-embedded .wrap { max-width:none; }
+    body.is-embedded h1 { font-size:1.15rem; margin-bottom:.35rem; }
+    body.is-embedded .lead { display:none; }
+    h1 { margin:0 0 .35rem; font-size:1.35rem; }
+    .lead { margin:0 0 1rem; color:var(--muted); line-height:1.5; max-width:42rem; }
+    .panel { background:var(--card); border:1px solid var(--border); padding:1rem; margin-bottom:1rem; }
+    label { display:grid; gap:.35rem; margin-bottom:.85rem; font-size:.82rem; font-weight:600; }
+    select, button { font:inherit; }
+    select { width:100%; padding:.55rem .65rem; border:1px solid var(--border); }
+    .btn { border:none; padding:.65rem 1rem; cursor:pointer; font-size:.78rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+    .btn--brand { background:var(--brand); color:#fff; }
+    .btn--outline { background:#fff; border:1px solid var(--ink); color:var(--ink); }
+    .row { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+    .slots { display:grid; gap:.75rem; }
+    .slot-card { display:grid; grid-template-columns:120px 1fr auto; gap:.75rem; align-items:center; border:1px solid var(--border); padding:.65rem; background:#fff; }
+    .slot-card.is-cover { border-color:var(--brand); box-shadow:0 0 0 1px rgba(232,76,38,.15); }
+    .slot-card img { width:120px; aspect-ratio:4/3; object-fit:cover; display:block; background:var(--bg); }
+    .slot-card__meta { font-size:.85rem; line-height:1.45; }
+    .slot-card__meta strong { display:block; font-size:.95rem; }
+    .badge { display:inline-block; margin-top:.25rem; padding:.2rem .45rem; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; background:rgba(232,76,38,.12); color:var(--brand); }
+    .slot-actions input[type=file] { display:none; }
+    .btn--danger { background:#fff; border:1px solid #b42318; color:#b42318; }
+    .status { margin-top:.75rem; font-size:.85rem; color:var(--brand); min-height:1.2rem; }
+    .hint { font-size:.82rem; color:var(--muted); line-height:1.45; margin:.5rem 0 0; }
+    code { font-family:Consolas,monospace; font-size:.85em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Capa e galeria do modelo</h1>
+    <p class="lead">
+      Escolha qual foto aparece no <strong>catálogo</strong> (capa) e a ordem na <strong>página do modelo</strong>.
+      Para carregar ou eliminar imagens, use <strong>Catálogo → Modelos e fotos</strong> no CMS.
+    </p>
+
+    <div class="panel">
+      <label>
+        Modelo
+        <select id="model-select"></select>
+      </label>
+      <label>
+        N.º de fotos na página do modelo
+        <select id="photo-count">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </label>
+      <label>
+        Capa do catálogo (cartão e homepage)
+        <select id="catalog-slot"></select>
+      </label>
+      <div class="slots" id="slots"></div>
+      <p class="hint">A primeira foto da lista abaixo é a que abre por defeito na página do modelo. Use «Subir» / «Descer» para reordenar.</p>
+      <div class="row" style="margin-top:1rem">
+        <button type="button" class="btn btn--brand" id="save-btn">Publicar no site</button>
+      </div>
+      <p class="status" id="status" role="status"></p>
+    </div>
+  </div>
+  <script src="photo-slots.js"></script>
+</body>
+</html>

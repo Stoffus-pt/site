@@ -1,0 +1,36 @@
+/* Magistral - tipografia Stoffus (ficheiros licenciados em site/fonts/) */
+@font-face {
+  font-family: "Magistral";
+  src: url("../fonts/Magistral-Light.woff2") format("woff2"),
+       url("../fonts/Magistral-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Magistral";
+  src: url("../fonts/Magistral-Book.woff2") format("woff2"),
+       url("../fonts/Magistral-Book.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Magistral";
+  src: url("../fonts/Magistral-Medium.woff2") format("woff2"),
+       url("../fonts/Magistral-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Magistral";
+  src: url("../fonts/Magistral-Bold.woff2") format("woff2"),
+       url("../fonts/Magistral-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

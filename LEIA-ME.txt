@@ -1,0 +1,75 @@
+Site público Stoffus (nova homepage)
+====================================
+
+Pré-visualizar localmente
+-------------------------
+Recomendado (site + CMS + configurador):
+  Executar site/ABRIR-CMS.bat
+  Abrir http://127.0.0.1:8080/index.html
+
+  O configurador abre em /Studio3D/app.html (mapeado para app.html na raiz do projecto).
+
+Alternativa (só HTML estático, sem configurador local):
+  cd site && npx --yes serve .
+  Os botões "Configurar" usam o configurador online em stoffus.pt.
+
+Publicar em stoffus.pt (substituir WordPress)
+---------------------------------------------
+1. Copiar o conteúdo da pasta site/ para a raiz do domínio:
+     index.html
+     css/site.css
+     js/site.js
+
+2. Manter no servidor (já existentes):
+     /Studio3D/          - configurador
+     /routing/           - CRM
+     /wp-content/...     - imagens do catálogo (até migrar)
+
+3. Configurar redirects 301 no .htaccess das páginas antigas do WordPress
+   para as novas URLs quando forem migradas.
+
+4. Carregar marketing/configurador-demo.gif em /Studio3D/marketing/
+
+Ficheiros relacionados
+----------------------
+  marketing/wordpress-pagina-stoffus-3d-COLAR.html  - landing 3D (pode integrar depois)
+  portal/home.php                                   - referência de design interno
+
+
+CMS - Editar páginas no browser
+-------------------------------
+Painel em /cms/ (requer PHP no servidor).
+
+1. Primeira visita: criar utilizador e palavra-passe.
+2. Editar textos por secção, título SEO e menu.
+3. Ver instruções completas em cms/LEIA-ME.txt
+4. Em local: executar ABRIR-CMS.bat (com PHP instalado).
+
+Dados partilhados (catálogo / novidades)
+----------------------------------------
+  data/models.json     - lista única de modelos, novidades e destaques da homepage
+  js/config.js         - URLs do configurador e downloads (local vs produção)
+  js/models.js         - grelhas reutilizáveis (catálogo, novidades, homepage)
+  modelo.html          - página de detalhe por modelo (?id=brittany)
+
+Sincronizar menu e SEO em todas as páginas
+------------------------------------------
+  php tools/sync-shell.php
+
+Nota: ainda NÃO migrámos ficheiros do WordPress. Os PDFs continuam nos URLs actuais
+até à fase de publicação (configurável em js/config.js → downloads).
+
+Identidade visual
+-----------------
+  Tipografia: Magistral - site/fonts/ (ver LEIA-ME)
+  Gráficos:   site/assets/brand/
+    logo-horizontal.png   - cabeçalho e rodapé
+    symbol.png            - ícone S
+    elemento-canto.png    - detalhe gráfico nos cantos
+    icon-app.png          - favicon
+    variantes-referencia.png / cores-referencia.png - consulta interna
+
+  Cores oficiais:
+    Laranja  #e04e26
+    Preto    #1a1a1a
+    Cinza    #a8a8a8

@@ -1,0 +1,21 @@
+# Dependências
+node_modules/
+
+# CMS — credenciais (criar no setup)
+cms/config.php
+
+# Backups automáticos
+*.bak-*
+
+# Cursor / IDE
+.cursor/
+.vscode/
+
+# Sistema
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log
+
+# Uploads temporários
+assets/inbox/*-upload-*

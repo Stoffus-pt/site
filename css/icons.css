@@ -1,0 +1,24 @@
+/* Ícones SVG leves (substituem Font Awesome no site público) */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.icon--menu { width: 1.15em; height: 1.15em; }
+
+.btn .icon { margin-right: 0.1em; }
+
+.menu-toggle .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.contact-card__icon .icon,
+.s3d-feature__icon .icon {
+  width: 1.35rem;
+  height: 1.35rem;
+}

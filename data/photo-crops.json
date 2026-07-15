@@ -1,0 +1,213 @@
+{
+    "cardWidth": 420,
+    "cardHeight": 315,
+    "defaultMode": "cover",
+    "crops": {
+        "bartini": {
+            "1": {
+                "focusX": 0.42,
+                "focusY": 0.58,
+                "zoom": 1.05
+            },
+            "2": {
+                "focusX": 0.427,
+                "focusY": 0.545,
+                "zoom": 1
+            }
+        },
+        "spirit": {
+            "1": {
+                "focusX": 0.42,
+                "focusY": 0.52,
+                "zoom": 1.01
+            }
+        },
+        "sleepy": {
+            "1": {
+                "focusX": 0.407,
+                "focusY": 0.392,
+                "zoom": 1.09
+            }
+        },
+        "vintage": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.747,
+                "zoom": 1.38
+            },
+            "2": {
+                "focusX": 0.514,
+                "focusY": 0.64,
+                "zoom": 1
+            }
+        },
+        "aston": {
+            "1": {
+                "focusX": 0.498,
+                "focusY": 0.712,
+                "zoom": 1
+            }
+        },
+        "kelia": {
+            "1": {
+                "focusX": 0.481,
+                "focusY": 0.674,
+                "zoom": 1
+            }
+        },
+        "adel": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.62,
+                "zoom": 1.02
+            }
+        },
+        "brenda": {
+            "1": {
+                "focusX": 0.52,
+                "focusY": 0.58,
+                "zoom": 1.08
+            }
+        },
+        "iris": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.56,
+                "zoom": 1.06
+            }
+        },
+        "judy": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.6,
+                "zoom": 1.08
+            }
+        },
+        "aro": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.72,
+                "zoom": 1.4
+            },
+            "2": {
+                "focusX": 0.5,
+                "focusY": 0.55,
+                "zoom": 1.28
+            }
+        },
+        "eva": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.52,
+                "zoom": 1.15
+            },
+            "2": {
+                "focusX": 0.619,
+                "focusY": 0.735,
+                "zoom": 1.39
+            }
+        },
+        "ice": {
+            "1": {
+                "focusX": 0.654,
+                "focusY": 0.62,
+                "zoom": 1.43
+            },
+            "2": {
+                "focusX": 0.5,
+                "focusY": 0.52,
+                "zoom": 1.22
+            }
+        },
+        "meg": {
+            "1": {
+                "focusX": 0.52,
+                "focusY": 0.58,
+                "zoom": 1.08
+            },
+            "2": {
+                "focusX": 0.5,
+                "focusY": 0.52,
+                "zoom": 1.22
+            }
+        },
+        "yan": {
+            "1": {
+                "focusX": 0.799,
+                "focusY": 0.712,
+                "zoom": 1.64
+            },
+            "2": {
+                "focusX": 0.5,
+                "focusY": 0.52,
+                "zoom": 1.2
+            }
+        },
+        "oasis": {
+            "1": {
+                "focusX": 0.52,
+                "focusY": 0.58,
+                "zoom": 1
+            },
+            "2": {
+                "focusX": 0.5,
+                "focusY": 0.56,
+                "zoom": 1.08
+            },
+            "3": {
+                "focusX": 0.5,
+                "focusY": 0.58,
+                "zoom": 1.05
+            }
+        },
+        "alexa": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.5,
+                "zoom": 1
+            }
+        },
+        "athena": {
+            "2": {
+                "focusX": 0.5,
+                "focusY": 0.5,
+                "zoom": 1
+            }
+        },
+        "kindia": {
+            "1": {
+                "focusX": 0.524,
+                "focusY": 0.503,
+                "zoom": 1.13
+            }
+        },
+        "fienza": {
+            "1": {
+                "focusX": 0.514,
+                "focusY": 0.503,
+                "zoom": 1
+            }
+        },
+        "polestar": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.5,
+                "zoom": 1.19
+            }
+        },
+        "rose": {
+            "1": {
+                "focusX": 0.502,
+                "focusY": 0.637,
+                "zoom": 1.42
+            }
+        },
+        "magic": {
+            "1": {
+                "focusX": 0.5,
+                "focusY": 0.5,
+                "zoom": 1.1
+            }
+        }
+    }
+}

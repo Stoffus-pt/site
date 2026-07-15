@@ -1,0 +1,566 @@
+{
+    "types": {
+        "relax": "Relax",
+        "fixed": "Fixo",
+        "slide": "Deslizante",
+        "pendular": "Pendular",
+        "sofabed": "Sofá-cama",
+        "armchair": "Poltrona",
+        "banqueta": "Banqueta",
+        "pouf": "Puff",
+        "pet": "Para pets"
+    },
+    "novidadesOrder": [
+        "magnum",
+        "altieri",
+        "oasis",
+        "orsini",
+        "magany",
+        "verona",
+        "syros",
+        "poppy"
+    ],
+    "featuredHome": [
+        "magnum",
+        "altieri",
+        "oasis",
+        "verona"
+    ],
+    "heroFeature": {
+        "model": "magnum",
+        "slot": 2
+    },
+    "models": [
+        {
+            "id": "brittany",
+            "name": "Brittany",
+            "type": "relax",
+            "tag": "Chaise · Contemporâneo",
+            "photo": true,
+            "novidade": false,
+            "description": "Sofá modular com chaise, linhas contemporâneas e configuração flexível para salas amplas ou compactas."
+        },
+        {
+            "id": "athena",
+            "name": "Athena",
+            "type": "relax",
+            "tag": "Compacto · Modular",
+            "photo": true,
+            "novidade": false,
+            "description": "Modular compacto, ideal para apartamentos e projectos onde cada centímetro conta."
+        },
+        {
+            "id": "bartini",
+            "name": "Bartini",
+            "type": "relax",
+            "tag": "De canto · Modular",
+            "photo": true,
+            "novidade": false,
+            "description": "Solução de canto modular com assentos relax e múltiplas composições.",
+            "catalogSlot": 1,
+            "photoOrder": [
+                1,
+                2
+            ]
+        },
+        {
+            "id": "enzo",
+            "name": "Enzo",
+            "type": "relax",
+            "tag": "Atemporal · Modular",
+            "photo": true,
+            "novidade": false,
+            "description": "Design atemporal, modular e versátil para uso diário intenso."
+        },
+        {
+            "id": "fiori",
+            "name": "Fiori",
+            "type": "relax",
+            "tag": "Relax · Modular",
+            "photo": true,
+            "novidade": false,
+            "description": "Mecanismo relax integrado num sofá modular de linhas suaves."
+        },
+        {
+            "id": "dayma",
+            "name": "Dayma",
+            "type": "relax",
+            "tag": "Modular · Conforto",
+            "photo": true,
+            "novidade": false,
+            "description": "Conforto generoso com módulos combináveis para família e projectos exigentes."
+        },
+        {
+            "id": "kindia",
+            "name": "Kindia",
+            "type": "relax",
+            "tag": "Linhas suaves",
+            "photo": true,
+            "novidade": false,
+            "description": "Curvas suaves e assento confortável num formato modular equilibrado."
+        },
+        {
+            "id": "sting",
+            "name": "Sting",
+            "type": "relax",
+            "tag": "Presença marcante",
+            "photo": true,
+            "novidade": false,
+            "description": "Volumes assertivos e presença arquitectónica na sala."
+        },
+        {
+            "id": "bianchi",
+            "name": "Bianchi",
+            "type": "relax",
+            "tag": "Modular · Relax",
+            "photo": true,
+            "novidade": false,
+            "description": "Modular relax com assento generoso e composições à medida."
+        },
+        {
+            "id": "bruma",
+            "name": "Bruma",
+            "type": "fixed",
+            "tag": "Fixo · Chaise",
+            "photo": true,
+            "novidade": false,
+            "description": "Modelo fixo com chaise integrada e perfil contemporâneo."
+        },
+        {
+            "id": "fienza",
+            "name": "Fienza",
+            "type": "fixed",
+            "tag": "Fixo · Modular",
+            "photo": true,
+            "novidade": false,
+            "description": "Sofá fixo de linha modular, equilíbrio entre forma e funcionalidade."
+        },
+        {
+            "id": "kaori",
+            "name": "Kaori",
+            "type": "fixed",
+            "tag": "Fixo · Minimal",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Estética minimalista, ideal para interiores contemporâneos e limpos."
+        },
+        {
+            "id": "polestar",
+            "name": "Polestar",
+            "type": "fixed",
+            "tag": "Fixo · De canto",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "description": "Configuração de canto fixa para optimizar o espaço da sala."
+        },
+        {
+            "id": "rose",
+            "name": "Rose",
+            "type": "fixed",
+            "tag": "Fixo · Elegante",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Linhas elegantes e assento confortável num formato fixo."
+        },
+        {
+            "id": "spirit",
+            "name": "Spirit",
+            "type": "fixed",
+            "tag": "Fixo · Amplo",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "description": "Assento amplo e presença generosa para salas de convívio."
+        },
+        {
+            "id": "moretti",
+            "name": "Moretti",
+            "type": "fixed",
+            "tag": "Novidade · Fixo",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "description": "Novo modelo fixo da Eleganza Collection, disponível em centenas de revestimentos."
+        },
+        {
+            "id": "corsi",
+            "name": "Corsi",
+            "type": "fixed",
+            "tag": "Novidade · Fixo",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Lançamento recente com linhas actuais e acabamento Stoffus."
+        },
+        {
+            "id": "infinity",
+            "name": "Infinity",
+            "type": "slide",
+            "tag": "Deslizante eléctrico",
+            "photo": true,
+            "novidade": false,
+            "description": "Mecanismo deslizante eléctrico para máximo conforto de assento."
+        },
+        {
+            "id": "magic",
+            "name": "Magic",
+            "type": "slide",
+            "tag": "Deslizante · Relax",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Deslizante com função relax para uso diário confortável."
+        },
+        {
+            "id": "rinaldi",
+            "name": "Rinaldi",
+            "type": "pendular",
+            "tag": "Pendular · Relax",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Mecanismo pendular para posições de descanso progressivas."
+        },
+        {
+            "id": "martinelli",
+            "name": "Martinelli",
+            "type": "sofabed",
+            "tag": "Sofá-cama",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Sofá-cama prático para salas que precisam de função extra."
+        },
+        {
+            "id": "serena",
+            "name": "Serena",
+            "type": "sofabed",
+            "tag": "Sofá-cama",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Sofá-cama confortável para visitas e uso ocasional."
+        },
+        {
+            "id": "sleepy",
+            "name": "Sleepy",
+            "type": "sofabed",
+            "tag": "Sofá-cama",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Abertura prática e assento confortável no dia a dia."
+        },
+        {
+            "id": "alexa",
+            "name": "Alexa",
+            "type": "armchair",
+            "tag": "Poltrona",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "description": "Poltrona complementar para completar a zona de estar."
+        },
+        {
+            "id": "aline",
+            "name": "Aline",
+            "type": "armchair",
+            "tag": "Poltrona · Relax elevável",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Cadeira relax com versões manual, eléctrica e elevatória powerlift."
+        },
+        {
+            "id": "kelia",
+            "name": "Kelia",
+            "type": "armchair",
+            "tag": "Poltrona · Relax elevável",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "description": "Cadeira relax de perfil alto, com versões manual, eléctrica e powerlift."
+        },
+        {
+            "id": "aston",
+            "name": "Aston",
+            "type": "armchair",
+            "tag": "Poltrona · Giratória",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Poltrona giratória com assento confortável."
+        },
+        {
+            "id": "masai",
+            "name": "Masai L",
+            "type": "armchair",
+            "tag": "Poltrona · Pouffe",
+            "photo": true,
+            "photoCount": 3,
+            "novidade": false,
+            "description": "Poltrona giratória com pouffe complementar — versatilidade e conforto num conjunto modular."
+        },
+        {
+            "id": "osaka",
+            "name": "Osaka",
+            "type": "armchair",
+            "tag": "Poltrona · Balancim",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Poltrona de balancim com movimento suave e design actual."
+        },
+        {
+            "id": "prada",
+            "name": "Prada",
+            "type": "armchair",
+            "tag": "Poltrona",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "description": "Poltrona de presença para complementar sofás da gama."
+        },
+        {
+            "id": "supreme",
+            "name": "Supreme",
+            "type": "armchair",
+            "tag": "Poltrona",
+            "photo": false,
+            "novidade": false,
+            "description": "Poltrona generosa com acabamentos de qualidade."
+        },
+        {
+            "id": "syros",
+            "name": "Syros",
+            "type": "armchair",
+            "tag": "Novidade · Poltrona · Relax eléctrica",
+            "photo": true,
+            "photoCount": 3,
+            "novidade": true,
+            "description": "Poltrona relax eléctrica de encosto alto, com comando integrado e posição de descanso extensível."
+        },
+        {
+            "id": "vintage",
+            "name": "Vintage",
+            "type": "armchair",
+            "tag": "Poltrona · Clássica",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Influência clássica num formato actual e confortável."
+        },
+        {
+            "id": "adel",
+            "name": "Adel",
+            "type": "banqueta",
+            "tag": "Banqueta · Cofre opcional",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": false,
+            "description": "Banqueta em forma de cápsula com base metálica dourada. Versão com cofre interior acolchoado para arrumação discreta — ideal para complementar a zona de estar."
+        },
+        {
+            "id": "brenda",
+            "name": "Brenda",
+            "type": "banqueta",
+            "tag": "Banqueta · Arrumação",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "configurator": false,
+            "description": "Banqueta baixa com tampo abatível e arrumação interior, ideal para complementar a zona de estar ou quarto. Disponível em centenas de revestimentos."
+        },
+        {
+            "id": "iris",
+            "name": "Iris",
+            "type": "banqueta",
+            "tag": "Banqueta · Arrumação",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "configurator": false,
+            "description": "Banqueta baixa de linhas rectas com tampo abatível e pés metálicos finos. Complemento versátil para hall, quarto ou zona de estar, disponível em centenas de revestimentos."
+        },
+        {
+            "id": "judy",
+            "name": "Judy",
+            "type": "banqueta",
+            "tag": "Banqueta · Contemporânea",
+            "photo": true,
+            "photoCount": 1,
+            "novidade": false,
+            "configurator": false,
+            "description": "Banqueta baixa de linhas suaves e pés metálicos, ideal ao pé da cama ou na zona de estar. Disponível em centenas de revestimentos."
+        },
+        {
+            "id": "aro",
+            "name": "Aro",
+            "type": "pouf",
+            "tag": "Puff · Redondo",
+            "photo": true,
+            "photoCount": 2,
+            "catalogSlot": 1,
+            "photoOrder": [
+                2,
+                1
+            ],
+            "novidade": false,
+            "configurator": false,
+            "description": "Puff redondo de linhas suaves, ideal para complementar o sofá com cor e conforto extra. Disponível em centenas de revestimentos."
+        },
+        {
+            "id": "eva",
+            "name": "Eva",
+            "type": "pouf",
+            "tag": "Puff · Quadrado",
+            "photo": true,
+            "photoCount": 2,
+            "photoCutout": true,
+            "novidade": false,
+            "configurator": false,
+            "description": "Puff quadrado de linhas limpas, com pés elevados e acabamento em tecido ou pele. Complemento versátil para a zona de estar.",
+            "catalogSlot": 2,
+            "photoOrder": [
+                1,
+                2
+            ]
+        },
+        {
+            "id": "ice",
+            "name": "Ice",
+            "type": "pouf",
+            "tag": "Puff · Quadrado",
+            "photo": true,
+            "photoCount": 2,
+            "catalogSlot": 1,
+            "photoOrder": [
+                2,
+                1
+            ],
+            "novidade": false,
+            "configurator": false,
+            "description": "Puff cúbico de linhas contemporâneas, ideal para complementar o sofá com cor e textura. Disponível em centenas de revestimentos."
+        },
+        {
+            "id": "meg",
+            "name": "Meg",
+            "type": "pouf",
+            "tag": "Puff · Quadrado",
+            "photo": true,
+            "photoCount": 2,
+            "catalogSlot": 1,
+            "photoOrder": [
+                2,
+                1
+            ],
+            "novidade": false,
+            "configurator": false,
+            "description": "Puff quadrado de padrão geométrico e pés finos, com assento generoso. Complemento versátil para a zona de estar, disponível em centenas de revestimentos."
+        },
+        {
+            "id": "yan",
+            "name": "Yan",
+            "type": "pouf",
+            "tag": "Puff · Redondo",
+            "photo": true,
+            "photoCount": 2,
+            "catalogSlot": 1,
+            "photoOrder": [
+                2,
+                1
+            ],
+            "novidade": false,
+            "configurator": false,
+            "description": "Puff cilíndrico de linhas suaves e pés finos, com acabamento em tecido texturado. Complemento elegante para a zona de estar, disponível em centenas de revestimentos."
+        },
+        {
+            "id": "magnum",
+            "name": "Magnum",
+            "type": "pendular",
+            "tag": "Novidade · Pendular",
+            "photo": true,
+            "photoCount": 3,
+            "novidade": true,
+            "configurator": false,
+            "description": "Novo pendular da Eleganza Collection, com movimento pendular suave para descanso progressivo."
+        },
+        {
+            "id": "altieri",
+            "name": "Altieri",
+            "type": "relax",
+            "tag": "Novidade · Relax modular",
+            "photo": true,
+            "novidade": true,
+            "configurator": false,
+            "description": "Modular relax de lançamento, com assento generoso e composições flexíveis para a sala.",
+            "photoCount": 2,
+            "catalogSlot": 1,
+            "photoOrder": [
+                1,
+                2
+            ]
+        },
+        {
+            "id": "oasis",
+            "name": "Oasis",
+            "type": "sofabed",
+            "tag": "Novidade · Sofá-cama",
+            "photo": true,
+            "photoCount": 3,
+            "catalogSlot": 1,
+            "photoOrder": [
+                1,
+                2,
+                3
+            ],
+            "novidade": true,
+            "configurator": false,
+            "description": "Sofá-cama disponível em chaise ou dois assentos, com linhas contemporâneas e abertura prática para a função cama. Ideal para salas que precisam de versatilidade no dia a dia."
+        },
+        {
+            "id": "orsini",
+            "name": "Orsini",
+            "type": "slide",
+            "tag": "Novidade · Deslizante",
+            "photo": false,
+            "novidade": true,
+            "configurator": false,
+            "description": "Mecanismo deslizante eléctrico para máximo conforto de assento."
+        },
+        {
+            "id": "magany",
+            "name": "Magany",
+            "type": "slide",
+            "tag": "Novidade · Deslizante",
+            "photo": false,
+            "novidade": true,
+            "configurator": false,
+            "description": "Deslizante com assento confortável e movimento eléctrico integrado."
+        },
+        {
+            "id": "verona",
+            "name": "Verona",
+            "type": "armchair",
+            "tag": "Novidade · Poltrona relax",
+            "photo": false,
+            "novidade": true,
+            "configurator": false,
+            "description": "Nova poltrona com mecanismo relax, ideal para complementar a zona de estar."
+        },
+        {
+            "id": "poppy",
+            "name": "Poppy",
+            "type": "pet",
+            "tag": "Novidade · Cama e escadas pet",
+            "photo": true,
+            "photoCount": 2,
+            "novidade": true,
+            "configurator": false,
+            "description": "Cama e escadas em espuma para pets, para colocar em cima do sofá ou da cama. Permite ao animal subir e descansar com mais segurança e conforto."
+        }
+    ]
+}

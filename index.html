@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Stoffus - ind&uacute;stria portuguesa de sof&aacute;s. Qualidade, design e conforto. Configure o seu sof&aacute; em 3D.">
+  <meta name="theme-color" content="#e84c26">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Stoffus" />
+  <meta property="og:title" content="Stoffus | World Design - Indústria Portuguesa de Sofá" />
+  <meta property="og:description" content="Stoffus - ind&amp;uacute;stria portuguesa de sof&amp;aacute;s. Qualidade, design e conforto. Configure o seu sof&amp;aacute; em 3D." />
+  <meta property="og:url" content="https://stoffus.pt/" />
+  <meta property="og:image" content="https://stoffus.pt/site/assets/brand/logo-horizontal.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <title>Stoffus | World Design - Ind&uacute;stria Portuguesa de Sof&aacute;</title>
+  <link rel="icon" href="assets/brand/icon-app.png" type="image/png">
+  <link rel="stylesheet" href="css/icons.css" />
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a href="index.html" class="site-logo" aria-label="Stoffus - p&aacute;gina inicial">
+        <img class="site-logo__img" src="assets/brand/logo-horizontal.png" alt="Stoffus world design" width="220" height="52">
+      </a>
+
+      <nav class="site-nav" aria-label="Menu principal">
+        <a href="empresa.html">Empresa</a>
+        <a href="catalogo.html">Coleções</a>
+        <a href="novidades.html">Novidades</a>
+        <a href="tecidos.html">Tecidos</a>
+        <a href="onde-comprar.html">Onde ver</a>
+        <a href="contactos.html">Contactos</a>
+        <a href="area-cliente.html">Área cliente</a>
+      </nav>
+
+      <div class="site-header__actions">
+        <a class="btn btn--brand btn--config3d" data-stoffus-configurator href="#">
+          <img src="assets/brand/logo-stoffus3d.png" alt="" aria-hidden="true" class="btn__logo3d" width="1040" height="273">
+          Configurar
+        </a>
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
+          <svg class="icon icon--menu" aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Menu móvel">
+    <a href="empresa.html">Empresa</a>
+    <a href="catalogo.html">Coleções</a>
+    <a href="novidades.html">Novidades</a>
+    <a href="tecidos.html">Tecidos</a>
+    <a href="onde-comprar.html">Onde ver</a>
+    <a href="contactos.html">Contactos</a>
+    <a href="area-cliente.html">Área cliente</a>
+    <a class="btn btn--brand btn--lg" data-stoffus-configurator href="#">Abrir configurador</a></nav>
+
+  <main>
+    <section class="hero hero--spotlight" aria-label="Apresenta&ccedil;&atilde;o">
+      <div class="container hero__grid">
+        <div class="hero__copy" data-cms-region="hero" data-cms-label="Hero">
+          <span class="label" id="hero-label">Novidade &middot; Eleganza Collection</span>
+          <h1>Arte em <em>sof&aacute;s</em></h1>
+          <p class="hero__lead">
+            Ind&uacute;stria portuguesa desde 2004 — lan&ccedil;amentos, tecidos e configura&ccedil;&atilde;o Stoffus 3D, do projecto &agrave; pe&ccedil;a que sai de Montemor-o-Velho.
+          </p>
+          <div class="hero__ctas">
+            <a class="btn btn--brand btn--lg" href="novidades.html">
+              Ver novidades
+              <svg class="icon" aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+            </a>
+            <a class="btn btn--outline btn--lg" data-stoffus-configurator href="#">Criar em 3D</a>
+          </div>
+        </div>
+
+        <div class="hero__visual">
+          <a class="hero__frame" id="hero-feature-link" href="modelo.html?id=magnum">
+            <img
+              id="hero-feature-photo"
+              src="assets/photos/models/magnum-2.png"
+              alt="Sof&aacute; Magnum pendular em ambiente mediterr&acirc;nico"
+              width="1024"
+              height="576"
+              fetchpriority="high"
+            />
+            <span class="hero__tag" id="hero-feature-tag">Magnum &middot; Pendular</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="brand-strip">
+      <div class="container brand-strip__inner" data-cms-region="destaques" data-cms-label="Destaques"><div class="brand-strip__item">
+          <strong>Fabrico nacional</strong>
+          <span>Produ&ccedil;&atilde;o em Montemor-o-Velho</span>
+        </div>
+        <div class="brand-strip__item">
+          <strong>World Design</strong>
+          <span>Identidade Stoffus em cada cole&ccedil;&atilde;o</span>
+        </div>
+        <div class="brand-strip__item">
+          <strong>Stoffus 3D</strong>
+          <span>Configure e orcemente online</span>
+        </div>
+        <div class="brand-strip__item">
+          <strong>Onde ver</strong>
+          <span>Pontos de visita em Portugal e exporta&ccedil;&atilde;o</span>
+        </div></div>
+    </div>
+
+    <section class="section" aria-labelledby="config-title">
+      <div class="container">
+        <div class="config-block">
+          <div class="config-block__media">
+            <img src="assets/marketing/configurador-demo.gif" alt="Demonstra&ccedil;&atilde;o do configurador Stoffus 3D" width="720" height="405" loading="lazy">
+          </div>
+          <div class="config-block__copy" data-cms-region="configurador" data-cms-label="Configurador 3D"><img class="config-block__logo3d" src="assets/brand/logo-stoffus3d.png" alt="Stoffus 3D" width="1040" height="273" loading="lazy">
+            <span class="label">Configurador 3D</span>
+            <h2 id="config-title">O sof&aacute;, antes de ser fabricado</h2>
+            <p>M&oacute;dulos, tecidos, medidas e acabamentos - visualize em tempo real e obtenha or&ccedil;amento em PDF. No telem&oacute;vel, veja o sof&aacute; em realidade aumentada na sua sala.</p>
+            <ul class="config-block__list">
+              <li>Montagem modular completa</li>
+              <li>Centenas de revestimentos Eleganza</li>
+              <li>Partilha por QR e link directo</li>
+            </ul>
+            <a class="btn btn--brand btn--lg" data-stoffus-configurator href="#">Experimentar Stoffus 3D</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--warm" id="novidades" aria-labelledby="novidades-home-title">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="label">Novidades</span>
+          <h2 id="novidades-home-title">&Uacute;ltimos lan&ccedil;amentos</h2>
+          <p>Magnum, Altieri, Oasis, Orsini, Magany, Verona, Syros e Poppy — veja os lançamentos ou peça indicação de onde visitar.</p>
+        </div>
+
+        <div class="collections" id="home-novidades-grid"></div>
+
+        <p class="text-center mt-2">
+          <a class="btn btn--outline btn--lg" href="novidades.html">
+            Ver todas as novidades
+            <svg class="icon" aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="colecoes" aria-labelledby="colecoes-title">
+      <div class="container">
+        <div class="section-head section-head--center" data-cms-region="colecoes-intro" data-cms-label="Introdu&ccedil;&atilde;o cole&ccedil;&otilde;es"><span class="label">Cat&aacute;logo</span>
+          <h2 id="colecoes-title">Eleganza Collection</h2>
+          <p>Destaques da gama completa - modelos modulares para cada espa&ccedil;o.</p></div>
+
+        <div class="collections collections--classic">
+          <a class="collection-card collection-card--feature" href="modelo.html?id=brittany">
+            <img src="assets/photos/models/brittany-2.png" alt="Sof&aacute; Brittany em ambiente - Eleganza Collection" loading="lazy">
+            <div class="collection-card__veil"></div>
+            <div class="collection-card__name">
+              <h3>Brittany</h3>
+              <span>Chaise &middot; Contempor&acirc;neo</span>
+            </div>
+          </a>
+
+          <a class="collection-card" href="modelo.html?id=athena">
+            <img src="assets/photos/models/athena-1.png" alt="Sof&aacute; Athena - Eleganza Collection" loading="lazy">
+            <div class="collection-card__veil"></div>
+            <div class="collection-card__name">
+              <h3>Athena</h3>
+              <span>Compacto</span>
+            </div>
+          </a>
+
+          <a class="collection-card" href="modelo.html?id=bartini">
+            <img src="assets/photos/models/bartini-2.png" alt="Sof&aacute; Bartini - Eleganza Collection" loading="lazy">
+            <div class="collection-card__veil"></div>
+            <div class="collection-card__name">
+              <h3>Bartini</h3>
+              <span>De canto</span>
+            </div>
+          </a>
+
+          <a class="collection-card" href="modelo.html?id=enzo">
+            <img src="assets/photos/models/enzo-1.png" alt="Sof&aacute; Enzo - Eleganza Collection" loading="lazy">
+            <div class="collection-card__veil"></div>
+            <div class="collection-card__name">
+              <h3>Enzo</h3>
+              <span>Atemporal</span>
+            </div>
+          </a>
+
+          <a class="collection-card" href="modelo.html?id=fiori">
+            <img src="assets/photos/models/fiori-2.png" alt="Sof&aacute; Fiori - Eleganza Collection" loading="lazy">
+            <div class="collection-card__veil"></div>
+            <div class="collection-card__name">
+              <h3>Fiori</h3>
+              <span>Relax</span>
+            </div>
+          </a>
+        </div>
+
+        <p class="text-center mt-2">
+          <a class="btn btn--outline btn--lg" href="catalogo.html">
+            Cat&aacute;logo completo
+            <svg class="icon" aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+          </a>
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="downloads-title">
+      <div class="container">
+        <div class="config-block config-block--compact">
+          <div class="config-block__media">
+            <img src="assets/catalog/capa-eleganza-collection.png" alt="Capa do catálogo Eleganza Collection" width="1920" height="1080" loading="lazy">
+          </div>
+          <div class="config-block__copy">
+            <span class="label">&Aacute;rea cliente</span>
+            <h2 id="downloads-title">Cat&aacute;logo e pre&ccedil;os</h2>
+            <p>Downloads para revendedores e profissionais - cat&aacute;logo PDF, tabela de pre&ccedil;os e modelos 3D.</p>
+            <a class="btn btn--brand btn--lg" href="area-cliente.html">Abrir &aacute;rea cliente</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--warm" aria-labelledby="valores-title">
+      <div class="container" data-cms-region="valores" data-cms-label="Valores"><div class="section-head section-head--center">
+          <span class="label">A nossa promessa</span>
+          <h2 id="valores-title">Mais do que um sof&aacute;</h2>
+        </div>
+        <div class="values">
+          <article class="value-card">
+            <h3>Conforto</h3>
+            <p>Estruturas, espumas e mecanismos pensados para o uso di&aacute;rio - relax, cama e solu&ccedil;&otilde;es &agrave; medida de cada fam&iacute;lia.</p>
+          </article>
+          <article class="value-card">
+            <h3>Acabamento</h3>
+            <p>Tecidos Easy Clean, Pet Friendly e antibacteriano. P&eacute;s, lacados Pantone e detalhes que fazem a diferen&ccedil;a. <a class="catalog-card__link" href="tecidos.html">Explorar tecidos</a></p>
+          </article>
+          <article class="value-card">
+            <h3>Parceria</h3>
+            <p>Ferramentas para lojistas e arquitectos - configurador 3D, or&ccedil;amentos PDF e apoio comercial dedicado.</p>
+          </article>
+        </div></div>
+    </section>
+
+    <section class="section section--warm">
+      <div class="container">
+        <div class="cta-band" data-cms-region="cta" data-cms-label="CTA visita"><h2>Onde ver os sofás Stoffus</h2>
+          <p>Indique a sua zona e sugerimos o local mais próximo para experimentar tecidos e pedir orçamento.</p>
+          <a class="btn btn--brand btn--lg" href="onde-comprar.html">Indicar a minha zona</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <img class="footer-logo site-logo__img--footer" src="assets/brand/logo-horizontal.png" alt="Stoffus world design" width="200" height="48">
+          <p>Ind&uacute;stria portuguesa de sof&aacute;s.<br>Parque de Neg&oacute;cios 7/8 &middot; 3140-258 Montemor-o-Velho</p>
+        </div>
+        <div>
+          <h4>Explorar</h4>
+          <ul>
+            <li><a href="empresa.html">Empresa</a></li>
+            <li><a href="catalogo.html">Cat&aacute;logo</a></li>
+            <li><a href="novidades.html">Novidades</a></li>
+            <li><a href="tecidos.html">Tecidos</a></li>
+            <li><a href="stoffus-3d.html">Stoffus 3D</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Clientes</h4>
+          <ul>
+            <li><a href="onde-comprar.html">Onde ver</a></li>
+            <li><a href="area-cliente.html">&Aacute;rea cliente</a></li>
+            <li><a data-stoffus-configurator href="#">Configurador</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="tel:+351239700799">+351 239 700 799</a></li>
+            <li><a href="mailto:geral@stoffus.pt">geral@stoffus.pt</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="year"></span> Stoffus</span>
+        <span>Made in Portugal</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/photo-card-v.js"></script>
+  <script src="js/models.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/cms-loader.js"></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FurnitureStore","name":"Stoffus","description":"Indústria portuguesa de sofás - Eleganza Collection","url":"https://stoffus.pt","telephone":"+351-239-700-799","email":"geral@stoffus.pt","address":{"@type":"PostalAddress","streetAddress":"Parque de Negócios 7/8","addressLocality":"Montemor-o-Velho","postalCode":"3140-258","addressCountry":"PT"}}</script>
+</body>
+</html>
