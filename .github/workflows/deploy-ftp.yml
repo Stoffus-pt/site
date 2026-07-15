@@ -1,8 +1,8 @@
 name: Publicar site (FTP)
 
+# Só manual — evita falhas/emails enquanto não houver credenciais FTP.
+# Pré-visualização automática: workflow "Pré-visualização (GitHub Pages)".
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
