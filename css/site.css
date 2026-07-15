@@ -157,12 +157,16 @@ a { color: inherit; }
   border-radius: 0;
 }
 
-/* Logo oficial (PNG) */
+/* Logo oficial (PNG) — aspect-ratio evita distorção no mobile (max-width global em img) */
 .site-logo__img {
-  height: 2.55rem;
+  height: auto;
   width: auto;
+  max-height: 2.55rem;
+  max-width: 11rem;
+  aspect-ratio: 220 / 52;
+  object-fit: contain;
+  object-position: left center;
   display: block;
-  /* A marca tem cinza claro; uma sombra subtil ajuda sem criar “caixa” */
   filter: contrast(1.12) saturate(1.02) drop-shadow(0 1px 0 rgba(0, 0, 0, 0.10));
 }
 
@@ -323,6 +327,22 @@ a { color: inherit; }
 
 .mobile-nav .btn { width: 100%; margin-top: 1.25rem; }
 
+@media (max-width: 1079px) {
+  .site-logo__img {
+    max-height: 2rem;
+    max-width: 8.5rem;
+  }
+
+  .site-header__actions {
+    gap: 0.45rem;
+  }
+
+  .btn--config3d {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.66rem;
+  }
+}
+
 @media (min-width: 1080px) {
   .site-nav { display: flex; }
   .menu-toggle { display: none; }
@@ -331,7 +351,8 @@ a { color: inherit; }
 
 @media (min-width: 1080px) and (max-width: 1320px) {
   .site-logo__img {
-    height: 2.2rem;
+    max-height: 2.2rem;
+    max-width: 9.5rem;
   }
 
   .site-nav {

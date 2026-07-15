@@ -2,6 +2,8 @@
   var host = location.hostname;
   var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
   var isGithubPreview = host.endsWith('.github.io');
+  var onlineTextures = 'https://stoffus.pt/Studio3D/assets/textures/';
+
   var onlineConfigurator = 'https://stoffus.pt/Studio3D/app.html';
 
   // Com ABRIR-CMS.bat (router na raiz): /Studio3D/app.html funciona em local.
@@ -20,7 +22,19 @@
     return '/Studio3D/app.html';
   }
 
-  function encodeCfgState(parts) {
+  function textureRemoteBase() {
+    if (isGithubPreview) {
+      return onlineTextures;
+    }
+    if (isLocal) {
+      var port = location.port || '';
+      if (port === '8080') {
+        return '/Studio3D/assets/textures/';
+      }
+      return onlineTextures;
+    }
+    return '/Studio3D/assets/textures/';
+  }
     try {
       return btoa(parts.join('|'));
     } catch (e) {
@@ -112,7 +126,7 @@
       priceXlsx: 'https://stoffus.pt/wp-content/uploads/2026/02/Tabela-de-Precos-Stoffus-Eleganza-Collection.xlsx',
       warehouse3d: 'https://3dwarehouse.sketchup.com/by/stoffus#models'
     },
-    textureRemote: '/Studio3D/assets/textures/'
+    textureRemote: textureRemoteBase()
   };
 
   if (document.readyState === 'loading') {

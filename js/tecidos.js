@@ -45,7 +45,10 @@
   ];
 
   var CONFIGURATOR = (window.StoffusSite && window.StoffusSite.configurator) || '/Studio3D/app.html';
-  var TEXTURE_REMOTE = (window.StoffusSite && window.StoffusSite.textureRemote) || '/Studio3D/assets/textures/';
+
+  function textureRemoteBase() {
+    return (window.StoffusSite && window.StoffusSite.textureRemote) || 'https://stoffus.pt/Studio3D/assets/textures/';
+  }
 
   var grid = document.getElementById('fabrics-grid');
   var filters = document.getElementById('fabrics-filters');
@@ -71,7 +74,7 @@
 
   function textureUrl(col, fileIndex) {
     var file = encodeURIComponent(textureFolderName(col) + ' ' + fileIndex + '.jpg');
-    return TEXTURE_REMOTE + file;
+    return textureRemoteBase() + file;
   }
 
   function colorCount(col) {
@@ -104,6 +107,9 @@
   }
 
   function cardThumb(col) {
+    if (window.StoffusSite && window.StoffusSite.isGithubPreview) {
+      return textureUrl(col, 1);
+    }
     return 'assets/photos/tecidos/' + col.id + '.jpg';
   }
 
