@@ -24,13 +24,10 @@
     if (label && model.novidade) label.textContent = 'Novidade · Eleganza Collection';
 
     if (img) {
-      var slotNum = slot.slot || slotIndex;
-      var webp = StoffusModels.modelPhotoPath(model, slotNum);
-      var md = StoffusModels.modelPhotoMdPng(model, slotNum);
-      var sm = StoffusModels.modelPhotoSmPng(model, slotNum);
-      img.src = md;
-      img.srcset = sm + ' 480w, ' + md + ' 960w, ' + slot.png + ' 1920w';
-      img.sizes = '(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 960px';
+      // Usar PNG completo no hero — miniaturas -md/-sm podem ainda não existir para o slot em destaque
+      img.removeAttribute('srcset');
+      img.removeAttribute('sizes');
+      img.src = slot.png;
       img.alt = (model.type === 'pet' ? '' : (model.type === 'banqueta' ? 'Banqueta ' : (model.type === 'pouf' ? 'Puff ' : 'Sofá '))) + model.name + ' — Eleganza Collection';
       img.dataset.fallback = slot.png;
       img.dataset.iconFallback = slot.icon;
