@@ -24,7 +24,7 @@
         "magnum",
         "altieri",
         "oasis",
-        "verona"
+        "syros"
     ],
     "featuredClassic": [
         "brittany",
@@ -503,6 +503,7 @@
             "tag": "Novidade · Pendular",
             "photo": true,
             "photoCount": 3,
+            "catalogSlot": 2,
             "novidade": true,
             "description": "Novo pendular da Eleganza Collection, com movimento pendular suave para descanso progressivo."
         },

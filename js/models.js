@@ -241,8 +241,10 @@
   function renderCollectionCard(model) {
     var site = global.StoffusSite || {};
     var pageUrl = site.modelPage ? site.modelPage(model.id) : ('modelo.html?id=' + model.id);
-    var imgPrimary = modelCardImage(model);
-    var imgFallback = modelCardImageFallback(model);
+    // Cartões grandes da homepage: PNG completo (não a miniatura 420px)
+    var slot = modelCatalogSlot(model);
+    var imgPrimary = model.photo ? modelPhotoFullPng(model, slot) : modelImage(model);
+    var imgFallback = model.photo ? modelPhotoMdPng(model, slot) : modelImageFallback(model);
     var imgIcon = modelImageFallback(model);
 
     var card = document.createElement('a');
