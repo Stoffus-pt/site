@@ -2,7 +2,8 @@ Gráficos oficiais Stoffus (manual de marca)
 ==========================================
 
 logo-horizontal.png    Logo completo - cabeçalho e rodapé
-logo-stoffus3d.png     Assinatura Stoffus 3D (oficial)
+logo-stoffus3d.png     Assinatura Stoffus 3D (oficial, fundo claro)
+logo-stoffus3d-white.png  Versão branca para botão laranja / fundos escuros
 logo-vertical.png      Versão vertical
 symbol.png             Símbolo (linhas paralelas)
 wordmark-stoffus.png   Tipografia «stoffus»
