@@ -5,6 +5,7 @@
   var gpsStatus = document.getElementById('gps-status');
   var hint = document.getElementById('onde-hint');
   var placeInput = form ? form.querySelector('[name="place"]') : null;
+  var postalInput = form ? form.querySelector('[name="postal"]') : null;
   var coordsInput = document.getElementById('onde-coords');
   var mapsInput = document.getElementById('onde-maps');
   var successBox = document.getElementById('onde-success');
@@ -39,7 +40,17 @@
     return 'https://www.google.com/maps?q=' + encodeURIComponent(lat + ',' + lng);
   }
 
-  function formatAddressFromBigDataCloud(data) {
+  function formatPostal(raw) {
+    if (!raw) return '';
+    var digits = String(raw).replace(/\D/g, '');
+    if (digits.length >= 7) {
+      return digits.slice(0, 4) + '-' + digits.slice(4, 7);
+    }
+    if (digits.length === 4) return digits;
+    return String(raw).trim();
+  }
+
+  function placeFromBigDataCloud(data) {
     if (!data) return '';
     var parts = [];
     var locality = data.locality || data.city;
@@ -53,7 +64,12 @@
     return parts.filter(Boolean).join(', ');
   }
 
-  function formatAddressFromNominatim(data) {
+  function postalFromBigDataCloud(data) {
+    if (!data) return '';
+    return formatPostal(data.postcode || data.postalCode || '');
+  }
+
+  function placeFromNominatim(data) {
     if (!data) return '';
     if (data.display_name) {
       var short = String(data.display_name).split(',').slice(0, 3).join(',').trim();
@@ -69,6 +85,36 @@
     return parts.filter(Boolean).join(', ');
   }
 
+  function postalFromNominatim(data) {
+    if (!data || !data.address) return '';
+    return formatPostal(data.address.postcode || '');
+  }
+
+  function reverseGeocodeNominatim(lat, lng) {
+    var nomUrl =
+      'https://nominatim.openstreetmap.org/reverse?format=json&lat=' +
+      encodeURIComponent(lat) +
+      '&lon=' + encodeURIComponent(lng) +
+      '&zoom=18&addressdetails=1';
+
+    return fetch(nomUrl, {
+      headers: {
+        Accept: 'application/json',
+        'Accept-Language': 'pt-PT,pt'
+      }
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('geocode');
+        return res.json();
+      })
+      .then(function (data) {
+        return {
+          place: placeFromNominatim(data),
+          postal: postalFromNominatim(data)
+        };
+      });
+  }
+
   function reverseGeocode(lat, lng) {
     var bdcUrl =
       'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' +
@@ -82,47 +128,48 @@
         return res.json();
       })
       .then(function (data) {
-        return formatAddressFromBigDataCloud(data);
+        var place = placeFromBigDataCloud(data);
+        var postal = postalFromBigDataCloud(data);
+        // BigDataCloud muitas vezes não devolve CP — completar com Nominatim
+        if (postal) {
+          return { place: place, postal: postal };
+        }
+        return reverseGeocodeNominatim(lat, lng).then(function (nom) {
+          return {
+            place: place || nom.place,
+            postal: nom.postal
+          };
+        }).catch(function () {
+          return { place: place, postal: '' };
+        });
       })
       .catch(function () {
-        var nomUrl =
-          'https://nominatim.openstreetmap.org/reverse?format=json&lat=' +
-          encodeURIComponent(lat) +
-          '&lon=' + encodeURIComponent(lng) +
-          '&zoom=14&addressdetails=1';
-
-        return fetch(nomUrl, {
-          headers: {
-            Accept: 'application/json',
-            'Accept-Language': 'pt-PT,pt'
-          }
-        })
-          .then(function (res) {
-            if (!res.ok) throw new Error('geocode');
-            return res.json();
-          })
-          .then(function (data) {
-            return formatAddressFromNominatim(data);
-          })
-          .catch(function () {
-            return '';
-          });
+        return reverseGeocodeNominatim(lat, lng).catch(function () {
+          return { place: '', postal: '' };
+        });
       });
   }
 
-  function applyLocation(lat, lng, placeLabel) {
+  function applyLocation(lat, lng, info) {
+    info = info || {};
+    var placeLabel = info.place || '';
+    var postal = info.postal || '';
+
     var latS = Number(lat).toFixed(6);
     var lngS = Number(lng).toFixed(6);
     coordsInput.value = latS + ',' + lngS;
     mapsInput.value = buildMapsLink(latS, lngS);
 
     if (placeInput && placeLabel) placeInput.value = placeLabel;
+    if (postalInput && postal) postalInput.value = postal;
 
     setHint(gpsHint, '');
-    if (placeLabel) {
-      setGpsStatus('Localização detectada: ' + placeLabel + '. Confirme e envie o pedido.', 'ok');
+    if (placeLabel && postal) {
+      setGpsStatus('Localização detectada: ' + placeLabel + ' (' + postal + '). Confirme e envie o pedido.', 'ok');
+    } else if (placeLabel) {
+      setGpsStatus('Localização detectada: ' + placeLabel + '. Confirme o código postal e envie o pedido.', 'ok');
     } else {
-      setGpsStatus('Coordenadas obtidas. Indique a cidade e envie o pedido.', 'ok');
+      setGpsStatus('Coordenadas obtidas. Indique a cidade e o código postal.', 'ok');
     }
     if (placeInput) placeInput.focus();
   }
@@ -162,8 +209,8 @@
 
       navigator.geolocation.getCurrentPosition(
         function (pos) {
-          reverseGeocode(pos.coords.latitude, pos.coords.longitude).then(function (placeLabel) {
-            applyLocation(pos.coords.latitude, pos.coords.longitude, placeLabel);
+          reverseGeocode(pos.coords.latitude, pos.coords.longitude).then(function (info) {
+            applyLocation(pos.coords.latitude, pos.coords.longitude, info);
             setGpsLoading(false);
           });
         },
