@@ -9,7 +9,6 @@
   var mapsInput = document.getElementById('onde-maps');
   var successBox = document.getElementById('onde-success');
   var showroomEl = document.getElementById('onde-showroom');
-  var regionsEl = document.getElementById('onde-regions');
 
   if (!form) return;
 
@@ -197,25 +196,10 @@
       '</article>';
   }
 
-  function renderRegions(data) {
-    if (!regionsEl || !data || !data.regions) return;
-    regionsEl.innerHTML = data.regions.map(function (region) {
-      var districts = (region.districts || []).join(', ');
-      return (
-        '<article class="visit-region-card">' +
-          '<h3>' + region.name + '</h3>' +
-          (districts ? '<p>' + districts + '</p>' : '<p>Rede internacional — contacte-nos.</p>') +
-          '<a class="visit-region-card__link" href="#localizacao">Pedir indicação nesta zona</a>' +
-        '</article>'
-      );
-    }).join('');
-  }
-
   fetch('data/visit-points.json')
     .then(function (res) { return res.ok ? res.json() : null; })
     .then(function (data) {
       renderShowroom(data);
-      renderRegions(data);
     })
     .catch(function () {});
 

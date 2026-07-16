@@ -2932,41 +2932,6 @@ body.page-minimal:not(.page-rich) .section--warm {
   gap: 0.75rem;
 }
 
-.visit-regions-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-}
-
-.visit-region-card {
-  padding: 1.25rem;
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.visit-region-card h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.05rem;
-  color: var(--ink-deep);
-}
-
-.visit-region-card p {
-  margin: 0 0 0.85rem;
-  font-size: 0.88rem;
-  color: var(--ink-muted);
-  line-height: 1.5;
-}
-
-.visit-region-card__link {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: var(--track-nav);
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--brand);
-}
-
 .footer-bottom {
   display: flex;
   flex-wrap: wrap;
