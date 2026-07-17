@@ -17,6 +17,8 @@ const catalogCandidates = [
   join(projectRoot, 'render-desktop', 'studio-bundle', 'data', 'catalog', 'catalog-published.json'),
 ];
 
+const GAMA_ORDER = ['bliss', 'delta', 'fashion', 'pele'];
+
 const GAMAS = {
   B: { filter: 'bliss', label: 'Bliss' },
   D: { filter: 'delta', label: 'Delta' },
@@ -108,7 +110,14 @@ const collections = (catalog.collections || [])
   .filter(Boolean)
   .filter((col) => col.show);
 
-collections.sort((a, b) => a.name.localeCompare(b.name, 'pt-PT'));
+collections.sort((a, b) => {
+  const oa = GAMA_ORDER.indexOf(a.gama);
+  const ob = GAMA_ORDER.indexOf(b.gama);
+  const rankA = oa === -1 ? GAMA_ORDER.length : oa;
+  const rankB = ob === -1 ? GAMA_ORDER.length : ob;
+  if (rankA !== rankB) return rankA - rankB;
+  return a.name.localeCompare(b.name, 'pt-PT');
+});
 
 const output = {
   meta: {

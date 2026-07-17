@@ -14,6 +14,19 @@
 
   if (!grid || !filters || !modal) return;
 
+  var GAMA_ORDER = ['bliss', 'delta', 'fashion', 'pele'];
+
+  function sortCollections(list) {
+    return list.slice().sort(function (a, b) {
+      var oa = GAMA_ORDER.indexOf(a.gama);
+      var ob = GAMA_ORDER.indexOf(b.gama);
+      if (oa === -1) oa = GAMA_ORDER.length;
+      if (ob === -1) ob = GAMA_ORDER.length;
+      if (oa !== ob) return oa - ob;
+      return a.name.localeCompare(b.name, 'pt-PT');
+    });
+  }
+
   var CONFIGURATOR = (window.StoffusSite && window.StoffusSite.configurator) || '/Studio3D/app.html';
   var GAMAS = {};
   var TEXTURE_LABELS = { default: 'Tecido' };
@@ -278,7 +291,7 @@
   function init(data) {
     GAMAS = data.gamas || {};
     TEXTURE_LABELS = data.textureLabels || TEXTURE_LABELS;
-    COLLECTIONS = data.collections || [];
+    COLLECTIONS = sortCollections(data.collections || []);
 
     bindUi();
     renderGrid();
