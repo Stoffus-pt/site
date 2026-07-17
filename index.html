@@ -119,19 +119,35 @@
       <div class="container">
         <div class="config-block">
           <div class="config-block__media">
-            <video
-              class="config-block__video"
-              muted
-              loop
-              playsinline
-              preload="none"
-              poster="assets/marketing/montagem-tecidos-poster.jpg"
-              width="720"
-              height="405"
-              aria-label="Montagem do sofá Brittany e escolha de tecidos no Stoffus 3D"
+            <div
+              class="site-video"
+              data-site-playlist
+              data-playlist='[{"src":"assets/marketing/entrada-web.mp4","label":"Entrada no configurador","poster":"assets/marketing/entrada-poster.jpg"},{"src":"assets/marketing/montagem-tecidos.mp4","label":"Módulos e revestimentos","poster":"assets/marketing/montagem-tecidos-poster.jpg"}]'
             >
-              <source src="assets/marketing/montagem-tecidos.mp4" type="video/mp4" />
-            </video>
+              <video
+                class="config-block__video site-video__el"
+                muted
+                playsinline
+                preload="none"
+                poster="assets/marketing/entrada-poster.jpg"
+                width="720"
+                height="405"
+                aria-label="Demonstração Stoffus 3D: entrada, montagem e escolha de tecidos"
+              ></video>
+              <div class="site-video__bar">
+                <div class="site-video__meta">
+                  <span class="site-video__label" data-video-label>Entrada no configurador</span>
+                  <span class="site-video__step" data-video-step>1 / 2</span>
+                </div>
+                <div class="site-video__actions">
+                  <button type="button" class="site-video__btn" data-video-prev aria-label="Vídeo anterior">Anterior</button>
+                  <button type="button" class="site-video__btn" data-video-next aria-label="Vídeo seguinte">Seguinte</button>
+                  <button type="button" class="site-video__btn site-video__btn--fs" data-video-fs aria-label="Ecrã cheio" aria-pressed="false">
+                    <span data-fs-label>Ecrã cheio</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="config-block__copy" data-cms-region="configurador" data-cms-label="Configurador 3D"><img class="config-block__logo3d" src="assets/brand/logo-stoffus3d.png" alt="Stoffus 3D" width="1040" height="273" loading="lazy">
             <span class="label">Configurador 3D</span>
@@ -151,18 +167,32 @@
       <div class="container">
         <div class="config-block config-block--reverse">
           <div class="config-block__media">
-            <video
-              class="config-block__video"
-              muted
-              loop
-              playsinline
-              preload="none"
-              width="720"
-              height="405"
-              aria-label="Demonstração de realidade aumentada Stoffus 3D"
+            <div
+              class="site-video"
+              data-site-playlist
+              data-playlist='[{"src":"assets/marketing/AR.mp4","label":"Realidade aumentada"}]'
             >
-              <source src="assets/marketing/AR.mp4" type="video/mp4" />
-            </video>
+              <video
+                class="config-block__video site-video__el"
+                muted
+                playsinline
+                preload="none"
+                width="720"
+                height="405"
+                aria-label="Demonstração de realidade aumentada Stoffus 3D"
+              ></video>
+              <div class="site-video__bar">
+                <div class="site-video__meta">
+                  <span class="site-video__label" data-video-label>Realidade aumentada</span>
+                  <span class="site-video__step" data-video-step></span>
+                </div>
+                <div class="site-video__actions">
+                  <button type="button" class="site-video__btn site-video__btn--fs" data-video-fs aria-label="Ecrã cheio" aria-pressed="false">
+                    <span data-fs-label>Ecrã cheio</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="config-block__copy" data-cms-region="ar" data-cms-label="Realidade aumentada">
             <span class="label">Realidade aumentada</span>
@@ -307,6 +337,7 @@
   <script src="js/cookies.js"></script>
   <script src="js/leads.js"></script>
   <script src="js/site.js"></script>
+  <script src="js/site-videos.js"></script>
   <script src="js/photo-card-v.js"></script>
   <script src="js/models.js"></script>
   <script src="js/home.js"></script>

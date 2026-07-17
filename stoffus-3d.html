@@ -78,20 +78,36 @@
 
         <div class="s3d-hero__demo">
           <figure class="s3d-demo">
-            <video
-              class="s3d-demo__video"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              poster="assets/marketing/montagem-tecidos-poster.jpg"
-              width="720"
-              height="405"
-              aria-label="Montagem do sofá Brittany e escolha de tecidos no Stoffus 3D"
+            <div
+              class="site-video"
+              data-site-playlist
+              data-playlist='[{"src":"assets/marketing/entrada-web.mp4","label":"Entrada no configurador","poster":"assets/marketing/entrada-poster.jpg"},{"src":"assets/marketing/montagem-tecidos.mp4","label":"Módulos e revestimentos","poster":"assets/marketing/montagem-tecidos-poster.jpg"}]'
             >
-              <source src="assets/marketing/montagem-tecidos.mp4" type="video/mp4" />
-            </video>
+              <video
+                class="s3d-demo__video site-video__el"
+                autoplay
+                muted
+                playsinline
+                preload="metadata"
+                poster="assets/marketing/entrada-poster.jpg"
+                width="720"
+                height="405"
+                aria-label="Demonstração Stoffus 3D: entrada, montagem e escolha de tecidos"
+              ></video>
+              <div class="site-video__bar">
+                <div class="site-video__meta">
+                  <span class="site-video__label" data-video-label>Entrada no configurador</span>
+                  <span class="site-video__step" data-video-step>1 / 2</span>
+                </div>
+                <div class="site-video__actions">
+                  <button type="button" class="site-video__btn" data-video-prev aria-label="Vídeo anterior">Anterior</button>
+                  <button type="button" class="site-video__btn" data-video-next aria-label="Vídeo seguinte">Seguinte</button>
+                  <button type="button" class="site-video__btn site-video__btn--fs" data-video-fs aria-label="Ecrã cheio" aria-pressed="false">
+                    <span data-fs-label>Ecrã cheio</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </figure>
         </div>
       </div>
@@ -101,18 +117,32 @@
       <div class="container">
         <div class="config-block">
           <div class="config-block__media">
-            <video
-              class="config-block__video"
-              muted
-              loop
-              playsinline
-              preload="none"
-              width="720"
-              height="405"
-              aria-label="Demonstração de realidade aumentada Stoffus 3D"
+            <div
+              class="site-video"
+              data-site-playlist
+              data-playlist='[{"src":"assets/marketing/AR.mp4","label":"Realidade aumentada"}]'
             >
-              <source src="assets/marketing/AR.mp4" type="video/mp4" />
-            </video>
+              <video
+                class="config-block__video site-video__el"
+                muted
+                playsinline
+                preload="none"
+                width="720"
+                height="405"
+                aria-label="Demonstração de realidade aumentada Stoffus 3D"
+              ></video>
+              <div class="site-video__bar">
+                <div class="site-video__meta">
+                  <span class="site-video__label" data-video-label>Realidade aumentada</span>
+                  <span class="site-video__step" data-video-step></span>
+                </div>
+                <div class="site-video__actions">
+                  <button type="button" class="site-video__btn site-video__btn--fs" data-video-fs aria-label="Ecrã cheio" aria-pressed="false">
+                    <span data-fs-label>Ecrã cheio</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="config-block__copy" data-cms-region="ar" data-cms-label="Realidade aumentada">
             <span class="label">Realidade aumentada</span>
@@ -328,6 +358,7 @@
   <script src="js/cookies.js"></script>
   <script src="js/leads.js"></script>
   <script src="js/site.js"></script>
+  <script src="js/site-videos.js"></script>
   <script src="js/cms-loader.js"></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FurnitureStore","name":"Stoffus","description":"Indústria portuguesa de sofás - Eleganza Collection","url":"https://stoffus.pt","telephone":"+351-239-700-799","email":"geral@stoffus.pt","address":{"@type":"PostalAddress","streetAddress":"Parque de Negócios 7/8","addressLocality":"Montemor-o-Velho","postalCode":"3140-258","addressCountry":"PT"}}</script>
 </body>
