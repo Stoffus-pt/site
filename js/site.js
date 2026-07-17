@@ -38,4 +38,38 @@
 
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  (function lazySiteVideos() {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var videos = document.querySelectorAll('.config-block__video, .s3d-demo__video');
+    if (!videos.length) return;
+
+    function play(video) {
+      if (reduce) {
+        video.removeAttribute('autoplay');
+        try { video.pause(); } catch (e) {}
+        return;
+      }
+      video.setAttribute('preload', 'metadata');
+      video.play().catch(function () {});
+    }
+
+    if (reduce || !('IntersectionObserver' in window)) {
+      videos.forEach(play);
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        play(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '140px' });
+
+    videos.forEach(function (video) {
+      if (video.hasAttribute('autoplay')) play(video);
+      else observer.observe(video);
+    });
+  })();
 })();

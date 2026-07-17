@@ -100,37 +100,7 @@
     });
   }
 
-  function lazyPlayConfigVideo() {
-    var video = document.querySelector('.config-block__video');
-    if (!video || prefersReducedMotion()) {
-      if (video) {
-        video.removeAttribute('autoplay');
-        try { video.pause(); } catch (e) {}
-      }
-      return;
-    }
-
-    if (!('IntersectionObserver' in window)) {
-      video.setAttribute('preload', 'metadata');
-      video.play().catch(function () {});
-      return;
-    }
-
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          video.setAttribute('preload', 'metadata');
-          video.play().catch(function () {});
-          observer.disconnect();
-        }
-      });
-    }, { rootMargin: '120px' });
-
-    observer.observe(video);
-  }
-
   initHeroMedia();
-  lazyPlayConfigVideo();
 
   StoffusModels.load().then(function (data) {
     initHero(data);

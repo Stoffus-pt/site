@@ -726,6 +726,18 @@ a { color: inherit; }
     grid-template-columns: 1.1fr 0.9fr;
     position: relative;
   }
+  .config-block--reverse {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+  .config-block--reverse .config-block__media {
+    order: 2;
+    border-right: none;
+    border-left: 1px solid var(--border);
+  }
+  .config-block--reverse .config-block__copy {
+    order: 1;
+    padding: 2.5rem 0 2.5rem 2.25rem;
+  }
   .config-block__media {
     border-bottom: none;
     border-right: 1px solid var(--border);
