@@ -225,6 +225,7 @@
       '<button class="cms-tab' + (tab === 'pages' ? ' is-active' : '') + '" data-tab="pages" type="button">Páginas</button>' +
       '<button class="cms-tab' + (tab === 'nav' ? ' is-active' : '') + '" data-tab="nav" type="button">Menu</button>' +
       '<button class="cms-tab' + (tab === 'catalog' ? ' is-active' : '') + '" data-tab="catalog" type="button">Catálogo</button>' +
+      '<button class="cms-tab' + (tab === 'fabrics' ? ' is-active' : '') + '" data-tab="fabrics" type="button">Tecidos</button>' +
       '</div><div class="cms-panel">';
 
     if (tab === 'pages') {
@@ -239,6 +240,9 @@
           '</div></article>';
       });
       html += '</div>';
+    } else if (tab === 'fabrics') {
+      html += '<p class="cms-hint">Visibilidade, capa e textos de marketing das colecções. Códigos e gamas vêm do Studio3D (<code>npm run fabrics:sync</code>).</p>' +
+        '<iframe class="cms-photos-frame" title="Gestão de tecidos" src="../tools/fabrics-manager.html?cms=1"></iframe>';
     } else if (tab === 'catalog') {
       var photoTool = state.photoTool || 'models';
       html += '<div class="cms-tabs cms-tabs--sub">' +

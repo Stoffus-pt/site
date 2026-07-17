@@ -477,11 +477,28 @@ a { color: inherit; }
   pointer-events: none;
 }
 
-.hero__frame img {
+.hero__frame img,
+.hero__frame video,
+.hero__video {
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: center 42%;
+  display: block;
+  background: #1a1a1a;
+}
+
+.hero__static {
+  display: block;
+}
+
+.hero__static[hidden],
+.hero__video[hidden] {
+  display: none !important;
+}
+
+.hero__frame--video .hero__tag {
+  z-index: 2;
 }
 
 .hero__tag {
@@ -506,7 +523,9 @@ a { color: inherit; }
     padding: 4.5rem 0 5rem;
   }
 
-  .hero--spotlight .hero__frame img {
+  .hero--spotlight .hero__frame img,
+  .hero--spotlight .hero__frame video,
+  .hero--spotlight .hero__video {
     aspect-ratio: 16 / 11;
     min-height: 22rem;
   }
@@ -631,7 +650,15 @@ a { color: inherit; }
   border-bottom: 1px solid var(--border);
 }
 
-.config-block__media img { width: 100%; }
+.config-block__media img,
+.config-block__media video,
+.config-block__video {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #1a1a1a;
+}
 
 .config-block__copy {
   padding: 0 1.75rem 2rem;
@@ -1491,6 +1518,50 @@ body.page-minimal:not(.page-rich) .section--warm {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.25rem;
+}
+
+.model-panel {
+  margin-top: 1.75rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--border);
+}
+
+.model-panel h2 {
+  margin: 0 0 0.85rem;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.model-specs {
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.model-specs__row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.4fr) 1fr;
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.model-specs__row:last-child {
+  border-bottom: none;
+}
+
+.model-specs__row dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.model-specs__row dd {
+  margin: 0;
+  color: var(--ink-deep);
 }
 
 @media (min-width: 900px) {
@@ -2654,11 +2725,14 @@ body.page-minimal:not(.page-rich) .section--warm {
   border: 1px solid var(--border);
 }
 
-.s3d-demo img {
+.s3d-demo img,
+.s3d-demo video,
+.s3d-demo__video {
   width: 100%;
   display: block;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  background: #1a1a1a;
 }
 
 @media (min-width: 900px) {

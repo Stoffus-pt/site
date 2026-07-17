@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tecidos — capas e visibilidade</title>
+  <link rel="stylesheet" href="../css/fonts.css" />
+  <style>
+    :root { --brand:#e84c26; --ink:#2d2a2c; --muted:#6b6568; --border:#ddd8d4; --bg:#f0eeec; --card:#fff; --ok:#1a7f37; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width:1100px; margin:0 auto; padding:1rem; }
+    body.is-embedded .wrap { max-width:none; }
+    body.is-embedded h1 { font-size:1.15rem; margin-bottom:.35rem; }
+    body.is-embedded .lead { display:none; }
+    h1 { margin:0 0 .35rem; font-size:1.35rem; }
+    .lead { margin:0 0 1rem; color:var(--muted); line-height:1.5; max-width:52rem; }
+    .toolbar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+    .btn { border:none; padding:.55rem .85rem; cursor:pointer; font-size:.75rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+    .btn--brand { background:var(--brand); color:#fff; }
+    .btn--outline { background:#fff; border:1px solid var(--ink); color:var(--ink); }
+    .status { color:var(--muted); font-size:.85rem; white-space:pre-wrap; }
+    .status.is-ok { color:var(--ok); }
+    .status.is-err { color:#b42318; }
+    .filters { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+    .filters input, .filters select {
+      padding:.5rem .65rem; border:1px solid var(--border); font:inherit; background:#fff;
+    }
+    .grid { display:grid; gap:.75rem; }
+    .card {
+      display:grid; grid-template-columns:88px 1fr auto; gap:.85rem; align-items:start;
+      background:var(--card); border:1px solid var(--border); padding:.85rem;
+    }
+    @media (max-width:700px) { .card { grid-template-columns:1fr; } }
+    .card img { width:88px; height:88px; object-fit:cover; background:#eee; border:1px solid var(--border); }
+    .card h3 { margin:0 0 .25rem; font-size:1rem; }
+    .card .meta { margin:0 0 .5rem; color:var(--muted); font-size:.8rem; }
+    label { display:grid; gap:.3rem; margin-bottom:.55rem; font-size:.78rem; font-weight:600; }
+    input[type=text], textarea { width:100%; padding:.45rem .55rem; border:1px solid var(--border); font:inherit; }
+    textarea { min-height:2.8rem; resize:vertical; }
+    .checks { display:flex; align-items:center; gap:.4rem; font-weight:500; margin-bottom:.55rem; }
+    .checks input { width:auto; }
+    .actions { display:flex; flex-direction:column; gap:.4rem; min-width:7rem; }
+    .badge { display:inline-block; font-size:.65rem; letter-spacing:.04em; text-transform:uppercase; padding:.15rem .35rem; background:#eee; }
+    .badge--off { background:#f8d7da; color:#842029; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Tecidos no site</h1>
+    <p class="lead">
+      As colecções e códigos vêm do catálogo Studio3D. Aqui gere apenas o que é específico do site:
+      visibilidade, capa e texto de marketing. Depois de guardar, o sync regenera <code>fabrics.json</code> quando o Node estiver disponível.
+    </p>
+
+    <div class="toolbar">
+      <button type="button" class="btn btn--outline" id="btn-reload">Actualizar lista</button>
+      <button type="button" class="btn btn--brand" id="btn-sync">Sincronizar catálogo</button>
+      <span class="status" id="status"></span>
+    </div>
+
+    <div class="filters">
+      <input type="search" id="filter-q" placeholder="Pesquisar colecção…" />
+      <select id="filter-gama">
+        <option value="">Todas as gamas</option>
+      </select>
+      <select id="filter-show">
+        <option value="">Visibilidade</option>
+        <option value="1">Visíveis</option>
+        <option value="0">Ocultas</option>
+      </select>
+    </div>
+
+    <div class="grid" id="list"></div>
+  </div>
+  <script src="fabrics-manager.js"></script>
+</body>
+</html>

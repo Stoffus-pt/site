@@ -1,76 +1,78 @@
 Publicar o site Stoffus online
 ==============================
 
-FASE DE TESTES — ver no GitHub (sem FTP)
-----------------------------------------
+Dois ambientes
+--------------
+1) Pré-visualização (testes): GitHub Pages
+   https://stoffus-pt.github.io/site/
+   Actualiza ~2 min após cada push para main.
+   Sem PHP/CMS — só HTML/CSS/JS/assets.
+
+2) Produção (site oficial): alojamento stoffus.pt
+   CMS PHP, formulários, uploads.
+   É este o URL “público” para clientes.
+
+
+FASE DE TESTES — GitHub Pages
+-----------------------------
 Cada push para main actualiza automaticamente a pré-visualização:
 
   https://stoffus-pt.github.io/site/
 
-1. GitHub → repositório Stoffus-pt/site → Settings → Pages
-2. Em "Build and deployment", escolha Source: **GitHub Actions**
-3. Faça push para main (ou Actions → "Pré-visualização (GitHub Pages)" → Run)
-
-Inclui: páginas HTML, catálogo, fotos, modelos (models.json).
-NÃO inclui: CMS (PHP), upload de fotos pelo browser.
-
-Quando quiser editar textos pelo CMS online, use o alojamento stoffus.pt
-(secção abaixo).
+1. GitHub → Stoffus-pt/site → Settings → Pages
+2. Source: GitHub Actions
+3. Push para main (ou Actions → "Pré-visualização (GitHub Pages)" → Run)
 
 
-PRODUÇÃO — stoffus.pt (com CMS PHP)
------------------------------------
-Para VER o site no alojamento real precisa de publicar num servidor com PHP.
+PRODUÇÃO — stoffus.pt (FTP)
+---------------------------
+O workflow "Publicar site (FTP)" está em modo manual
+(workflow_dispatch) para evitar falhas enquanto não houver
+credenciais. Depois de configurar os secrets, publique assim:
 
-OPÇÃO A — Automático (recomendado)
-----------------------------------
-Cada vez que fizer push para o GitHub, o site actualiza-se sozinho.
+1. Fornecedor de alojamento: servidor FTP, utilizador, password,
+   pasta remota (ex: /public_html/site/)
 
-1. Peça ao vosso fornecedor de alojamento (ou quem gere o stoffus.pt):
-   - Servidor FTP (ex: ftp.stoffus.pt)
-   - Utilizador e palavra-passe FTP
-   - Pasta de destino (ex: /public_html/site/ ou /public_html/novo/)
-
-2. No GitHub: https://github.com/Stoffus-pt/site
-   → Settings → Secrets and variables → Actions → New repository secret
-
-   Crie estes segredos:
+2. GitHub → Stoffus-pt/site → Settings → Secrets and variables → Actions
+   Secrets obrigatórios:
    | Nome            | Exemplo              |
    |-----------------|----------------------|
    | FTP_SERVER      | ftp.stoffus.pt       |
    | FTP_USERNAME    | o_vosso_user         |
    | FTP_PASSWORD    | a_vossa_password     |
    | FTP_REMOTE_DIR  | /public_html/site/   |
+   Opcional: FTP_PORT (default 21)
 
 3. GitHub → Actions → "Publicar site (FTP)" → Run workflow
-   (ou faça push para main)
 
-4. Abra no browser:
+4. Confirmar:
    https://stoffus.pt/site/index.html
-   (ou o URL que corresponda à pasta FTP_REMOTE_DIR)
+   CMS: https://stoffus.pt/site/cms/  (ou /cms/ conforme pasta)
 
-CMS online: https://stoffus.pt/cms/
-(na primeira visita, crie utilizador e palavra-passe)
+NÃO enviar cms/config.php se já existir no servidor com password.
 
-
-OPÇÃO B — Manual (FileZilla / cPanel)
--------------------------------------
-1. Ligue por FTP ao alojamento
-2. Envie TODO o conteúdo da pasta "site" para a pasta no servidor
-3. NÃO envie cms/config.php se já existir no servidor com password
-4. PHP 8+ tem de estar activo no alojamento
+Manual (FileZilla / cPanel): enviar o conteúdo de "site/",
+excluindo cms/config.php, node_modules, .git, backups.
 
 
-Versão de teste (não substituir o site actual)
-----------------------------------------------
-Peça um subdomínio, por exemplo: novo.stoffus.pt
-Aponte para uma pasta vazia e use FTP_REMOTE_DIR para essa pasta.
-Assim testa o site novo sem afectar o WordPress/site actual.
+Fluxo recomendado
+-----------------
+1. Alterar localmente → push → validar em GitHub Pages
+2. Quando estável → Actions → Publicar site (FTP)
+3. Validar em stoffus.pt (CMS, formulários, fotos)
+
+
+Tecidos
+-------
+Fonte Studio3D: npm run fabrics:sync (em site/)
+Overrides de capas/textos/visibilidade: CMS → separador Tecidos
+  (grava data/fabrics-site.json e tenta regenerar fabrics.json)
 
 
 Notas
 -----
-- Upload de fotos no CMS online exige Node.js no servidor (raro em alojamento
-  partilhado). Alternativa: carregar fotos localmente, git push, deploy FTP.
-- O repositório GitHub continua a ser backup + histórico; o site "vivo" está
-  no alojamento stoffus.pt.
+- Upload de fotos no CMS online exige Node.js no servidor
+  (raro em alojamento partilhado). Alternativa: fotos locais +
+  git push + deploy FTP.
+- O repositório GitHub é backup + histórico; o site “vivo”
+  está no alojamento stoffus.pt.

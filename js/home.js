@@ -1,4 +1,32 @@
 (function () {
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function initHeroMedia() {
+    var video = document.getElementById('hero-feature-video');
+    var staticEl = document.getElementById('hero-feature-static');
+    if (!video || !staticEl) return;
+
+    if (prefersReducedMotion()) {
+      video.hidden = true;
+      video.removeAttribute('autoplay');
+      try { video.pause(); } catch (e) {}
+      staticEl.hidden = false;
+      return;
+    }
+
+    staticEl.hidden = true;
+    video.hidden = false;
+    var play = video.play();
+    if (play && typeof play.catch === 'function') {
+      play.catch(function () {
+        video.hidden = true;
+        staticEl.hidden = false;
+      });
+    }
+  }
+
   function initHero(data) {
     var feature = data && data.heroFeature;
     if (!feature || !feature.model) return;
@@ -15,16 +43,22 @@
     var pageUrl = site.modelPage ? site.modelPage(model.id) : ('modelo.html?id=' + model.id);
     var link = document.getElementById('hero-feature-link');
     var img = document.getElementById('hero-feature-photo');
+    var video = document.getElementById('hero-feature-video');
     var tag = document.getElementById('hero-feature-tag');
     var label = document.getElementById('hero-label');
     var typePart = String(model.tag || '').split('·').pop().trim();
+    var webp = String(slot.png || '').replace(/\.png$/i, '.webp');
 
     if (link) link.href = pageUrl;
-    if (tag) tag.textContent = model.name + (typePart ? ' · ' + typePart : '');
+    if (tag) tag.textContent = model.name + ' · Stoffus 3D';
     if (label && model.novidade) label.textContent = 'Novidade · Eleganza Collection';
 
+    if (video) {
+      video.setAttribute('poster', webp);
+      video.setAttribute('aria-label', 'Stoffus 3D — ' + model.name);
+    }
+
     if (img) {
-      // Usar PNG completo no hero — miniaturas -md/-sm podem ainda não existir para o slot em destaque
       img.removeAttribute('srcset');
       img.removeAttribute('sizes');
       img.src = slot.png;
@@ -32,6 +66,9 @@
       img.dataset.fallback = slot.png;
       img.dataset.iconFallback = slot.icon;
       StoffusModels.bindImageFallback(img);
+
+      var source = img.parentElement && img.parentElement.querySelector('source[type="image/webp"]');
+      if (source) source.setAttribute('srcset', webp);
     }
   }
 
@@ -62,6 +99,38 @@
       grid.appendChild(card);
     });
   }
+
+  function lazyPlayConfigVideo() {
+    var video = document.querySelector('.config-block__video');
+    if (!video || prefersReducedMotion()) {
+      if (video) {
+        video.removeAttribute('autoplay');
+        try { video.pause(); } catch (e) {}
+      }
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      video.setAttribute('preload', 'metadata');
+      video.play().catch(function () {});
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          video.setAttribute('preload', 'metadata');
+          video.play().catch(function () {});
+          observer.disconnect();
+        }
+      });
+    }, { rootMargin: '120px' });
+
+    observer.observe(video);
+  }
+
+  initHeroMedia();
+  lazyPlayConfigVideo();
 
   StoffusModels.load().then(function (data) {
     initHero(data);

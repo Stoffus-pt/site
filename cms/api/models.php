@@ -99,6 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'novidade' => $model['novidade'] ?? false,
             'configurator' => $model['configurator'] ?? true,
             'description' => $model['description'] ?? '',
+            'measurements' => $model['measurements'] ?? [],
+            'options' => $model['options'] ?? [],
+            'related' => $model['related'] ?? [],
+            'pdf' => $model['pdf'] ?? '',
         ];
 
         if (!empty($defaults['photo'])) {

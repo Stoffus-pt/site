@@ -505,7 +505,19 @@
             "photoCount": 3,
             "catalogSlot": 2,
             "novidade": true,
-            "description": "Novo pendular da Eleganza Collection, com movimento pendular suave para descanso progressivo."
+            "description": "Novo pendular da Eleganza Collection, com movimento pendular suave para descanso progressivo.",
+            "measurements": [
+                { "label": "Profundidade", "value": "aprox. 105 cm" },
+                { "label": "Altura", "value": "aprox. 95 cm" },
+                { "label": "Largura", "value": "composições modulares sob consulta" }
+            ],
+            "options": [
+                "Movimento pendular suave",
+                "Centenas de revestimentos Eleganza",
+                "Configuração no Stoffus 3D",
+                "Orçamento PDF e partilha por link"
+            ],
+            "related": ["altieri", "oasis", "syros", "orsini"]
         },
         {
             "id": "altieri",
@@ -521,7 +533,17 @@
             "photoOrder": [
                 1,
                 2
-            ]
+            ],
+            "measurements": [
+                { "label": "Assento", "value": "generoso, profundidade confortável" },
+                { "label": "Composição", "value": "módulos combináveis sob consulta" }
+            ],
+            "options": [
+                "Modular relax",
+                "Disponível em lojas parceiras",
+                "Centenas de tecidos e peles Eleganza"
+            ],
+            "related": ["magnum", "oasis", "syros"]
         },
         {
             "id": "oasis",

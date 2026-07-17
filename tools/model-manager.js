@@ -272,6 +272,12 @@
             '<label>Etiqueta (tag)<input type="text" name="tag" value="' + esc(model.tag) + '" placeholder="Puff · Cilíndrico" /></label>' +
           '</div>' +
           '<label>Descrição<textarea name="description">' + esc(model.description) + '</textarea></label>' +
+          '<label>Medidas (uma por linha: Etiqueta | Valor)<textarea name="measurements" rows="4" placeholder="Largura | a partir de 220 cm">' + esc(measurementsToText(model.measurements)) + '</textarea></label>' +
+          '<label>Opções (uma por linha)<textarea name="options" rows="4" placeholder="Movimento pendular">' + esc((model.options || []).join('\n')) + '</textarea></label>' +
+          '<div class="grid2">' +
+            '<label>Também gosta de (IDs separados por vírgula)<input type="text" name="related" value="' + esc((model.related || []).join(', ')) + '" placeholder="altieri, oasis, syros" /></label>' +
+            '<label>PDF do modelo (caminho)<input type="text" name="pdf" value="' + esc(model.pdf || '') + '" placeholder="assets/pdfs/magnum.pdf" /></label>' +
+          '</div>' +
           '<div class="checks">' +
             '<label><input type="checkbox" name="photo"' + (model.photo ? ' checked' : '') + ' /> Usa fotografias</label>' +
             '<label><input type="checkbox" name="novidade"' + (model.novidade ? ' checked' : '') + ' /> Novidade</label>' +
@@ -312,6 +318,12 @@
             '<label>Etiqueta (tag)<input type="text" name="tag" placeholder="Puff · Cilíndrico" /></label>' +
           '</div>' +
           '<label>Descrição<textarea name="description" placeholder="Texto curto para a página do modelo."></textarea></label>' +
+          '<label>Medidas (Etiqueta | Valor)<textarea name="measurements" rows="3" placeholder="Largura | a partir de 220 cm"></textarea></label>' +
+          '<label>Opções (uma por linha)<textarea name="options" rows="3"></textarea></label>' +
+          '<div class="grid2">' +
+            '<label>Também gosta de (IDs)<input type="text" name="related" placeholder="altieri, oasis" /></label>' +
+            '<label>PDF do modelo<input type="text" name="pdf" placeholder="assets/pdfs/modelo.pdf" /></label>' +
+          '</div>' +
           '<div class="checks">' +
             '<label><input type="checkbox" name="photo" checked /> Usa fotografias</label>' +
             '<label><input type="checkbox" name="novidade" /> Novidade</label>' +
@@ -330,6 +342,28 @@
     bindCreateForm();
   }
 
+  function measurementsToText(rows) {
+    if (!Array.isArray(rows) || !rows.length) return '';
+    return rows.map(function (row) {
+      return String((row && row.label) || '').trim() + ' | ' + String((row && row.value) || '').trim();
+    }).join('\n');
+  }
+
+  function parseMeasurements(text) {
+    return String(text || '').split(/\r\n|\r|\n/).map(function (line) {
+      line = line.trim();
+      if (!line) return null;
+      var parts = line.split('|');
+      if (parts.length === 1) parts = line.split(/\t|:|;/);
+      return {
+        label: String(parts[0] || '').trim(),
+        value: String(parts.slice(1).join('|') || '').trim(),
+      };
+    }).filter(function (row) {
+      return row && (row.label || row.value);
+    });
+  }
+
   function formPayload(form) {
     var fd = new FormData(form);
     return {
@@ -338,6 +372,10 @@
       type: String(fd.get('type') || 'relax'),
       tag: String(fd.get('tag') || '').trim(),
       description: String(fd.get('description') || '').trim(),
+      measurements: parseMeasurements(fd.get('measurements')),
+      options: String(fd.get('options') || '').split(/\r\n|\r|\n/).map(function (s) { return s.trim(); }).filter(Boolean),
+      related: String(fd.get('related') || '').split(/[\s,;]+/).map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean),
+      pdf: String(fd.get('pdf') || '').trim(),
       photo: !!form.querySelector('[name=photo]').checked,
       novidade: !!form.querySelector('[name=novidade]').checked,
       configurator: !!form.querySelector('[name=configurator]').checked,
@@ -395,6 +433,10 @@
           type: payload.type,
           tag: payload.tag,
           description: payload.description,
+          measurements: payload.measurements,
+          options: payload.options,
+          related: payload.related,
+          pdf: payload.pdf,
           photo: payload.photo,
           novidade: payload.novidade,
           configurator: payload.configurator,

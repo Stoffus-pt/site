@@ -291,6 +291,66 @@ function cms_sanitize_model_payload(array $input, bool $isCreate = false): array
         $model['photoOrder'] = cms_normalize_photo_order($count, $input['photoOrder']);
     }
 
+    if (array_key_exists('measurements', $input)) {
+        $measurements = [];
+        if (is_array($input['measurements'])) {
+            foreach ($input['measurements'] as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $label = trim((string) ($row['label'] ?? ''));
+                $value = trim((string) ($row['value'] ?? ''));
+                if ($label === '' && $value === '') {
+                    continue;
+                }
+                $measurements[] = ['label' => $label, 'value' => $value];
+            }
+        }
+        $model['measurements'] = $measurements;
+    }
+
+    if (array_key_exists('options', $input)) {
+        $options = [];
+        if (is_array($input['options'])) {
+            foreach ($input['options'] as $opt) {
+                $text = trim((string) $opt);
+                if ($text !== '') {
+                    $options[] = $text;
+                }
+            }
+        } elseif (is_string($input['options'])) {
+            foreach (preg_split('/\r\n|\r|\n/', $input['options']) as $line) {
+                $text = trim($line);
+                if ($text !== '') {
+                    $options[] = $text;
+                }
+            }
+        }
+        $model['options'] = $options;
+    }
+
+    if (array_key_exists('related', $input)) {
+        $related = [];
+        $raw = $input['related'];
+        if (is_string($raw)) {
+            $raw = preg_split('/[\s,;]+/', $raw) ?: [];
+        }
+        if (is_array($raw)) {
+            foreach ($raw as $relId) {
+                $relId = strtolower(trim((string) $relId));
+                if (cms_validate_model_id($relId) && !in_array($relId, $related, true)) {
+                    $related[] = $relId;
+                }
+            }
+        }
+        $model['related'] = $related;
+    }
+
+    if (array_key_exists('pdf', $input)) {
+        $pdf = trim((string) $input['pdf']);
+        $model['pdf'] = $pdf;
+    }
+
     return $model;
 }
 
