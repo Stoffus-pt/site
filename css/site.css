@@ -514,6 +514,16 @@ a { color: inherit; }
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
   color: var(--ink-deep);
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+a.hero__tag:hover {
+  background: #fff;
+}
+
+.hero__frame.site-video .site-video__fs {
+  z-index: 3;
 }
 
 @media (min-width: 900px) {
