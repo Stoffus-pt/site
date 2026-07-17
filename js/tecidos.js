@@ -1,55 +1,4 @@
 (function () {
-  var GAMAS = {
-    B: { filter: 'bliss', label: 'Bliss' },
-    D: { filter: 'delta', label: 'Delta' },
-    E: { filter: 'pele', label: 'Pele Extra' },
-    P: { filter: 'pele', label: 'Pele Platina' }
-  };
-
-  var TEXTURE_LABELS = {
-    default: 'Tecido',
-    aveludado: 'Aveludado',
-    alinhado: 'Alinhado',
-    pele: 'Pele genuína'
-  };
-
-  var COLLECTIONS = [
-    { id: 'artis', name: 'Artis', prefix: 'B', start: 6001, end: 6007, texture: 'alinhado' },
-    { id: 'bella', name: 'Bella', prefix: 'B', start: 1057, end: 1063, texture: 'aveludado' },
-    { id: 'carmen', name: 'Carmen', prefix: 'B', start: 1127, end: 1133, texture: 'alinhado' },
-    { id: 'falcon', name: 'Falcon', prefix: 'B', start: 4092, end: 4098, texture: 'aveludado' },
-    { id: 'funky', name: 'Funky', prefix: 'B', start: 4106, end: 4112, texture: 'aveludado' },
-    { id: 'garby', name: 'Garby', prefix: 'B', start: 4078, end: 4084, texture: 'aveludado' },
-    { id: 'grift', name: 'Grift', prefix: 'B', start: 4008, end: 4014, texture: 'alinhado' },
-    { id: 'ifrane', name: 'Ifrane', prefix: 'B', start: 4036, end: 4042, texture: 'aveludado' },
-    { id: 'jade', name: 'Jade', prefix: 'B', start: 1145, end: 1151, texture: 'aveludado' },
-    { id: 'kamala', name: 'Kamala', prefix: 'B', start: 4071, end: 4077, texture: 'aveludado' },
-    { id: 'kamala2', name: 'Kamala 2', prefix: 'B', start: 1138, end: 1144, texture: 'aveludado' },
-    { id: 'karma', name: 'Karma', prefix: 'B', start: 4043, end: 4049, texture: 'alinhado' },
-    { id: 'matchy', name: 'Matchy', prefix: 'B', start: 4085, end: 4091, texture: 'aveludado' },
-    { id: 'mirage', name: 'Mirage', prefix: 'B', start: 4099, end: 4105, texture: 'aveludado' },
-    { id: 'pisa', name: 'Pisa', prefix: 'B', start: 1113, end: 1119, texture: 'alinhado' },
-    { id: 'prisma', name: 'Prisma', prefix: 'B', start: 4022, end: 4028, texture: 'aveludado' },
-    { id: 'ramses', name: 'Ramses', prefix: 'B', start: 1015, end: 1021, texture: 'aveludado' },
-    { id: 'rissani', name: 'Rissani', prefix: 'B', start: 4057, end: 4063, texture: 'alinhado' },
-    { id: 'soft', name: 'Soft', prefix: 'B', start: 4015, end: 4021, texture: 'alinhado' },
-    { id: 'stancy', name: 'Stancy', prefix: 'B', start: 4029, end: 4035, texture: 'aveludado' },
-    { id: 'talia', name: 'Talia', prefix: 'B', start: 1043, end: 1049, texture: 'aveludado' },
-    { id: 'touareg', name: 'Touareg', prefix: 'B', start: 1106, end: 1112, texture: 'aveludado' },
-    { id: 'venturi', name: 'Venturi', prefix: 'B', start: 4050, end: 4056, texture: 'aveludado' },
-    { id: 'zemy', name: 'Zemy', prefix: 'B', start: 4001, end: 4007, texture: 'aveludado' },
-    { id: 'fumiko', name: 'Fumiko', prefix: 'D', start: 1001, end: 1007, texture: 'alinhado' },
-    { id: 'madoka', name: 'Madoka', prefix: 'D', start: 4008, end: 4014, texture: 'alinhado' },
-    { id: 'river', name: 'River', prefix: 'E', start: 1001, end: 1007, texture: 'pele' },
-    { id: 'siza', name: 'Siza', prefix: 'P', start: 1001, end: 1007, texture: 'pele' }
-  ];
-
-  var CONFIGURATOR = (window.StoffusSite && window.StoffusSite.configurator) || '/Studio3D/app.html';
-
-  function textureRemoteBase() {
-    return (window.StoffusSite && window.StoffusSite.textureRemote) || 'https://stoffus.pt/Studio3D/assets/textures/';
-  }
-
   var grid = document.getElementById('fabrics-grid');
   var filters = document.getElementById('fabrics-filters');
   var countEl = document.getElementById('fabrics-count');
@@ -65,20 +14,25 @@
 
   if (!grid || !filters || !modal) return;
 
+  var CONFIGURATOR = (window.StoffusSite && window.StoffusSite.configurator) || '/Studio3D/app.html';
+  var GAMAS = {};
+  var TEXTURE_LABELS = { default: 'Tecido' };
+  var COLLECTIONS = [];
   var currentFilter = 'all';
   var lastFocus = null;
 
-  function textureFolderName(col) {
-    return col.name === 'Kamala 2' ? 'Kamala2' : col.name;
+  function textureRemoteBase() {
+    return (window.StoffusSite && window.StoffusSite.textureRemote) || 'https://stoffus.pt/Studio3D/assets/textures/';
   }
 
   function textureUrl(col, fileIndex) {
-    var file = encodeURIComponent(textureFolderName(col) + ' ' + fileIndex + '.jpg');
+    var folder = col.textureFolder || col.name;
+    var file = encodeURIComponent(folder + ' ' + fileIndex + '.jpg');
     return textureRemoteBase() + file;
   }
 
   function colorCount(col) {
-    return col.end - col.start + 1;
+    return col.colorCount || (col.end - col.start + 1);
   }
 
   function colorCode(col, fileIndex) {
@@ -86,8 +40,7 @@
   }
 
   function fabricIdFor(col, fileIndex) {
-    var key = col.name.toLowerCase().replace(/\s/g, '');
-    return key + '_' + colorCode(col, fileIndex);
+    return col.id + '_' + colorCode(col, fileIndex);
   }
 
   function fabricConfiguratorUrl(fabricId) {
@@ -107,6 +60,7 @@
   }
 
   function cardThumb(col) {
+    if (col.cover) return col.cover;
     if (window.StoffusSite && window.StoffusSite.isGithubPreview) {
       return textureUrl(col, 1);
     }
@@ -128,8 +82,15 @@
     img.src = primary;
   }
 
+  function gamaFor(col) {
+    if (col.gamaLabel) {
+      return { filter: col.gama || 'all', label: col.gamaLabel };
+    }
+    return GAMAS[col.prefix] || { label: col.prefix, filter: col.gama || 'all' };
+  }
+
   function renderCard(col) {
-    var gama = GAMAS[col.prefix] || { label: col.prefix, filter: 'all' };
+    var gama = gamaFor(col);
     var textureLabel = TEXTURE_LABELS[col.texture] || TEXTURE_LABELS.default;
     var colors = colorCount(col);
     var codeRange = col.prefix + col.start + ' – ' + col.prefix + col.end;
@@ -148,6 +109,7 @@
       '<div class="fabric-card__body">' +
         '<h3 class="fabric-card__title">' + col.name + '</h3>' +
         '<p class="fabric-card__meta">' + textureLabel + ' · ' + colors + ' cores</p>' +
+        (col.description ? '<p class="fabric-card__desc">' + col.description + '</p>' : '') +
         '<p class="fabric-card__codes">' + codeRange + '</p>' +
         '<button type="button" class="fabric-card__link" data-open-fabric="' + col.id + '">Ver paleta de cores</button>' +
         '<a class="fabric-card__config" href="#" data-fabric-id="' + fabricIdFor(col, 1) + '">Ver no configurador</a>' +
@@ -189,7 +151,7 @@
   function openModal(col) {
     if (!col) return;
 
-    var gama = GAMAS[col.prefix] || { label: col.prefix };
+    var gama = gamaFor(col);
     var textureLabel = TEXTURE_LABELS[col.texture] || TEXTURE_LABELS.default;
     var colors = colorCount(col);
 
@@ -252,8 +214,8 @@
   function getFiltered() {
     if (currentFilter === 'all') return COLLECTIONS.slice();
     return COLLECTIONS.filter(function (col) {
-      var gama = GAMAS[col.prefix];
-      return gama && gama.filter === currentFilter;
+      var gama = gamaFor(col);
+      return gama.filter === currentFilter;
     });
   }
 
@@ -274,47 +236,70 @@
     }
   }
 
-  grid.addEventListener('click', function (e) {
-    var trigger = e.target.closest('[data-open-fabric]');
-    if (!trigger) return;
-    var col = getCollectionById(trigger.dataset.openFabric);
-    if (col) openModal(col);
-  });
-
-  filters.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-filter]');
-    if (!btn) return;
-
-    currentFilter = btn.dataset.filter;
-    filters.querySelectorAll('[data-filter]').forEach(function (el) {
-      el.classList.toggle('is-active', el === btn);
-      el.setAttribute('aria-pressed', el === btn ? 'true' : 'false');
+  function bindUi() {
+    grid.addEventListener('click', function (e) {
+      var trigger = e.target.closest('[data-open-fabric]');
+      if (!trigger) return;
+      var col = getCollectionById(trigger.dataset.openFabric);
+      if (col) openModal(col);
     });
-    renderGrid();
-  });
 
-  modal.addEventListener('click', function (e) {
-    if (e.target.closest('[data-fabric-close]')) {
-      closeModal();
+    filters.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-filter]');
+      if (!btn) return;
+
+      currentFilter = btn.dataset.filter;
+      filters.querySelectorAll('[data-filter]').forEach(function (el) {
+        el.classList.toggle('is-active', el === btn);
+        el.setAttribute('aria-pressed', el === btn ? 'true' : 'false');
+      });
+      renderGrid();
+    });
+
+    modal.addEventListener('click', function (e) {
+      if (e.target.closest('[data-fabric-close]')) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (modal.hidden) return;
+      if (e.key === 'Escape') closeModal();
+    });
+
+    if (modalConfig) {
+      modalConfig.addEventListener('click', function () {
+        var fabricId = modalConfig.getAttribute('data-fabric-id');
+        if (fabricId) modalConfig.href = fabricConfiguratorUrl(fabricId);
+      });
     }
-  });
+  }
 
-  document.addEventListener('keydown', function (e) {
-    if (modal.hidden) return;
-    if (e.key === 'Escape') closeModal();
-  });
+  function init(data) {
+    GAMAS = data.gamas || {};
+    TEXTURE_LABELS = data.textureLabels || TEXTURE_LABELS;
+    COLLECTIONS = data.collections || [];
 
-  if (modalConfig) {
-    modalConfig.addEventListener('click', function () {
-      var fabricId = modalConfig.getAttribute('data-fabric-id');
-      if (fabricId) modalConfig.href = fabricConfiguratorUrl(fabricId);
+    bindUi();
+    renderGrid();
+
+    if (location.hash.length > 1) {
+      var fromHash = getCollectionById(location.hash.slice(1));
+      if (fromHash) openModal(fromHash);
+    }
+  }
+
+  fetch('data/fabrics.json')
+    .then(function (res) {
+      if (!res.ok) throw new Error('fabrics.json');
+      return res.json();
+    })
+    .then(init)
+    .catch(function () {
+      if (countEl) countEl.textContent = 'Catálogo indisponível';
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        emptyEl.textContent = 'Não foi possível carregar o catálogo de tecidos.';
+      }
     });
-  }
-
-  renderGrid();
-
-  if (location.hash.length > 1) {
-    var fromHash = getCollectionById(location.hash.slice(1));
-    if (fromHash) openModal(fromHash);
-  }
 })();
