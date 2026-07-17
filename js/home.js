@@ -1,32 +1,4 @@
 (function () {
-  function prefersReducedMotion() {
-    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }
-
-  function initHeroMedia() {
-    var video = document.getElementById('hero-feature-video');
-    var staticEl = document.getElementById('hero-feature-static');
-    if (!video || !staticEl) return;
-
-    if (prefersReducedMotion()) {
-      video.hidden = true;
-      video.removeAttribute('autoplay');
-      try { video.pause(); } catch (e) {}
-      staticEl.hidden = false;
-      return;
-    }
-
-    staticEl.hidden = true;
-    video.hidden = false;
-    var play = video.play();
-    if (play && typeof play.catch === 'function') {
-      play.catch(function () {
-        video.hidden = true;
-        staticEl.hidden = false;
-      });
-    }
-  }
-
   function initHero(data) {
     var feature = data && data.heroFeature;
     if (!feature || !feature.model) return;
@@ -43,20 +15,14 @@
     var pageUrl = site.modelPage ? site.modelPage(model.id) : ('modelo.html?id=' + model.id);
     var link = document.getElementById('hero-feature-link');
     var img = document.getElementById('hero-feature-photo');
-    var video = document.getElementById('hero-feature-video');
     var tag = document.getElementById('hero-feature-tag');
     var label = document.getElementById('hero-label');
     var typePart = String(model.tag || '').split('·').pop().trim();
     var webp = String(slot.png || '').replace(/\.png$/i, '.webp');
 
     if (link) link.href = pageUrl;
-    if (tag) tag.textContent = model.name + ' · Stoffus 3D';
+    if (tag) tag.textContent = model.name + (typePart ? ' · ' + typePart : '');
     if (label && model.novidade) label.textContent = 'Novidade · Eleganza Collection';
-
-    if (video) {
-      video.setAttribute('poster', webp);
-      video.setAttribute('aria-label', 'Stoffus 3D — ' + model.name);
-    }
 
     if (img) {
       img.removeAttribute('srcset');
@@ -99,8 +65,6 @@
       grid.appendChild(card);
     });
   }
-
-  initHeroMedia();
 
   StoffusModels.load().then(function (data) {
     initHero(data);
