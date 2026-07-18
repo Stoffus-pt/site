@@ -43,6 +43,7 @@
     var reduce = prefersReducedMotion();
     var switching = false;
     var fadeArmed = false;
+    var shouldLoop = root.getAttribute('data-loop') !== 'false';
 
     function current() {
       return playlist[index] || null;
@@ -61,7 +62,7 @@
       if (!playlist.length) return;
       index = ((i % playlist.length) + playlist.length) % playlist.length;
       var item = current();
-      video.loop = playlist.length === 1;
+      video.loop = shouldLoop && playlist.length === 1;
       fadeArmed = false;
       if (item.poster) video.setAttribute('poster', item.poster);
       else video.removeAttribute('poster');
@@ -126,6 +127,15 @@
     });
 
     video.addEventListener('ended', function () {
+      if (!shouldLoop && playlist.length === 1) {
+        try {
+          video.pause();
+          if (video.duration && isFinite(video.duration)) {
+            video.currentTime = Math.max(0, video.duration - 0.04);
+          }
+        } catch (e) {}
+        return;
+      }
       if (switching || playlist.length < 2) return;
       goTo(index + 1, true);
     });
