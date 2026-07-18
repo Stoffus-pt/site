@@ -488,6 +488,14 @@ a { color: inherit; }
   background: #1a1a1a;
 }
 
+.hero__frame video.hero__video,
+.hero__frame .site-video__el.hero__video {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center center;
+  background: #1a1a1a;
+}
+
 .hero__static {
   display: block;
 }
@@ -533,11 +541,17 @@ a.hero__tag:hover {
     padding: 4.5rem 0 5rem;
   }
 
-  .hero--spotlight .hero__frame img,
-  .hero--spotlight .hero__frame video,
-  .hero--spotlight .hero__video {
+  .hero--spotlight .hero__frame img {
     aspect-ratio: 16 / 11;
     min-height: 22rem;
+  }
+
+  .hero--spotlight .hero__frame video.hero__video,
+  .hero--spotlight .hero__frame .site-video__el.hero__video {
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+    object-fit: cover;
+    object-position: center center;
   }
 }
 
