@@ -490,7 +490,7 @@ a { color: inherit; }
 
 .hero__frame video.hero__video,
 .hero__frame .site-video__el.hero__video {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1280 / 704;
   object-fit: cover;
   object-position: center center;
   background: #1a1a1a;
@@ -548,7 +548,7 @@ a.hero__tag:hover {
 
   .hero--spotlight .hero__frame video.hero__video,
   .hero--spotlight .hero__frame .site-video__el.hero__video {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 1280 / 704;
     min-height: 0;
     object-fit: cover;
     object-position: center center;
