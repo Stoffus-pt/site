@@ -28,7 +28,7 @@ const urls = staticPages.map((file) => ({
 
 (models.models || []).forEach((model) => {
   urls.push({
-    loc: `${base}/modelo.html?id=${encodeURIComponent(model.id)}`,
+    loc: `${base}/modelo/${encodeURIComponent(model.id)}/`,
     changefreq: 'monthly',
     priority: '0.7',
   });

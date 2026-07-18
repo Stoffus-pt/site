@@ -1,7 +1,7 @@
 {
   "meta": {
-    "syncedAt": "2026-07-17T09:50:21.587Z",
-    "catalogSource": "c:/Users/User/Desktop/Stoffus 3D/data/catalog/catalog-draft.json",
+    "syncedAt": "2026-07-18T13:28:47.982Z",
+    "catalogSource": "C:/Users/User/Desktop/Stoffus 3D/data/catalog/catalog-draft.json",
     "overrideSource": "data/fabrics-site.json",
     "catalogVersion": null,
     "collectionCount": 29
@@ -48,7 +48,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Linha Bliss alinhada — toque suave e leitura contemporânea para sofás de uso diário."
     },
     {
       "id": "bella",
@@ -63,7 +63,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss com presença táctil; ideal para ambientes acolhedores."
     },
     {
       "id": "carmen",
@@ -78,7 +78,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Alinhado Bliss — estrutura visual discreta e conforto duradouro."
     },
     {
       "id": "falcon",
@@ -93,7 +93,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss de carácter marcado; funciona bem em módulos relax."
     },
     {
       "id": "funky",
@@ -108,7 +108,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss com personalidade — destaque de cor sem perder elegância."
     },
     {
       "id": "garby",
@@ -123,7 +123,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss versátil para composições claras ou contrastes suaves."
     },
     {
       "id": "grift",
@@ -168,7 +168,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss com profundidade de tom; combina com pés lacados e metálicos."
     },
     {
       "id": "kamala",
@@ -183,7 +183,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss bestseller — toque aveludado e fácil de integrar em qualquer sala."
     },
     {
       "id": "kamala2",
@@ -198,7 +198,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Evolução Kamala: mesma família aveludada, nova leitura de cor."
     },
     {
       "id": "karma",
@@ -228,7 +228,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss pensado para combinações harmoniosas entre módulos."
     },
     {
       "id": "mirage",
@@ -273,7 +273,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Aveludado Bliss com jogo de luz; destaca volumes e chaise."
     },
     {
       "id": "ramses",
@@ -318,7 +318,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Alinhado Bliss de toque macio — escolha segura para famílias e pet friendly."
     },
     {
       "id": "stancy",
@@ -408,7 +408,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Gama Delta — alinhado com carácter técnico e boa resistência ao uso."
     },
     {
       "id": "madoka",
@@ -423,7 +423,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Gama Delta — alinhado contemporâneo para projectos de loja e hotelaria leve."
     },
     {
       "id": "barbados",
@@ -438,7 +438,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Gama Fashion — presença visual forte para quem quer o sofá como peça de destaque."
     },
     {
       "id": "river",
@@ -453,7 +453,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Pele genuína Extra — acabamento nobre com patina natural ao longo do tempo."
     },
     {
       "id": "siza",
@@ -468,7 +468,7 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": "Pele genuína Platina — toque premium para sofás de assinatura."
     }
   ]
 }

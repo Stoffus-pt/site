@@ -111,7 +111,8 @@
     pickRandomModelId: pickRandomModelId,
     loadModelIds: loadModelIds,
     modelPage: function (modelId) {
-      return 'modelo.html?id=' + encodeURIComponent(modelId);
+      if (!modelId) return 'catalogo.html';
+      return 'modelo/' + encodeURIComponent(modelId) + '/';
     },
     applyLinks: function () {
       var base = configuratorBase();

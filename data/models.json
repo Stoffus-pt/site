@@ -45,7 +45,34 @@
             "tag": "Chaise · Contemporâneo",
             "photo": true,
             "novidade": false,
-            "description": "Sofá modular com chaise, linhas contemporâneas e configuração flexível para salas amplas ou compactas."
+            "description": "Sofá modular com chaise, linhas contemporâneas e configuração flexível para salas amplas ou compactas.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "athena",
+                "bartini",
+                "enzo",
+                "fiori"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "athena",
@@ -54,7 +81,34 @@
             "tag": "Compacto · Modular",
             "photo": true,
             "novidade": false,
-            "description": "Modular compacto, ideal para apartamentos e projectos onde cada centímetro conta."
+            "description": "Modular compacto, ideal para apartamentos e projectos onde cada centímetro conta.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "bartini",
+                "enzo",
+                "fiori"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "bartini",
@@ -68,7 +122,34 @@
             "photoOrder": [
                 1,
                 2
-            ]
+            ],
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "enzo",
+                "fiori"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "enzo",
@@ -77,7 +158,34 @@
             "tag": "Atemporal · Modular",
             "photo": true,
             "novidade": false,
-            "description": "Design atemporal, modular e versátil para uso diário intenso."
+            "description": "Design atemporal, modular e versátil para uso diário intenso.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "bartini",
+                "fiori"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "fiori",
@@ -86,7 +194,34 @@
             "tag": "Relax · Modular",
             "photo": true,
             "novidade": false,
-            "description": "Mecanismo relax integrado num sofá modular de linhas suaves."
+            "description": "Mecanismo relax integrado num sofá modular de linhas suaves.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "bartini",
+                "enzo"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "dayma",
@@ -95,7 +230,34 @@
             "tag": "Modular · Conforto",
             "photo": true,
             "novidade": false,
-            "description": "Conforto generoso com módulos combináveis para família e projectos exigentes."
+            "description": "Conforto generoso com módulos combináveis para família e projectos exigentes.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "bartini",
+                "enzo"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "kindia",
@@ -104,7 +266,34 @@
             "tag": "Linhas suaves",
             "photo": true,
             "novidade": false,
-            "description": "Curvas suaves e assento confortável num formato modular equilibrado."
+            "description": "Curvas suaves e assento confortável num formato modular equilibrado.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "bartini",
+                "enzo"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "sting",
@@ -113,7 +302,34 @@
             "tag": "Presença marcante",
             "photo": true,
             "novidade": false,
-            "description": "Volumes assertivos e presença arquitectónica na sala."
+            "description": "Volumes assertivos e presença arquitectónica na sala.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "bartini",
+                "enzo"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "bianchi",
@@ -122,7 +338,34 @@
             "tag": "Modular · Relax",
             "photo": true,
             "novidade": false,
-            "description": "Modular relax com assento generoso e composições à medida."
+            "description": "Modular relax com assento generoso e composições à medida.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme módulos (consultar ficha)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme versão e costas"
+                },
+                {
+                    "label": "Composição",
+                    "value": "modular — chaise, canto e extensões"
+                }
+            ],
+            "options": [
+                "Configuração modular",
+                "Centenas de revestimentos Eleganza",
+                "Tecidos Easy Clean e Pet Friendly",
+                "Orçamento PDF no Stoffus 3D"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "bartini",
+                "enzo"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "bruma",
@@ -131,7 +374,33 @@
             "tag": "Fixo · Chaise",
             "photo": true,
             "novidade": false,
-            "description": "Modelo fixo com chaise integrada e perfil contemporâneo."
+            "description": "Modelo fixo com chaise integrada e perfil contemporâneo.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "fienza",
+                "kaori",
+                "polestar",
+                "rose"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "fienza",
@@ -140,7 +409,33 @@
             "tag": "Fixo · Modular",
             "photo": true,
             "novidade": false,
-            "description": "Sofá fixo de linha modular, equilíbrio entre forma e funcionalidade."
+            "description": "Sofá fixo de linha modular, equilíbrio entre forma e funcionalidade.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "bruma",
+                "kaori",
+                "polestar",
+                "rose"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "kaori",
@@ -150,7 +445,33 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Estética minimalista, ideal para interiores contemporâneos e limpos."
+            "description": "Estética minimalista, ideal para interiores contemporâneos e limpos.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "bruma",
+                "fienza",
+                "polestar",
+                "rose"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "polestar",
@@ -160,7 +481,33 @@
             "photo": true,
             "photoCount": 1,
             "novidade": false,
-            "description": "Configuração de canto fixa para optimizar o espaço da sala."
+            "description": "Configuração de canto fixa para optimizar o espaço da sala.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "bruma",
+                "fienza",
+                "kaori",
+                "rose"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "rose",
@@ -170,7 +517,33 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Linhas elegantes e assento confortável num formato fixo."
+            "description": "Linhas elegantes e assento confortável num formato fixo.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "bruma",
+                "fienza",
+                "kaori",
+                "polestar"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "spirit",
@@ -180,7 +553,33 @@
             "photo": true,
             "photoCount": 1,
             "novidade": false,
-            "description": "Assento amplo e presença generosa para salas de convívio."
+            "description": "Assento amplo e presença generosa para salas de convívio.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "bruma",
+                "fienza",
+                "kaori",
+                "polestar"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "moretti",
@@ -190,7 +589,33 @@
             "photo": true,
             "photoCount": 1,
             "novidade": false,
-            "description": "Novo modelo fixo da Eleganza Collection, disponível em centenas de revestimentos."
+            "description": "Novo modelo fixo da Eleganza Collection, disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "bruma",
+                "fienza",
+                "kaori",
+                "polestar"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "corsi",
@@ -200,7 +625,33 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Lançamento recente com linhas actuais e acabamento Stoffus."
+            "description": "Lançamento recente com linhas actuais e acabamento Stoffus.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                },
+                {
+                    "label": "Larguras",
+                    "value": "várias medidas sob consulta"
+                }
+            ],
+            "options": [
+                "Linhas definidas e estrutura estável",
+                "Centenas de revestimentos Eleganza",
+                "Acabamentos e pés configuráveis"
+            ],
+            "related": [
+                "bruma",
+                "fienza",
+                "kaori",
+                "polestar"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "infinity",
@@ -209,7 +660,32 @@
             "tag": "Deslizante eléctrico",
             "photo": true,
             "novidade": false,
-            "description": "Mecanismo deslizante eléctrico para máximo conforto de assento."
+            "description": "Mecanismo deslizante eléctrico para máximo conforto de assento.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "com deslizamento do assento"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas"
+                },
+                {
+                    "label": "Função",
+                    "value": "assento deslizante"
+                }
+            ],
+            "options": [
+                "Assento deslizante",
+                "Centenas de revestimentos Eleganza",
+                "Conforto para uso diário"
+            ],
+            "related": [
+                "orsini",
+                "magany",
+                "magic"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "magic",
@@ -219,7 +695,32 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Deslizante com função relax para uso diário confortável."
+            "description": "Deslizante com função relax para uso diário confortável.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "com deslizamento do assento"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas"
+                },
+                {
+                    "label": "Função",
+                    "value": "assento deslizante"
+                }
+            ],
+            "options": [
+                "Assento deslizante",
+                "Centenas de revestimentos Eleganza",
+                "Conforto para uso diário"
+            ],
+            "related": [
+                "orsini",
+                "magany",
+                "infinity"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "rinaldi",
@@ -229,7 +730,33 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Mecanismo pendular para posições de descanso progressivas."
+            "description": "Mecanismo pendular para posições de descanso progressivas.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "aprox. 105 cm (conforme versão)"
+                },
+                {
+                    "label": "Altura",
+                    "value": "aprox. 95 cm (conforme versão)"
+                },
+                {
+                    "label": "Movimento",
+                    "value": "pendular suave"
+                }
+            ],
+            "options": [
+                "Movimento pendular suave",
+                "Centenas de revestimentos Eleganza",
+                "Configuração no Stoffus 3D (quando disponível)"
+            ],
+            "related": [
+                "magnum",
+                "brittany",
+                "athena",
+                "bartini"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "martinelli",
@@ -239,7 +766,32 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Sofá-cama prático para salas que precisam de função extra."
+            "description": "Sofá-cama prático para salas que precisam de função extra.",
+            "measurements": [
+                {
+                    "label": "Modo sofá",
+                    "value": "medidas conforme composição"
+                },
+                {
+                    "label": "Modo cama",
+                    "value": "abertura sob consulta"
+                },
+                {
+                    "label": "Função",
+                    "value": "sofá-cama"
+                }
+            ],
+            "options": [
+                "Dupla função sofá e cama",
+                "Centenas de revestimentos Eleganza",
+                "Ideal para visitas e espaços versáteis"
+            ],
+            "related": [
+                "oasis",
+                "serena",
+                "sleepy"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "serena",
@@ -249,7 +801,32 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Sofá-cama confortável para visitas e uso ocasional."
+            "description": "Sofá-cama confortável para visitas e uso ocasional.",
+            "measurements": [
+                {
+                    "label": "Modo sofá",
+                    "value": "medidas conforme composição"
+                },
+                {
+                    "label": "Modo cama",
+                    "value": "abertura sob consulta"
+                },
+                {
+                    "label": "Função",
+                    "value": "sofá-cama"
+                }
+            ],
+            "options": [
+                "Dupla função sofá e cama",
+                "Centenas de revestimentos Eleganza",
+                "Ideal para visitas e espaços versáteis"
+            ],
+            "related": [
+                "oasis",
+                "martinelli",
+                "sleepy"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "sleepy",
@@ -259,7 +836,32 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Abertura prática e assento confortável no dia a dia."
+            "description": "Abertura prática e assento confortável no dia a dia.",
+            "measurements": [
+                {
+                    "label": "Modo sofá",
+                    "value": "medidas conforme composição"
+                },
+                {
+                    "label": "Modo cama",
+                    "value": "abertura sob consulta"
+                },
+                {
+                    "label": "Função",
+                    "value": "sofá-cama"
+                }
+            ],
+            "options": [
+                "Dupla função sofá e cama",
+                "Centenas de revestimentos Eleganza",
+                "Ideal para visitas e espaços versáteis"
+            ],
+            "related": [
+                "oasis",
+                "martinelli",
+                "serena"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "alexa",
@@ -269,7 +871,33 @@
             "photo": true,
             "photoCount": 1,
             "novidade": false,
-            "description": "Poltrona complementar para completar a zona de estar."
+            "description": "Poltrona complementar para completar a zona de estar.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "aline",
+                "kelia"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "aline",
@@ -279,7 +907,33 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Cadeira relax com versões manual, eléctrica e elevatória powerlift."
+            "description": "Cadeira relax com versões manual, eléctrica e elevatória powerlift.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "kelia"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "kelia",
@@ -289,7 +943,33 @@
             "photo": true,
             "photoCount": 1,
             "novidade": false,
-            "description": "Cadeira relax de perfil alto, com versões manual, eléctrica e powerlift."
+            "description": "Cadeira relax de perfil alto, com versões manual, eléctrica e powerlift.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "aline"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "aston",
@@ -299,7 +979,33 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Poltrona giratória com assento confortável."
+            "description": "Poltrona giratória com assento confortável.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "aline"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "masai",
@@ -309,7 +1015,33 @@
             "photo": true,
             "photoCount": 3,
             "novidade": false,
-            "description": "Poltrona giratória com pouffe complementar — versatilidade e conforto num conjunto modular."
+            "description": "Poltrona giratória com pouffe complementar — versatilidade e conforto num conjunto modular.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "aline"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "osaka",
@@ -319,7 +1051,33 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Poltrona de balancim com movimento suave e design actual."
+            "description": "Poltrona de balancim com movimento suave e design actual.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "aline"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "prada",
@@ -329,7 +1087,33 @@
             "photo": true,
             "photoCount": 1,
             "novidade": false,
-            "description": "Poltrona de presença para complementar sofás da gama."
+            "description": "Poltrona de presença para complementar sofás da gama.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "aline"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "supreme",
@@ -344,7 +1128,33 @@
             "catalogSlot": 1,
             "photoOrder": [
                 1
-            ]
+            ],
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "aline"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "syros",
@@ -354,7 +1164,33 @@
             "photo": true,
             "photoCount": 3,
             "novidade": true,
-            "description": "Poltrona relax eléctrica de encosto alto, com comando integrado e posição de descanso extensível."
+            "description": "Poltrona relax eléctrica de encosto alto, com comando integrado e posição de descanso extensível.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "verona",
+                "alexa",
+                "aline",
+                "kelia"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "vintage",
@@ -370,7 +1206,33 @@
             "photoOrder": [
                 1,
                 2
-            ]
+            ],
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "verona",
+                "alexa",
+                "aline"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "adel",
@@ -380,7 +1242,32 @@
             "photo": true,
             "photoCount": 2,
             "novidade": false,
-            "description": "Banqueta em forma de cápsula com base metálica dourada. Versão com cofre interior acolchoado para arrumação discreta — ideal para complementar a zona de estar."
+            "description": "Banqueta em forma de cápsula com base metálica dourada. Versão com cofre interior acolchoado para arrumação discreta — ideal para complementar a zona de estar.",
+            "measurements": [
+                {
+                    "label": "Larguras",
+                    "value": "120, 140 e 150 cm"
+                },
+                {
+                    "label": "Base",
+                    "value": "metálica dourada de série"
+                },
+                {
+                    "label": "Opção",
+                    "value": "cofre interior (quando aplicável)"
+                }
+            ],
+            "options": [
+                "Três larguras disponíveis",
+                "Base metálica dourada",
+                "Opção cofre interior"
+            ],
+            "related": [
+                "brenda",
+                "iris",
+                "judy"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "brenda",
@@ -391,7 +1278,32 @@
             "photoCount": 1,
             "novidade": false,
             "configurator": false,
-            "description": "Banqueta baixa com tampo abatível e arrumação interior, ideal para complementar a zona de estar ou quarto. Disponível em centenas de revestimentos."
+            "description": "Banqueta baixa com tampo abatível e arrumação interior, ideal para complementar a zona de estar ou quarto. Disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Larguras",
+                    "value": "120, 140 e 150 cm"
+                },
+                {
+                    "label": "Base",
+                    "value": "metálica dourada de série"
+                },
+                {
+                    "label": "Opção",
+                    "value": "cofre interior (quando aplicável)"
+                }
+            ],
+            "options": [
+                "Três larguras disponíveis",
+                "Base metálica dourada",
+                "Opção cofre interior"
+            ],
+            "related": [
+                "adel",
+                "iris",
+                "judy"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "iris",
@@ -402,7 +1314,32 @@
             "photoCount": 1,
             "novidade": false,
             "configurator": false,
-            "description": "Banqueta baixa de linhas rectas com tampo abatível e pés metálicos finos. Complemento versátil para hall, quarto ou zona de estar, disponível em centenas de revestimentos."
+            "description": "Banqueta baixa de linhas rectas com tampo abatível e pés metálicos finos. Complemento versátil para hall, quarto ou zona de estar, disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Larguras",
+                    "value": "120, 140 e 150 cm"
+                },
+                {
+                    "label": "Base",
+                    "value": "metálica dourada de série"
+                },
+                {
+                    "label": "Opção",
+                    "value": "cofre interior (quando aplicável)"
+                }
+            ],
+            "options": [
+                "Três larguras disponíveis",
+                "Base metálica dourada",
+                "Opção cofre interior"
+            ],
+            "related": [
+                "adel",
+                "brenda",
+                "judy"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "judy",
@@ -413,7 +1350,32 @@
             "photoCount": 1,
             "novidade": false,
             "configurator": false,
-            "description": "Banqueta baixa de linhas suaves e pés metálicos, ideal ao pé da cama ou na zona de estar. Disponível em centenas de revestimentos."
+            "description": "Banqueta baixa de linhas suaves e pés metálicos, ideal ao pé da cama ou na zona de estar. Disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Larguras",
+                    "value": "120, 140 e 150 cm"
+                },
+                {
+                    "label": "Base",
+                    "value": "metálica dourada de série"
+                },
+                {
+                    "label": "Opção",
+                    "value": "cofre interior (quando aplicável)"
+                }
+            ],
+            "options": [
+                "Três larguras disponíveis",
+                "Base metálica dourada",
+                "Opção cofre interior"
+            ],
+            "related": [
+                "adel",
+                "brenda",
+                "iris"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "aro",
@@ -429,7 +1391,33 @@
             ],
             "novidade": false,
             "configurator": false,
-            "description": "Puff redondo de linhas suaves, ideal para complementar o sofá com cor e conforto extra. Disponível em centenas de revestimentos."
+            "description": "Puff redondo de linhas suaves, ideal para complementar o sofá com cor e conforto extra. Disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Formato",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "assento baixo / complemento"
+                },
+                {
+                    "label": "Uso",
+                    "value": "apoio de pés ou assento extra"
+                }
+            ],
+            "options": [
+                "Complemento versátil",
+                "Centenas de revestimentos Eleganza",
+                "Para sofá ou poltrona"
+            ],
+            "related": [
+                "eva",
+                "ice",
+                "meg",
+                "yan"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "eva",
@@ -446,7 +1434,33 @@
             "photoOrder": [
                 1,
                 2
-            ]
+            ],
+            "measurements": [
+                {
+                    "label": "Formato",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "assento baixo / complemento"
+                },
+                {
+                    "label": "Uso",
+                    "value": "apoio de pés ou assento extra"
+                }
+            ],
+            "options": [
+                "Complemento versátil",
+                "Centenas de revestimentos Eleganza",
+                "Para sofá ou poltrona"
+            ],
+            "related": [
+                "aro",
+                "ice",
+                "meg",
+                "yan"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "ice",
@@ -462,7 +1476,33 @@
             ],
             "novidade": false,
             "configurator": false,
-            "description": "Puff cúbico de linhas contemporâneas, ideal para complementar o sofá com cor e textura. Disponível em centenas de revestimentos."
+            "description": "Puff cúbico de linhas contemporâneas, ideal para complementar o sofá com cor e textura. Disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Formato",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "assento baixo / complemento"
+                },
+                {
+                    "label": "Uso",
+                    "value": "apoio de pés ou assento extra"
+                }
+            ],
+            "options": [
+                "Complemento versátil",
+                "Centenas de revestimentos Eleganza",
+                "Para sofá ou poltrona"
+            ],
+            "related": [
+                "aro",
+                "eva",
+                "meg",
+                "yan"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "meg",
@@ -478,7 +1518,33 @@
             ],
             "novidade": false,
             "configurator": false,
-            "description": "Puff quadrado de padrão geométrico e pés finos, com assento generoso. Complemento versátil para a zona de estar, disponível em centenas de revestimentos."
+            "description": "Puff quadrado de padrão geométrico e pés finos, com assento generoso. Complemento versátil para a zona de estar, disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Formato",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "assento baixo / complemento"
+                },
+                {
+                    "label": "Uso",
+                    "value": "apoio de pés ou assento extra"
+                }
+            ],
+            "options": [
+                "Complemento versátil",
+                "Centenas de revestimentos Eleganza",
+                "Para sofá ou poltrona"
+            ],
+            "related": [
+                "aro",
+                "eva",
+                "ice",
+                "yan"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "yan",
@@ -494,7 +1560,33 @@
             ],
             "novidade": false,
             "configurator": false,
-            "description": "Puff cilíndrico de linhas suaves e pés finos, com acabamento em tecido texturado. Complemento elegante para a zona de estar, disponível em centenas de revestimentos."
+            "description": "Puff cilíndrico de linhas suaves e pés finos, com acabamento em tecido texturado. Complemento elegante para a zona de estar, disponível em centenas de revestimentos.",
+            "measurements": [
+                {
+                    "label": "Formato",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "assento baixo / complemento"
+                },
+                {
+                    "label": "Uso",
+                    "value": "apoio de pés ou assento extra"
+                }
+            ],
+            "options": [
+                "Complemento versátil",
+                "Centenas de revestimentos Eleganza",
+                "Para sofá ou poltrona"
+            ],
+            "related": [
+                "aro",
+                "eva",
+                "ice",
+                "meg"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "magnum",
@@ -507,9 +1599,18 @@
             "novidade": true,
             "description": "Novo pendular da Eleganza Collection, com movimento pendular suave para descanso progressivo.",
             "measurements": [
-                { "label": "Profundidade", "value": "aprox. 105 cm" },
-                { "label": "Altura", "value": "aprox. 95 cm" },
-                { "label": "Largura", "value": "composições modulares sob consulta" }
+                {
+                    "label": "Profundidade",
+                    "value": "aprox. 105 cm"
+                },
+                {
+                    "label": "Altura",
+                    "value": "aprox. 95 cm"
+                },
+                {
+                    "label": "Largura",
+                    "value": "composições modulares sob consulta"
+                }
             ],
             "options": [
                 "Movimento pendular suave",
@@ -517,7 +1618,13 @@
                 "Configuração no Stoffus 3D",
                 "Orçamento PDF e partilha por link"
             ],
-            "related": ["altieri", "oasis", "syros", "orsini"]
+            "related": [
+                "altieri",
+                "oasis",
+                "syros",
+                "orsini"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "altieri",
@@ -535,15 +1642,26 @@
                 2
             ],
             "measurements": [
-                { "label": "Assento", "value": "generoso, profundidade confortável" },
-                { "label": "Composição", "value": "módulos combináveis sob consulta" }
+                {
+                    "label": "Assento",
+                    "value": "generoso, profundidade confortável"
+                },
+                {
+                    "label": "Composição",
+                    "value": "módulos combináveis sob consulta"
+                }
             ],
             "options": [
                 "Modular relax",
                 "Disponível em lojas parceiras",
                 "Centenas de tecidos e peles Eleganza"
             ],
-            "related": ["magnum", "oasis", "syros"]
+            "related": [
+                "magnum",
+                "oasis",
+                "syros"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "oasis",
@@ -560,7 +1678,32 @@
             ],
             "novidade": true,
             "configurator": false,
-            "description": "Sofá-cama disponível em chaise ou dois assentos, com linhas contemporâneas e abertura prática para a função cama. Ideal para salas que precisam de versatilidade no dia a dia."
+            "description": "Sofá-cama disponível em chaise ou dois assentos, com linhas contemporâneas e abertura prática para a função cama. Ideal para salas que precisam de versatilidade no dia a dia.",
+            "measurements": [
+                {
+                    "label": "Modo sofá",
+                    "value": "medidas conforme composição"
+                },
+                {
+                    "label": "Modo cama",
+                    "value": "abertura sob consulta"
+                },
+                {
+                    "label": "Função",
+                    "value": "sofá-cama"
+                }
+            ],
+            "options": [
+                "Dupla função sofá e cama",
+                "Centenas de revestimentos Eleganza",
+                "Ideal para visitas e espaços versáteis"
+            ],
+            "related": [
+                "martinelli",
+                "serena",
+                "sleepy"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "orsini",
@@ -570,7 +1713,32 @@
             "photo": false,
             "novidade": true,
             "configurator": false,
-            "description": "Mecanismo deslizante eléctrico para máximo conforto de assento."
+            "description": "Mecanismo deslizante eléctrico para máximo conforto de assento.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "com deslizamento do assento"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas"
+                },
+                {
+                    "label": "Função",
+                    "value": "assento deslizante"
+                }
+            ],
+            "options": [
+                "Assento deslizante",
+                "Centenas de revestimentos Eleganza",
+                "Conforto para uso diário"
+            ],
+            "related": [
+                "magany",
+                "infinity",
+                "magic"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "magany",
@@ -580,7 +1748,32 @@
             "photo": false,
             "novidade": true,
             "configurator": false,
-            "description": "Deslizante com assento confortável e movimento eléctrico integrado."
+            "description": "Deslizante com assento confortável e movimento eléctrico integrado.",
+            "measurements": [
+                {
+                    "label": "Profundidade",
+                    "value": "com deslizamento do assento"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas"
+                },
+                {
+                    "label": "Função",
+                    "value": "assento deslizante"
+                }
+            ],
+            "options": [
+                "Assento deslizante",
+                "Centenas de revestimentos Eleganza",
+                "Conforto para uso diário"
+            ],
+            "related": [
+                "orsini",
+                "infinity",
+                "magic"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "verona",
@@ -590,7 +1783,33 @@
             "photo": false,
             "novidade": true,
             "configurator": false,
-            "description": "Nova poltrona com mecanismo relax, ideal para complementar a zona de estar."
+            "description": "Nova poltrona com mecanismo relax, ideal para complementar a zona de estar.",
+            "measurements": [
+                {
+                    "label": "Largura",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Profundidade",
+                    "value": "conforme modelo"
+                },
+                {
+                    "label": "Altura",
+                    "value": "conforme costas e pés"
+                }
+            ],
+            "options": [
+                "Conforto individual",
+                "Centenas de revestimentos Eleganza",
+                "Complemento ideal para sofá modular"
+            ],
+            "related": [
+                "syros",
+                "alexa",
+                "aline",
+                "kelia"
+            ],
+            "pdf": "https://stoffus.pt/wp-content/uploads/2026/01/Catalogo.1EleganzaCollection_email.pdf"
         },
         {
             "id": "poppy",
@@ -601,7 +1820,32 @@
             "photoCount": 2,
             "novidade": true,
             "configurator": false,
-            "description": "Cama e escadas em espuma para pets, para colocar em cima do sofá ou da cama. Permite ao animal subir e descansar com mais segurança e conforto."
+            "description": "Cama e escadas em espuma para pets, para colocar em cima do sofá ou da cama. Permite ao animal subir e descansar com mais segurança e conforto.",
+            "measurements": [
+                {
+                    "label": "Material",
+                    "value": "espuma macia e estável"
+                },
+                {
+                    "label": "Uso",
+                    "value": "sofá ou cama do pet"
+                },
+                {
+                    "label": "Acesso",
+                    "value": "facilita a subida com segurança"
+                }
+            ],
+            "options": [
+                "Espuma macia e estável",
+                "Para sofá ou cama",
+                "Facilita o acesso do pet"
+            ],
+            "related": [
+                "brittany",
+                "athena",
+                "bartini",
+                "enzo"
+            ]
         }
     ]
 }

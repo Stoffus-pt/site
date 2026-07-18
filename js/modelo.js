@@ -2,8 +2,20 @@
   var root = document.getElementById('modelo-page');
   if (!root) return;
 
-  var params = new URLSearchParams(location.search);
-  var modelId = String(params.get('id') || '').toLowerCase();
+  function resolveModelId() {
+    if (window.__STOFFUS_MODEL_ID) {
+      return String(window.__STOFFUS_MODEL_ID).toLowerCase();
+    }
+    var params = new URLSearchParams(location.search);
+    var q = params.get('id');
+    if (q) return String(q).toLowerCase();
+    var path = location.pathname.replace(/\\/g, '/');
+    var m = path.match(/\/modelo\/([^\/]+)\/?(?:index\.html)?$/i);
+    if (m && m[1]) return String(m[1]).toLowerCase();
+    return '';
+  }
+
+  var modelId = resolveModelId();
 
   function esc(s) {
     return String(s || '')
@@ -116,6 +128,42 @@
     );
   }
 
+  function injectProductJsonLd(model, productLabel, description, pageUrl, primary) {
+    var existing = document.getElementById('stoffus-product-jsonld');
+    if (existing) existing.remove();
+
+    var seo = window.StoffusSeo || {};
+    var abs = seo.absoluteAsset
+      ? seo.absoluteAsset(primary.png || primary.src)
+      : (primary.png || primary.src);
+    var data = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: productLabel,
+      description: description,
+      sku: model.id,
+      brand: {
+        '@type': 'Brand',
+        name: 'Stoffus'
+      },
+      category: 'Furniture',
+      url: pageUrl,
+      image: abs ? [abs] : undefined,
+      manufacturer: {
+        '@type': 'Organization',
+        name: 'Stoffus',
+        url: 'https://stoffus.pt'
+      }
+    };
+    if (!data.image) delete data.image;
+
+    var script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'stoffus-product-jsonld';
+    script.textContent = JSON.stringify(data);
+    document.head.appendChild(script);
+  }
+
   StoffusModels.load().then(function (data) {
     var model = StoffusModels.byId(data, modelId);
     if (!model) {
@@ -144,24 +192,31 @@
       : (isBanqueta ? ('Banqueta ' + model.name) : (isPouf ? ('Puff ' + model.name) : ('Sofá ' + model.name)));
 
     document.title = model.name + ' | Stoffus - Eleganza Collection';
+    var pageDesc = model.description || (productLabel + ' - Eleganza Collection Stoffus.');
     var metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', model.description || (productLabel + ' - Eleganza Collection Stoffus.'));
+    if (metaDesc) metaDesc.setAttribute('content', pageDesc);
+    var baseUrl = (window.StoffusSeo && StoffusSeo.publicBaseUrl)
+      ? StoffusSeo.publicBaseUrl().replace(/\/$/, '')
+      : 'https://stoffus.pt';
+    var pageUrl = baseUrl + '/modelo/' + encodeURIComponent(model.id) + '/';
     if (window.StoffusSeo) {
       StoffusSeo.applyPageSeo({
         title: document.title,
-        description: model.description || (productLabel + ' - Eleganza Collection Stoffus.'),
+        description: pageDesc,
         image: primary.png || primary.src,
         type: 'product',
-        url: StoffusSeo.publicBaseUrl().replace(/\/$/, '') + '/modelo.html?id=' + encodeURIComponent(model.id)
+        url: pageUrl
       });
     }
+
+    injectProductJsonLd(model, productLabel, pageDesc, pageUrl, primary);
 
     var thumbsHtml = photoSlots.map(function (slot, index) {
       return renderThumb(slot, index, index === 0);
     }).join('');
 
     var pdfBtn = model.pdf
-      ? '<a class="btn btn--outline btn--lg" href="' + esc(model.pdf) + '" target="_blank" rel="noopener">PDF do modelo</a>'
+      ? '<a class="btn btn--outline btn--lg" href="' + esc(model.pdf) + '" target="_blank" rel="noopener">Catálogo técnico (PDF)</a>'
       : '';
 
     var heroActions = showConfig
@@ -215,10 +270,10 @@
     var detailActions = showConfig
       ? '<a class="btn btn--brand" href="' + configUrl + '">Abrir no configurador</a>' +
         '<a class="btn btn--outline" href="onde-comprar.html">Onde ver</a>' +
-        (model.pdf ? '<a class="btn btn--outline" href="' + esc(model.pdf) + '" target="_blank" rel="noopener">Descarregar PDF</a>' : '')
+        (model.pdf ? '<a class="btn btn--outline" href="' + esc(model.pdf) + '" target="_blank" rel="noopener">Catálogo técnico (PDF)</a>' : '')
       : '<a class="btn btn--brand" href="onde-comprar.html">Onde ver</a>' +
         '<a class="btn btn--outline" href="contactos.html">Pedir informação</a>' +
-        (model.pdf ? '<a class="btn btn--outline" href="' + esc(model.pdf) + '" target="_blank" rel="noopener">Descarregar PDF</a>' : '');
+        (model.pdf ? '<a class="btn btn--outline" href="' + esc(model.pdf) + '" target="_blank" rel="noopener">Catálogo técnico (PDF)</a>' : '');
 
     root.innerHTML =
       '<section class="catalog-hero model-hero" aria-label="' + esc(model.name) + '">' +

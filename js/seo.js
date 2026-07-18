@@ -87,7 +87,12 @@
   }
 
   applyDefaultOgImage();
-  if (pageFile() !== 'modelo.html') {
+  function isModelDetailPage() {
+    if (pageFile() === 'modelo.html') return true;
+    if (global.__STOFFUS_MODEL_ID) return true;
+    return /\/modelo\/[^\/]+\/?(?:index\.html)?$/i.test(location.pathname.replace(/\\/g, '/'));
+  }
+  if (!isModelDetailPage()) {
     applyPageSeo({});
   }
 

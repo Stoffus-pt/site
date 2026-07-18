@@ -1,3 +1,55 @@
 {
-  "collections": {}
+  "collections": {
+    "artis": {
+      "description": "Linha Bliss alinhada — toque suave e leitura contemporânea para sofás de uso diário."
+    },
+    "bella": {
+      "description": "Aveludado Bliss com presença táctil; ideal para ambientes acolhedores."
+    },
+    "carmen": {
+      "description": "Alinhado Bliss — estrutura visual discreta e conforto duradouro."
+    },
+    "falcon": {
+      "description": "Aveludado Bliss de carácter marcado; funciona bem em módulos relax."
+    },
+    "funky": {
+      "description": "Aveludado Bliss com personalidade — destaque de cor sem perder elegância."
+    },
+    "garby": {
+      "description": "Aveludado Bliss versátil para composições claras ou contrastes suaves."
+    },
+    "jade": {
+      "description": "Aveludado Bliss com profundidade de tom; combina com pés lacados e metálicos."
+    },
+    "kamala": {
+      "description": "Aveludado Bliss bestseller — toque aveludado e fácil de integrar em qualquer sala."
+    },
+    "kamala2": {
+      "description": "Evolução Kamala: mesma família aveludada, nova leitura de cor."
+    },
+    "matchy": {
+      "description": "Aveludado Bliss pensado para combinações harmoniosas entre módulos."
+    },
+    "prisma": {
+      "description": "Aveludado Bliss com jogo de luz; destaca volumes e chaise."
+    },
+    "soft": {
+      "description": "Alinhado Bliss de toque macio — escolha segura para famílias e pet friendly."
+    },
+    "fumiko": {
+      "description": "Gama Delta — alinhado com carácter técnico e boa resistência ao uso."
+    },
+    "madoka": {
+      "description": "Gama Delta — alinhado contemporâneo para projectos de loja e hotelaria leve."
+    },
+    "barbados": {
+      "description": "Gama Fashion — presença visual forte para quem quer o sofá como peça de destaque."
+    },
+    "river": {
+      "description": "Pele genuína Extra — acabamento nobre com patina natural ao longo do tempo."
+    },
+    "siza": {
+      "description": "Pele genuína Platina — toque premium para sofás de assinatura."
+    }
+  }
 }

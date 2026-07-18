@@ -1,0 +1,10 @@
+# Stoffus — URLs limpas (Apache / cPanel)
+# Colocar na pasta pública do site (junto a index.html).
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Compatibilidade: modelo.html?id=magnum → /modelo/magnum/
+  RewriteCond %{QUERY_STRING} (^|&)id=([a-z0-9\-]+)(&|$) [NC]
+  RewriteRule ^modelo\.html$ modelo/%2/? [R=301,L]
+</IfModule>

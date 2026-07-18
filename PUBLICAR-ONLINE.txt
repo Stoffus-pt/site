@@ -24,35 +24,55 @@ Cada push para main actualiza automaticamente a pré-visualização:
 3. Push para main (ou Actions → "Pré-visualização (GitHub Pages)" → Run)
 
 
+O QUE SÃO "SECRETS" FTP (GitHub)
+--------------------------------
+São palavras-passe e dados de acesso guardados **só no GitHub**,
+fora do código. O repositório nunca deve conter utilizador/password FTP.
+
+Quando corre o workflow "Publicar site (FTP)", o GitHub injecta estes
+valores no momento do envio — o agente/CI usa-os, mas ninguém os vê
+no histórico do git.
+
+Porque existem:
+- Publicar o site em stoffus.pt sem escrever a password no código
+- Evitar que um push acidental exponha credenciais
+- Permitir publicar com um clique (Actions → Run workflow)
+
+Onde configurar:
+  GitHub → Stoffus-pt/site → Settings → Secrets and variables → Actions
+  → New repository secret
+
+
 PRODUÇÃO — stoffus.pt (FTP)
 ---------------------------
 O workflow "Publicar site (FTP)" está em modo manual
-(workflow_dispatch) para evitar falhas enquanto não houver
-credenciais. Depois de configurar os secrets, publique assim:
+(workflow_dispatch). Depois de configurar os secrets:
 
-1. Fornecedor de alojamento: servidor FTP, utilizador, password,
-   pasta remota (ex: /public_html/site/)
+1. Pedir ao alojamento: servidor FTP, utilizador, password,
+   pasta remota (ex: /public_html/ ou /public_html/site/)
 
-2. GitHub → Stoffus-pt/site → Settings → Secrets and variables → Actions
-   Secrets obrigatórios:
-   | Nome            | Exemplo              |
-   |-----------------|----------------------|
-   | FTP_SERVER      | ftp.stoffus.pt       |
-   | FTP_USERNAME    | o_vosso_user         |
-   | FTP_PASSWORD    | a_vossa_password     |
-   | FTP_REMOTE_DIR  | /public_html/site/   |
+2. Criar estes secrets (nomes exactos):
+   | Nome            | O que pôr                    |
+   |-----------------|------------------------------|
+   | FTP_SERVER      | host FTP (ex. ftp.stoffus.pt)|
+   | FTP_USERNAME    | utilizador FTP               |
+   | FTP_PASSWORD    | password FTP                 |
+   | FTP_REMOTE_DIR  | pasta remota do site         |
    Opcional: FTP_PORT (default 21)
 
 3. GitHub → Actions → "Publicar site (FTP)" → Run workflow
 
-4. Confirmar:
-   https://stoffus.pt/site/index.html
-   CMS: https://stoffus.pt/site/cms/  (ou /cms/ conforme pasta)
+4. Confirmar no browser:
+   https://stoffus.pt/  (ou /site/ conforme a pasta remota)
+   CMS: …/cms/
 
 NÃO enviar cms/config.php se já existir no servidor com password.
 
 Manual (FileZilla / cPanel): enviar o conteúdo de "site/",
 excluindo cms/config.php, node_modules, .git, backups.
+
+URLs de modelo: pastas modelo/<id>/ + ficheiro .htaccess
+(redirecciona modelo.html?id=… para a URL limpa no Apache).
 
 
 Fluxo recomendado
@@ -62,11 +82,23 @@ Fluxo recomendado
 3. Validar em stoffus.pt (CMS, formulários, fotos)
 
 
-Tecidos
--------
-Fonte Studio3D: npm run fabrics:sync (em site/)
-Overrides de capas/textos/visibilidade: CMS → separador Tecidos
-  (grava data/fabrics-site.json e tenta regenerar fabrics.json)
+Tecidos — npm run fabrics:sync
+------------------------------
+O Studio3D guarda o catálogo de colecções (prefixos, cores, pastas
+de textura) em data/catalog/catalog-published.json.
+
+O comando (na pasta site/):
+
+  npm run fabrics:sync
+
+1. Lê esse catálogo
+2. Aplica overrides de marketing em data/fabrics-site.json
+   (descrições, capas, ocultar colecções)
+3. Escreve data/fabrics.json — o que a página tecidos.html mostra
+
+Correr sempre que actualizar colecções no Studio3D.
+Textos/capas só do site: editar no CMS (separador Tecidos) ou em
+fabrics-site.json e voltar a fazer sync.
 
 
 Notas
