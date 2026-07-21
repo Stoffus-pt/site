@@ -3205,14 +3205,67 @@ body.page-minimal:not(.page-rich) .section--warm {
   color: var(--brand);
 }
 
-.footer-visits {
-  color: var(--ink-muted);
-  font-variant-numeric: tabular-nums;
+/* Contador de visitas — canto superior direito (cabeçalho sticky) */
+.visit-counter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.05rem;
+  margin-left: 0.15rem;
+  padding: 0.2rem 0.15rem 0.2rem 0.45rem;
+  line-height: 1.1;
+  white-space: nowrap;
+  pointer-events: none;
+  flex-shrink: 0;
 }
 
-.footer-visits strong {
-  color: var(--ink-deep);
+.visit-counter__label {
+  font-size: 0.55rem;
   font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.visit-counter strong,
+.visit-counter [data-visit-count] {
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-deep);
+  letter-spacing: 0.02em;
+}
+
+/* Fallback se a página não tiver cabeçalho */
+.visit-counter--fixed {
+  position: fixed;
+  top: max(0.45rem, env(safe-area-inset-top, 0px));
+  right: max(0.55rem, env(safe-area-inset-right, 0px));
+  z-index: 160;
+  margin: 0;
+  padding: 0.35rem 0.55rem;
+  background: rgba(255, 250, 248, 0.92);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 18px rgba(45, 42, 44, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 720px) {
+  .visit-counter {
+    margin-left: 0;
+    padding: 0.15rem 0.05rem 0.15rem 0.25rem;
+  }
+
+  .visit-counter__label {
+    font-size: 0.5rem;
+  }
+
+  .visit-counter strong,
+  .visit-counter [data-visit-count] {
+    font-size: 0.68rem;
+  }
 }
 
 .legal-content {

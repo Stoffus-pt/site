@@ -66,13 +66,26 @@
     }
 
     function ensureSlot() {
-      document.querySelectorAll('.footer-bottom').forEach(function (el) {
-        if (el.querySelector('.footer-visits')) return;
-        var span = document.createElement('span');
-        span.className = 'footer-visits';
-        span.innerHTML = 'Visitas: <strong data-visit-count>' + formatVisits(SEED) + '</strong>';
-        el.insertBefore(span, el.firstChild);
+      document.querySelectorAll('.footer-visits').forEach(function (el) {
+        el.remove();
       });
+      if (document.querySelector('.visit-counter')) return;
+
+      var el = document.createElement('div');
+      el.className = 'visit-counter';
+      el.setAttribute('aria-live', 'polite');
+      el.setAttribute('title', 'Visitas ao site');
+      el.innerHTML =
+        '<span class="visit-counter__label">Visitas</span>' +
+        '<strong data-visit-count>' + formatVisits(SEED) + '</strong>';
+
+      var actions = document.querySelector('.site-header__actions');
+      if (actions) {
+        actions.appendChild(el);
+      } else {
+        el.classList.add('visit-counter--fixed');
+        document.body.appendChild(el);
+      }
     }
 
     function loadStatic() {
