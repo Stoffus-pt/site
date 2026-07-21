@@ -1,0 +1,4 @@
+{
+  "count": 3377596,
+  "note": "Valor de arranque herdado do site anterior. Em produção o contador vivo está em cms/data/visits-count.json."
+}

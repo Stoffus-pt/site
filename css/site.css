@@ -3166,6 +3166,16 @@ body.page-minimal:not(.page-rich) .section--warm {
   color: var(--brand);
 }
 
+.footer-visits {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.footer-visits strong {
+  color: var(--ink-deep);
+  font-weight: 600;
+}
+
 .legal-content {
   max-width: 44rem;
   margin-inline: auto;
