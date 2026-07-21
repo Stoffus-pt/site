@@ -1,7 +1,6 @@
 {
   "collections": {
     "artis": {
-      "description": "Linha Bliss alinhada — toque suave e leitura contemporânea para sofás de uso diário.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -11,7 +10,6 @@
       }
     },
     "bella": {
-      "description": "Aveludado Bliss com presença táctil; ideal para ambientes acolhedores.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -21,7 +19,6 @@
       }
     },
     "carmen": {
-      "description": "Alinhado Bliss — estrutura visual discreta e conforto duradouro.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -31,7 +28,6 @@
       }
     },
     "falcon": {
-      "description": "Aveludado Bliss de carácter marcado; funciona bem em módulos relax.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -41,7 +37,6 @@
       }
     },
     "funky": {
-      "description": "Aveludado Bliss com personalidade — destaque de cor sem perder elegância.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -51,7 +46,6 @@
       }
     },
     "garby": {
-      "description": "Aveludado Bliss versátil para composições claras ou contrastes suaves.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -61,7 +55,6 @@
       }
     },
     "grift": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -71,7 +64,6 @@
       }
     },
     "ifrane": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -81,7 +73,6 @@
       }
     },
     "jade": {
-      "description": "Aveludado Bliss com profundidade de tom; combina com pés lacados e metálicos.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -91,7 +82,6 @@
       }
     },
     "kamala": {
-      "description": "Aveludado Bliss bestseller — toque aveludado e fácil de integrar em qualquer sala.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -101,7 +91,6 @@
       }
     },
     "kamala2": {
-      "description": "Evolução Kamala: mesma família aveludada, nova leitura de cor.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -111,7 +100,6 @@
       }
     },
     "karma": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -121,7 +109,6 @@
       }
     },
     "matchy": {
-      "description": "Aveludado Bliss pensado para combinações harmoniosas entre módulos.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -131,7 +118,6 @@
       }
     },
     "mirage": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -141,7 +127,6 @@
       }
     },
     "pisa": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -151,7 +136,6 @@
       }
     },
     "prisma": {
-      "description": "Aveludado Bliss com jogo de luz; destaca volumes e chaise.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -161,7 +145,6 @@
       }
     },
     "ramses": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -171,7 +154,6 @@
       }
     },
     "rissani": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -181,7 +163,6 @@
       }
     },
     "soft": {
-      "description": "Alinhado Bliss de toque macio — escolha segura para famílias e pet friendly.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -191,7 +172,6 @@
       }
     },
     "stancy": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -201,7 +181,6 @@
       }
     },
     "talia": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -211,7 +190,6 @@
       }
     },
     "touareg": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -221,7 +199,6 @@
       }
     },
     "venturi": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -231,7 +208,6 @@
       }
     },
     "zemy": {
-      "description": "",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -241,7 +217,6 @@
       }
     },
     "fumiko": {
-      "description": "Gama Delta — alinhado com carácter técnico e boa resistência ao uso.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -251,7 +226,6 @@
       }
     },
     "madoka": {
-      "description": "Gama Delta — alinhado contemporâneo para projectos de loja e hotelaria leve.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -261,7 +235,6 @@
       }
     },
     "barbados": {
-      "description": "Gama Fashion — presença visual forte para quem quer o sofá como peça de destaque.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -271,7 +244,6 @@
       }
     },
     "river": {
-      "description": "Pele genuína Extra — acabamento nobre com patina natural ao longo do tempo.",
       "specs": {
         "composicao": "",
         "largura": "",
@@ -281,7 +253,6 @@
       }
     },
     "siza": {
-      "description": "Pele genuína Platina — toque premium para sofás de assinatura.",
       "specs": {
         "composicao": "",
         "largura": "",

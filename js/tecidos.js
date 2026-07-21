@@ -182,7 +182,6 @@
       '<div class="fabric-card__body">' +
         '<h3 class="fabric-card__title">' + col.name + '</h3>' +
         '<p class="fabric-card__meta">' + textureLabel + ' · ' + colors + ' cores</p>' +
-        (col.description ? '<p class="fabric-card__desc">' + col.description + '</p>' : '') +
         '<p class="fabric-card__codes">' + codeRange + '</p>' +
         '<button type="button" class="fabric-card__link" data-open-fabric="' + col.id + '">Ver paleta de cores</button>' +
         '<a class="fabric-card__config" href="#" data-fabric-id="' + fabricIdFor(col, 1) + '">Ver no configurador</a>' +
