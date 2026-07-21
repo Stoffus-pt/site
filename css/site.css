@@ -1997,29 +1997,54 @@ body.page-minimal:not(.page-rich) .section--warm {
   border: 1px solid var(--border);
 }
 
-.fabric-tech__head {
+.fabric-tech__summary {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.7rem 0.85rem 0.55rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 0.95rem;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
   background: var(--surface-2);
 }
 
-.fabric-tech__head h3 {
-  margin: 0;
-  font-size: 0.95rem;
+.fabric-tech__summary::-webkit-details-marker {
+  display: none;
+}
+
+.fabric-tech__summary-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.fabric-tech__summary-title {
+  font-size: 0.88rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
   color: var(--ink-deep);
 }
 
-.fabric-tech__head span {
+.fabric-tech__summary-sub {
   font-size: 0.68rem;
   font-weight: 400;
   color: var(--ink-muted);
-  white-space: nowrap;
+}
+
+.fabric-tech__chevron {
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.fabric-tech[open] .fabric-tech__chevron {
+  transform: rotate(180deg);
+}
+
+.fabric-tech[open] .fabric-tech__summary {
+  border-bottom: 1px solid var(--border);
 }
 
 .fabric-tech__table {
@@ -2127,10 +2152,6 @@ body.page-minimal:not(.page-rich) .section--warm {
     margin-inline: 0.85rem;
   }
 
-  .fabric-tech__head {
-    flex-wrap: wrap;
-  }
-
   .fabric-tech__row {
     grid-template-columns: 1fr 0.9fr;
   }
@@ -2160,13 +2181,50 @@ body.page-minimal:not(.page-rich) .section--warm {
   text-align: center;
 }
 
-.fabric-modal__preview img {
+.fabric-modal__zoom {
+  position: relative;
+  display: block;
   width: min(100%, 18rem);
-  aspect-ratio: 1;
-  object-fit: cover;
   margin-inline: auto;
+  padding: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  background: #fff;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.fabric-modal__zoom img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.fabric-modal__zoom-hint {
+  position: absolute;
+  right: 0.55rem;
+  bottom: 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--radius);
+  background: rgba(255, 250, 248, 0.94);
+  border: 1px solid var(--border);
+  color: var(--ink-deep);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.92;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.fabric-modal__zoom:hover .fabric-modal__zoom-hint,
+.fabric-modal__zoom:focus-visible .fabric-modal__zoom-hint {
+  opacity: 1;
+  background: #fff;
 }
 
 .fabric-modal__code {
@@ -2176,6 +2234,144 @@ body.page-minimal:not(.page-rich) .section--warm {
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--ink-deep);
+}
+
+/* Visualizador fullscreen + zoom */
+.fabric-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 320;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.fabric-viewer[hidden] {
+  display: none;
+}
+
+.fabric-viewer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 18, 18, 0.88);
+}
+
+.fabric-viewer__stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.fabric-viewer__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 250, 248, 0.96);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.fabric-viewer__caption {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.fabric-viewer__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fabric-viewer__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.35rem;
+  height: 2.35rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--ink-deep);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.fabric-viewer__btn:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.fabric-viewer__btn--close {
+  margin-left: 0.25rem;
+}
+
+.fabric-viewer__level {
+  min-width: 3.2rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+.fabric-viewer__canvas {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fabric-viewer__canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.fabric-viewer__canvas img {
+  max-width: min(92vw, 42rem);
+  max-height: min(78vh, 42rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transform-origin: center center;
+  user-select: none;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.fabric-viewer__hint {
+  margin: 0;
+  padding: 0.55rem 1rem 0.75rem;
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(255, 250, 248, 0.72);
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .fabric-viewer__bar {
+    flex-wrap: wrap;
+  }
+
+  .fabric-viewer__hint {
+    display: none;
+  }
 }
 
 .fabric-modal__colors {

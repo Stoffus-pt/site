@@ -9,9 +9,18 @@
   var modalMeta = document.getElementById('fabric-modal-meta');
   var modalSpecs = document.getElementById('fabric-modal-specs');
   var modalPreview = document.getElementById('fabric-modal-preview');
+  var modalZoom = document.getElementById('fabric-modal-zoom');
   var modalCode = document.getElementById('fabric-modal-code');
   var modalColors = document.getElementById('fabric-modal-colors');
   var modalConfig = document.getElementById('fabric-modal-config');
+  var viewer = document.getElementById('fabric-viewer');
+  var viewerImg = document.getElementById('fabric-viewer-img');
+  var viewerCanvas = document.getElementById('fabric-viewer-canvas');
+  var viewerCaption = document.getElementById('fabric-viewer-caption');
+  var viewerLevel = document.getElementById('fabric-viewer-level');
+  var viewerIn = document.getElementById('fabric-viewer-in');
+  var viewerOut = document.getElementById('fabric-viewer-out');
+  var viewerReset = document.getElementById('fabric-viewer-reset');
 
   if (!grid || !filters || !modal) return;
 
@@ -211,6 +220,9 @@
     modalPreview.src = url;
     modalPreview.alt = col.name + ' ' + code;
     modalCode.textContent = code;
+    if (modalZoom) {
+      modalZoom.setAttribute('aria-label', 'Ampliar ' + col.name + ' ' + code);
+    }
     if (modalConfig) {
       modalConfig.setAttribute('data-fabric-id', fabricIdFor(col, fileIndex));
     }
@@ -218,6 +230,58 @@
     modalColors.querySelectorAll('.fabric-color').forEach(function (el) {
       el.classList.toggle('is-active', el === btn);
     });
+
+    if (viewer && !viewer.hidden) {
+      openViewer(col.name + ' ' + code, url);
+    }
+  }
+
+  var viewerState = {
+    scale: 1,
+    x: 0,
+    y: 0,
+    dragging: false,
+    lastX: 0,
+    lastY: 0,
+  };
+
+  function applyViewerTransform() {
+    if (!viewerImg) return;
+    viewerImg.style.transform =
+      'translate(' + viewerState.x + 'px, ' + viewerState.y + 'px) scale(' + viewerState.scale + ')';
+    if (viewerLevel) {
+      viewerLevel.textContent = Math.round(viewerState.scale * 100) + '%';
+    }
+  }
+
+  function setViewerZoom(next) {
+    viewerState.scale = Math.max(1, Math.min(4, next));
+    if (viewerState.scale === 1) {
+      viewerState.x = 0;
+      viewerState.y = 0;
+    }
+    applyViewerTransform();
+  }
+
+  function openViewer(caption, url) {
+    if (!viewer || !viewerImg) return;
+    viewerImg.src = url;
+    viewerImg.alt = caption || '';
+    if (viewerCaption) viewerCaption.textContent = caption || '';
+    viewerState.scale = 1;
+    viewerState.x = 0;
+    viewerState.y = 0;
+    applyViewerTransform();
+    viewer.hidden = false;
+    viewer.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeViewer() {
+    if (!viewer || viewer.hidden) return;
+    viewer.hidden = true;
+    viewer.setAttribute('aria-hidden', 'true');
+    viewerState.dragging = false;
+    if (viewerCanvas) viewerCanvas.classList.remove('is-dragging');
   }
 
   function openModal(col) {
@@ -231,6 +295,7 @@
     modalGama.textContent = gama.label;
     modalMeta.textContent = textureLabel + ' · ' + colors + ' cores · ' + col.prefix + col.start + ' – ' + col.prefix + col.end;
     fillModalSpecs(col);
+    if (modalSpecs && 'open' in modalSpecs) modalSpecs.open = false;
     if (modalConfig) {
       modalConfig.setAttribute('data-fabric-id', fabricIdFor(col, 1));
     }
@@ -273,6 +338,7 @@
   }
 
   function closeModal() {
+    closeViewer();
     modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -335,7 +401,82 @@
       }
     });
 
+    if (modalZoom) {
+      modalZoom.addEventListener('click', function () {
+        openViewer(modalPreview.alt || modalCode.textContent, modalPreview.src);
+      });
+    }
+
+    if (viewer) {
+      viewer.addEventListener('click', function (e) {
+        if (e.target.closest('[data-viewer-close]')) closeViewer();
+      });
+    }
+
+    if (viewerIn) {
+      viewerIn.addEventListener('click', function () {
+        setViewerZoom(viewerState.scale + 0.25);
+      });
+    }
+    if (viewerOut) {
+      viewerOut.addEventListener('click', function () {
+        setViewerZoom(viewerState.scale - 0.25);
+      });
+    }
+    if (viewerReset) {
+      viewerReset.addEventListener('click', function () {
+        setViewerZoom(1);
+      });
+    }
+
+    if (viewerCanvas) {
+      viewerCanvas.addEventListener('wheel', function (e) {
+        if (!viewer || viewer.hidden) return;
+        e.preventDefault();
+        setViewerZoom(viewerState.scale + (e.deltaY < 0 ? 0.15 : -0.15));
+      }, { passive: false });
+
+      viewerCanvas.addEventListener('pointerdown', function (e) {
+        if (!viewer || viewer.hidden) return;
+        viewerState.dragging = true;
+        viewerState.lastX = e.clientX;
+        viewerState.lastY = e.clientY;
+        viewerCanvas.classList.add('is-dragging');
+        viewerCanvas.setPointerCapture(e.pointerId);
+      });
+
+      viewerCanvas.addEventListener('pointermove', function (e) {
+        if (!viewerState.dragging) return;
+        viewerState.x += e.clientX - viewerState.lastX;
+        viewerState.y += e.clientY - viewerState.lastY;
+        viewerState.lastX = e.clientX;
+        viewerState.lastY = e.clientY;
+        applyViewerTransform();
+      });
+
+      function endDrag(e) {
+        if (!viewerState.dragging) return;
+        viewerState.dragging = false;
+        viewerCanvas.classList.remove('is-dragging');
+        try { viewerCanvas.releasePointerCapture(e.pointerId); } catch (err) {}
+      }
+
+      viewerCanvas.addEventListener('pointerup', endDrag);
+      viewerCanvas.addEventListener('pointercancel', endDrag);
+    }
+
     document.addEventListener('keydown', function (e) {
+      if (viewer && !viewer.hidden) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeViewer();
+          return;
+        }
+        if (e.key === '+' || e.key === '=') setViewerZoom(viewerState.scale + 0.25);
+        if (e.key === '-' || e.key === '_') setViewerZoom(viewerState.scale - 0.25);
+        if (e.key === '0') setViewerZoom(1);
+        return;
+      }
       if (modal.hidden) return;
       if (e.key === 'Escape') closeModal();
     });

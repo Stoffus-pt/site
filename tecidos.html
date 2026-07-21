@@ -175,15 +175,24 @@
         </header>
 
         <div class="fabric-modal__preview">
-          <img id="fabric-modal-preview" src="" alt="" width="480" height="480" />
+          <button type="button" class="fabric-modal__zoom" id="fabric-modal-zoom" aria-label="Ver tecido em ecrã inteiro com zoom">
+            <img id="fabric-modal-preview" src="" alt="" width="480" height="480" />
+            <span class="fabric-modal__zoom-hint">
+              <i class="fa-solid fa-expand" aria-hidden="true"></i>
+              Ampliar
+            </span>
+          </button>
           <p class="fabric-modal__code" id="fabric-modal-code"></p>
         </div>
 
-        <section class="fabric-tech" id="fabric-modal-specs" aria-labelledby="fabric-tech-title">
-          <header class="fabric-tech__head">
-            <h3 id="fabric-tech-title">Características Técnicas</h3>
-            <span>Technical specifications</span>
-          </header>
+        <details class="fabric-tech" id="fabric-modal-specs">
+          <summary class="fabric-tech__summary">
+            <span class="fabric-tech__summary-main">
+              <span class="fabric-tech__summary-title">Características técnicas</span>
+              <span class="fabric-tech__summary-sub">Technical specifications</span>
+            </span>
+            <i class="fa-solid fa-chevron-down fabric-tech__chevron" aria-hidden="true"></i>
+          </summary>
           <dl class="fabric-tech__table">
             <div class="fabric-tech__row">
               <dt>
@@ -221,7 +230,7 @@
               <dd data-spec="borboto" class="fabric-tech__borboto">—</dd>
             </div>
           </dl>
-        </section>
+        </details>
 
         <div class="fabric-modal__colors" id="fabric-modal-colors"></div>
 
@@ -229,6 +238,32 @@
           <p class="fabric-modal__note">As cores no ecrã são referência — confirme a amostra física na visita.</p>
           <a class="btn btn--brand" id="fabric-modal-config" href="#">Experimentar no configurador</a>
         </footer>
+      </div>
+    </div>
+
+    <div class="fabric-viewer" id="fabric-viewer" hidden aria-hidden="true">
+      <div class="fabric-viewer__backdrop" data-viewer-close tabindex="-1" aria-hidden="true"></div>
+      <div class="fabric-viewer__stage" role="dialog" aria-modal="true" aria-label="Visualização ampliada do tecido">
+        <header class="fabric-viewer__bar">
+          <p class="fabric-viewer__caption" id="fabric-viewer-caption"></p>
+          <div class="fabric-viewer__tools">
+            <button type="button" class="fabric-viewer__btn" id="fabric-viewer-out" aria-label="Reduzir zoom">
+              <i class="fa-solid fa-minus" aria-hidden="true"></i>
+            </button>
+            <span class="fabric-viewer__level" id="fabric-viewer-level">100%</span>
+            <button type="button" class="fabric-viewer__btn" id="fabric-viewer-in" aria-label="Aumentar zoom">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="fabric-viewer__btn" id="fabric-viewer-reset" aria-label="Repor zoom">1×</button>
+            <button type="button" class="fabric-viewer__btn fabric-viewer__btn--close" data-viewer-close aria-label="Fechar">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+          </div>
+        </header>
+        <div class="fabric-viewer__canvas" id="fabric-viewer-canvas">
+          <img id="fabric-viewer-img" src="" alt="" draggable="false" />
+        </div>
+        <p class="fabric-viewer__hint">Arraste para deslocar · scroll ou botões para zoom</p>
       </div>
     </div>
 
