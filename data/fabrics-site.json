@@ -1,55 +1,294 @@
 {
   "collections": {
     "artis": {
-      "description": "Linha Bliss alinhada — toque suave e leitura contemporânea para sofás de uso diário."
+      "description": "Linha Bliss alinhada — toque suave e leitura contemporânea para sofás de uso diário.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "bella": {
-      "description": "Aveludado Bliss com presença táctil; ideal para ambientes acolhedores."
+      "description": "Aveludado Bliss com presença táctil; ideal para ambientes acolhedores.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "carmen": {
-      "description": "Alinhado Bliss — estrutura visual discreta e conforto duradouro."
+      "description": "Alinhado Bliss — estrutura visual discreta e conforto duradouro.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "falcon": {
-      "description": "Aveludado Bliss de carácter marcado; funciona bem em módulos relax."
+      "description": "Aveludado Bliss de carácter marcado; funciona bem em módulos relax.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "funky": {
-      "description": "Aveludado Bliss com personalidade — destaque de cor sem perder elegância."
+      "description": "Aveludado Bliss com personalidade — destaque de cor sem perder elegância.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "garby": {
-      "description": "Aveludado Bliss versátil para composições claras ou contrastes suaves."
+      "description": "Aveludado Bliss versátil para composições claras ou contrastes suaves.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "grift": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "ifrane": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "jade": {
-      "description": "Aveludado Bliss com profundidade de tom; combina com pés lacados e metálicos."
+      "description": "Aveludado Bliss com profundidade de tom; combina com pés lacados e metálicos.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "kamala": {
-      "description": "Aveludado Bliss bestseller — toque aveludado e fácil de integrar em qualquer sala."
+      "description": "Aveludado Bliss bestseller — toque aveludado e fácil de integrar em qualquer sala.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "kamala2": {
-      "description": "Evolução Kamala: mesma família aveludada, nova leitura de cor."
+      "description": "Evolução Kamala: mesma família aveludada, nova leitura de cor.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "karma": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "matchy": {
-      "description": "Aveludado Bliss pensado para combinações harmoniosas entre módulos."
+      "description": "Aveludado Bliss pensado para combinações harmoniosas entre módulos.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "mirage": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "pisa": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "prisma": {
-      "description": "Aveludado Bliss com jogo de luz; destaca volumes e chaise."
+      "description": "Aveludado Bliss com jogo de luz; destaca volumes e chaise.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "ramses": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "rissani": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "soft": {
-      "description": "Alinhado Bliss de toque macio — escolha segura para famílias e pet friendly."
+      "description": "Alinhado Bliss de toque macio — escolha segura para famílias e pet friendly.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "stancy": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "talia": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "touareg": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "venturi": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    "zemy": {
+      "description": "",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "fumiko": {
-      "description": "Gama Delta — alinhado com carácter técnico e boa resistência ao uso."
+      "description": "Gama Delta — alinhado com carácter técnico e boa resistência ao uso.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "madoka": {
-      "description": "Gama Delta — alinhado contemporâneo para projectos de loja e hotelaria leve."
+      "description": "Gama Delta — alinhado contemporâneo para projectos de loja e hotelaria leve.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "barbados": {
-      "description": "Gama Fashion — presença visual forte para quem quer o sofá como peça de destaque."
+      "description": "Gama Fashion — presença visual forte para quem quer o sofá como peça de destaque.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "river": {
-      "description": "Pele genuína Extra — acabamento nobre com patina natural ao longo do tempo."
+      "description": "Pele genuína Extra — acabamento nobre com patina natural ao longo do tempo.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     "siza": {
-      "description": "Pele genuína Platina — toque premium para sofás de assinatura."
+      "description": "Pele genuína Platina — toque premium para sofás de assinatura.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     }
   }
 }

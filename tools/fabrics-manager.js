@@ -83,6 +83,13 @@
             '<label class="checks"><input type="checkbox" name="show"' + (col.show ? ' checked' : '') + ' /> Visível no site</label>' +
             '<label>Capa (caminho relativo)<input type="text" name="cover" value="' + esc(col.cover || '') + '" placeholder="assets/photos/tecidos/' + esc(col.id) + '.jpg" /></label>' +
             '<label>Texto de marketing<textarea name="description" rows="2">' + esc(col.description || '') + '</textarea></label>' +
+            '<div class="specs">' +
+              '<label>Composição<input type="text" name="composicao" value="' + esc((col.specs && col.specs.composicao) || '') + '" placeholder="ex.: 100% poliéster" /></label>' +
+              '<label>Largura<input type="text" name="largura" value="' + esc((col.specs && col.specs.largura) || '') + '" placeholder="ex.: 140 cm" /></label>' +
+              '<label>Peso<input type="text" name="peso" value="' + esc((col.specs && col.specs.peso) || '') + '" placeholder="ex.: 320 g/m²" /></label>' +
+              '<label>Abrasão<input type="text" name="abrasao" value="' + esc((col.specs && col.specs.abrasao) || '') + '" placeholder="ex.: 40.000 ciclos Martindale" /></label>' +
+              '<label>Borboto<input type="text" name="borboto" value="' + esc((col.specs && col.specs.borboto) || '') + '" placeholder="ex.: 4–5" /></label>' +
+            '</div>' +
           '</div>' +
           '<div class="actions">' +
             '<button type="button" class="btn btn--brand" data-save>Guardar</button>' +
@@ -117,6 +124,13 @@
       show: !!card.querySelector('[name=show]').checked,
       cover: card.querySelector('[name=cover]').value,
       description: card.querySelector('[name=description]').value,
+      specs: {
+        composicao: card.querySelector('[name=composicao]').value,
+        largura: card.querySelector('[name=largura]').value,
+        peso: card.querySelector('[name=peso]').value,
+        abrasao: card.querySelector('[name=abrasao]').value,
+        borboto: card.querySelector('[name=borboto]').value,
+      },
     };
     setStatus('A guardar ' + id + '…');
     cmsApi('fabrics.php', { method: 'POST', body: payload }).then(function (data) {

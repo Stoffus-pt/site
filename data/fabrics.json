@@ -1,6 +1,6 @@
 {
   "meta": {
-    "syncedAt": "2026-07-18T13:28:47.982Z",
+    "syncedAt": "2026-07-21T12:04:00.129Z",
     "catalogSource": "C:/Users/User/Desktop/Stoffus 3D/data/catalog/catalog-draft.json",
     "overrideSource": "data/fabrics-site.json",
     "catalogVersion": null,
@@ -48,7 +48,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Linha Bliss alinhada — toque suave e leitura contemporânea para sofás de uso diário."
+      "description": "Linha Bliss alinhada — toque suave e leitura contemporânea para sofás de uso diário.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "bella",
@@ -63,7 +70,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss com presença táctil; ideal para ambientes acolhedores."
+      "description": "Aveludado Bliss com presença táctil; ideal para ambientes acolhedores.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "carmen",
@@ -78,7 +92,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Alinhado Bliss — estrutura visual discreta e conforto duradouro."
+      "description": "Alinhado Bliss — estrutura visual discreta e conforto duradouro.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "falcon",
@@ -93,7 +114,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss de carácter marcado; funciona bem em módulos relax."
+      "description": "Aveludado Bliss de carácter marcado; funciona bem em módulos relax.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "funky",
@@ -108,7 +136,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss com personalidade — destaque de cor sem perder elegância."
+      "description": "Aveludado Bliss com personalidade — destaque de cor sem perder elegância.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "garby",
@@ -123,7 +158,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss versátil para composições claras ou contrastes suaves."
+      "description": "Aveludado Bliss versátil para composições claras ou contrastes suaves.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "grift",
@@ -138,7 +180,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "ifrane",
@@ -153,7 +202,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "jade",
@@ -168,7 +224,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss com profundidade de tom; combina com pés lacados e metálicos."
+      "description": "Aveludado Bliss com profundidade de tom; combina com pés lacados e metálicos.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "kamala",
@@ -183,7 +246,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss bestseller — toque aveludado e fácil de integrar em qualquer sala."
+      "description": "Aveludado Bliss bestseller — toque aveludado e fácil de integrar em qualquer sala.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "kamala2",
@@ -198,7 +268,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Evolução Kamala: mesma família aveludada, nova leitura de cor."
+      "description": "Evolução Kamala: mesma família aveludada, nova leitura de cor.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "karma",
@@ -213,7 +290,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "matchy",
@@ -228,7 +312,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss pensado para combinações harmoniosas entre módulos."
+      "description": "Aveludado Bliss pensado para combinações harmoniosas entre módulos.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "mirage",
@@ -243,7 +334,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "pisa",
@@ -258,7 +356,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "prisma",
@@ -273,7 +378,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Aveludado Bliss com jogo de luz; destaca volumes e chaise."
+      "description": "Aveludado Bliss com jogo de luz; destaca volumes e chaise.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "ramses",
@@ -288,7 +400,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "rissani",
@@ -303,7 +422,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "soft",
@@ -318,7 +444,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Alinhado Bliss de toque macio — escolha segura para famílias e pet friendly."
+      "description": "Alinhado Bliss de toque macio — escolha segura para famílias e pet friendly.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "stancy",
@@ -333,7 +466,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "talia",
@@ -348,7 +488,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "touareg",
@@ -363,7 +510,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "venturi",
@@ -378,7 +532,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "zemy",
@@ -393,7 +554,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": null
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "fumiko",
@@ -408,7 +576,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Gama Delta — alinhado com carácter técnico e boa resistência ao uso."
+      "description": "Gama Delta — alinhado com carácter técnico e boa resistência ao uso.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "madoka",
@@ -423,7 +598,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Gama Delta — alinhado contemporâneo para projectos de loja e hotelaria leve."
+      "description": "Gama Delta — alinhado contemporâneo para projectos de loja e hotelaria leve.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "barbados",
@@ -438,7 +620,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Gama Fashion — presença visual forte para quem quer o sofá como peça de destaque."
+      "description": "Gama Fashion — presença visual forte para quem quer o sofá como peça de destaque.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "river",
@@ -453,7 +642,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Pele genuína Extra — acabamento nobre com patina natural ao longo do tempo."
+      "description": "Pele genuína Extra — acabamento nobre com patina natural ao longo do tempo.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     },
     {
       "id": "siza",
@@ -468,7 +664,14 @@
       "colorCount": 7,
       "show": true,
       "cover": null,
-      "description": "Pele genuína Platina — toque premium para sofás de assinatura."
+      "description": "Pele genuína Platina — toque premium para sofás de assinatura.",
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
     }
   ]
 }

@@ -73,6 +73,19 @@ function loadSiteOverrides() {
   return { path, overrides: raw.collections || {} };
 }
 
+const SPEC_KEYS = ['composicao', 'largura', 'peso', 'abrasao', 'borboto'];
+
+function mapSpecs(override, catalogCol) {
+  const fromOverride = override?.specs && typeof override.specs === 'object' ? override.specs : {};
+  const fromCatalog = catalogCol?.specs && typeof catalogCol.specs === 'object' ? catalogCol.specs : {};
+  const specs = {};
+  for (const key of SPEC_KEYS) {
+    const value = fromOverride[key] ?? fromCatalog[key] ?? '';
+    specs[key] = value == null ? '' : String(value).trim();
+  }
+  return specs;
+}
+
 function mapCollection(col, override) {
   const id = collectionId(col.name);
   const prefix = String(col.prefix || '').toUpperCase();
@@ -97,6 +110,7 @@ function mapCollection(col, override) {
     show: override?.show !== false,
     cover: override?.cover || null,
     description: override?.description || null,
+    specs: mapSpecs(override, col),
   };
 }
 

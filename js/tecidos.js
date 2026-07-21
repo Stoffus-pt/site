@@ -7,12 +7,21 @@
   var modalTitle = document.getElementById('fabric-modal-title');
   var modalGama = document.getElementById('fabric-modal-gama');
   var modalMeta = document.getElementById('fabric-modal-meta');
+  var modalSpecs = document.getElementById('fabric-modal-specs');
   var modalPreview = document.getElementById('fabric-modal-preview');
   var modalCode = document.getElementById('fabric-modal-code');
   var modalColors = document.getElementById('fabric-modal-colors');
   var modalConfig = document.getElementById('fabric-modal-config');
 
   if (!grid || !filters || !modal) return;
+
+  var SPEC_LABELS = [
+    { key: 'composicao', label: 'Composição' },
+    { key: 'largura', label: 'Largura' },
+    { key: 'peso', label: 'Peso' },
+    { key: 'abrasao', label: 'Abrasão' },
+    { key: 'borboto', label: 'Borboto' },
+  ];
 
   var GAMA_ORDER = ['bliss', 'delta', 'fashion', 'pele'];
 
@@ -102,6 +111,24 @@
     return GAMAS[col.prefix] || { label: col.prefix, filter: col.gama || 'all' };
   }
 
+  function specValue(col, key) {
+    var specs = col && col.specs ? col.specs : {};
+    var value = specs[key];
+    if (value == null) return '';
+    return String(value).trim();
+  }
+
+  function fillModalSpecs(col) {
+    if (!modalSpecs) return;
+    SPEC_LABELS.forEach(function (item) {
+      var dd = modalSpecs.querySelector('[data-spec="' + item.key + '"]');
+      if (!dd) return;
+      var value = specValue(col, item.key);
+      dd.textContent = value || '—';
+      dd.classList.toggle('is-empty', !value);
+    });
+  }
+
   function renderCard(col) {
     var gama = gamaFor(col);
     var textureLabel = TEXTURE_LABELS[col.texture] || TEXTURE_LABELS.default;
@@ -171,6 +198,7 @@
     modalTitle.textContent = col.name;
     modalGama.textContent = gama.label;
     modalMeta.textContent = textureLabel + ' · ' + colors + ' cores · ' + col.prefix + col.start + ' – ' + col.prefix + col.end;
+    fillModalSpecs(col);
     if (modalConfig) {
       modalConfig.setAttribute('data-fabric-id', fabricIdFor(col, 1));
     }

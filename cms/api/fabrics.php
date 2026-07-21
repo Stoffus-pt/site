@@ -46,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (array_key_exists('description', $input)) {
                 $fields['description'] = $input['description'];
             }
+            if (array_key_exists('specs', $input) && is_array($input['specs'])) {
+                $fields['specs'] = $input['specs'];
+            }
             if ($fields === []) {
                 cms_json(['ok' => false, 'error' => 'Nada para actualizar.'], 400);
             }

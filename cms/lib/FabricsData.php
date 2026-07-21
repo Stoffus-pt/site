@@ -84,6 +84,13 @@ function cms_fabrics_list_merged(): array
         }
         $id = (string) $col['id'];
         $override = isset($overrides[$id]) && is_array($overrides[$id]) ? $overrides[$id] : [];
+        $specsSource = [];
+        if (isset($override['specs']) && is_array($override['specs'])) {
+            $specsSource = $override['specs'];
+        } elseif (isset($col['specs']) && is_array($col['specs'])) {
+            $specsSource = $col['specs'];
+        }
+
         $items[] = [
             'id' => $id,
             'name' => (string) ($col['name'] ?? $id),
@@ -97,6 +104,7 @@ function cms_fabrics_list_merged(): array
             'show' => array_key_exists('show', $override) ? !empty($override['show']) : (!isset($col['show']) || !empty($col['show'])),
             'cover' => isset($override['cover']) ? (string) $override['cover'] : (isset($col['cover']) ? (string) $col['cover'] : ''),
             'description' => isset($override['description']) ? (string) $override['description'] : (isset($col['description']) ? (string) $col['description'] : ''),
+            'specs' => cms_fabrics_normalize_specs($specsSource),
             'hasOverride' => $override !== [],
         ];
     }
@@ -106,6 +114,22 @@ function cms_fabrics_list_merged(): array
         'gamas' => $catalog['gamas'] ?? [],
         'collections' => $items,
     ];
+}
+
+/**
+ * Normaliza as 5 características técnicas do tecido.
+ *
+ * @param array<string, mixed> $raw
+ * @return array{composicao:string,largura:string,peso:string,abrasao:string,borboto:string}
+ */
+function cms_fabrics_normalize_specs(array $raw): array
+{
+    $keys = ['composicao', 'largura', 'peso', 'abrasao', 'borboto'];
+    $out = [];
+    foreach ($keys as $key) {
+        $out[$key] = isset($raw[$key]) ? trim((string) $raw[$key]) : '';
+    }
+    return $out;
 }
 
 /**
@@ -142,6 +166,9 @@ function cms_fabrics_update_override(string $id, array $fields): array
             $current['description'] = $desc;
         }
     }
+    if (array_key_exists('specs', $fields) && is_array($fields['specs'])) {
+        $current['specs'] = cms_fabrics_normalize_specs($fields['specs']);
+    }
 
     // Remover override vazio
     $clean = [];
@@ -153,6 +180,11 @@ function cms_fabrics_update_override(string $id, array $fields): array
     }
     if (!empty($current['description'])) {
         $clean['description'] = (string) $current['description'];
+    }
+    if (isset($current['specs']) && is_array($current['specs'])) {
+        $specs = cms_fabrics_normalize_specs($current['specs']);
+        // Manter o bloco mesmo vazio — espaços definidos para preenchimento posterior
+        $clean['specs'] = $specs;
     }
 
     if ($clean === []) {
