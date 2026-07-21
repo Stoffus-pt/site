@@ -88,7 +88,7 @@
               '<label>Largura<input type="text" name="largura" value="' + esc((col.specs && col.specs.largura) || '') + '" placeholder="ex.: 140 cm" /></label>' +
               '<label>Peso<input type="text" name="peso" value="' + esc((col.specs && col.specs.peso) || '') + '" placeholder="ex.: 320 g/m²" /></label>' +
               '<label>Abrasão<input type="text" name="abrasao" value="' + esc((col.specs && col.specs.abrasao) || '') + '" placeholder="ex.: 40.000 ciclos Martindale" /></label>' +
-              '<label>Borboto<input type="text" name="borboto" value="' + esc((col.specs && col.specs.borboto) || '') + '" placeholder="ex.: 4–5" /></label>' +
+              '<label>Borboto<input type="text" name="borboto" value="' + esc((col.specs && col.specs.borboto) || '') + '" placeholder="ex.: 4.0" /></label>' +
             '</div>' +
           '</div>' +
           '<div class="actions">' +

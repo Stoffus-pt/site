@@ -118,13 +118,46 @@
     return String(value).trim();
   }
 
+  function parseBorboto(value) {
+    if (!value) return null;
+    var match = String(value).replace(',', '.').match(/(\d+(?:\.\d+)?)/);
+    if (!match) return null;
+    var num = Number(match[1]);
+    if (!Number.isFinite(num)) return null;
+    if (num > 5 && num <= 50) num = num / 10;
+    return Math.max(0, Math.min(5, num));
+  }
+
+  function renderBorboto(value) {
+    var score = parseBorboto(value);
+    if (score == null) {
+      return '<span class="fabric-tech__empty">—</span>';
+    }
+    var filled = Math.round(score);
+    var stars = '';
+    for (var i = 1; i <= 4; i++) {
+      stars += '<span class="fabric-tech__star' + (i <= filled ? ' is-on' : '') + '" aria-hidden="true">★</span>';
+    }
+    return (
+      '<span class="fabric-tech__pilling" title="Borboto ' + score.toFixed(1) + '">' +
+        '<span class="fabric-tech__knob" aria-hidden="true"></span>' +
+        '<span class="fabric-tech__stars">' + stars + '</span>' +
+        '<span class="fabric-tech__score">' + score.toFixed(1) + '</span>' +
+      '</span>'
+    );
+  }
+
   function fillModalSpecs(col) {
     if (!modalSpecs) return;
     SPEC_LABELS.forEach(function (item) {
       var dd = modalSpecs.querySelector('[data-spec="' + item.key + '"]');
       if (!dd) return;
       var value = specValue(col, item.key);
-      dd.textContent = value || '—';
+      if (item.key === 'borboto') {
+        dd.innerHTML = value ? renderBorboto(value) : '<span class="fabric-tech__empty">—</span>';
+      } else {
+        dd.textContent = value || '—';
+      }
       dd.classList.toggle('is-empty', !value);
     });
   }

@@ -168,13 +168,6 @@
             <span class="label" id="fabric-modal-gama"></span>
             <h2 id="fabric-modal-title"></h2>
             <p id="fabric-modal-meta" class="fabric-modal__meta"></p>
-            <dl class="fabric-specs" id="fabric-modal-specs" aria-label="Características do tecido">
-              <div><dt>Composição</dt><dd data-spec="composicao">—</dd></div>
-              <div><dt>Largura</dt><dd data-spec="largura">—</dd></div>
-              <div><dt>Peso</dt><dd data-spec="peso">—</dd></div>
-              <div><dt>Abrasão</dt><dd data-spec="abrasao">—</dd></div>
-              <div><dt>Borboto</dt><dd data-spec="borboto">—</dd></div>
-            </dl>
           </div>
           <button type="button" class="fabric-modal__close" data-fabric-close aria-label="Fechar">
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
@@ -185,6 +178,50 @@
           <img id="fabric-modal-preview" src="" alt="" width="480" height="480" />
           <p class="fabric-modal__code" id="fabric-modal-code"></p>
         </div>
+
+        <section class="fabric-tech" id="fabric-modal-specs" aria-labelledby="fabric-tech-title">
+          <header class="fabric-tech__head">
+            <h3 id="fabric-tech-title">Características Técnicas</h3>
+            <span>Technical specifications</span>
+          </header>
+          <dl class="fabric-tech__table">
+            <div class="fabric-tech__row">
+              <dt>
+                <span class="fabric-tech__label">Composição</span>
+                <span class="fabric-tech__sub">composición / composition</span>
+              </dt>
+              <dd data-spec="composicao">—</dd>
+            </div>
+            <div class="fabric-tech__row">
+              <dt>
+                <span class="fabric-tech__label">Largura</span>
+                <span class="fabric-tech__sub">ancho / width</span>
+              </dt>
+              <dd data-spec="largura">—</dd>
+            </div>
+            <div class="fabric-tech__row">
+              <dt>
+                <span class="fabric-tech__label">Peso</span>
+                <span class="fabric-tech__sub">weight</span>
+              </dt>
+              <dd data-spec="peso">—</dd>
+            </div>
+            <div class="fabric-tech__row">
+              <dt>
+                <span class="fabric-tech__label">Abrasão</span>
+                <span class="fabric-tech__sub">Martindale</span>
+              </dt>
+              <dd data-spec="abrasao">—</dd>
+            </div>
+            <div class="fabric-tech__row">
+              <dt>
+                <span class="fabric-tech__label">Borboto</span>
+                <span class="fabric-tech__sub">Pilling</span>
+              </dt>
+              <dd data-spec="borboto" class="fabric-tech__borboto">—</dd>
+            </div>
+          </dl>
+        </section>
 
         <div class="fabric-modal__colors" id="fabric-modal-colors"></div>
 
