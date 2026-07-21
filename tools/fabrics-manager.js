@@ -111,15 +111,9 @@
     });
   }
 
-  listEl.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-save]');
-    if (!btn) return;
-    var card = btn.closest('[data-id]');
-    if (!card) return;
-    var id = card.getAttribute('data-id');
-    var payload = {
-      action: 'update',
-      id: id,
+  function cardPayload(card) {
+    return {
+      id: card.getAttribute('data-id'),
       show: !!card.querySelector('[name=show]').checked,
       cover: card.querySelector('[name=cover]').value,
       description: '',
@@ -131,8 +125,13 @@
         borboto: card.querySelector('[name=borboto]').value,
       },
     };
+  }
+
+  function saveOne(card) {
+    var payload = Object.assign({ action: 'update' }, cardPayload(card));
+    var id = payload.id;
     setStatus('A guardar ' + id + '…');
-    cmsApi('fabrics.php', { method: 'POST', body: payload }).then(function (data) {
+    return cmsApi('fabrics.php', { method: 'POST', body: payload }).then(function (data) {
       var idx = collections.findIndex(function (c) { return c.id === id; });
       if (idx >= 0 && data.collection) collections[idx] = data.collection;
       render();
@@ -140,7 +139,39 @@
     }).catch(function (err) {
       setStatus(err.error || 'Erro ao guardar.', 'err');
     });
+  }
+
+  function saveAll() {
+    var cards = Array.prototype.slice.call(listEl.querySelectorAll('.card[data-id]'));
+    if (!cards.length) {
+      setStatus('Não há colecções visíveis para guardar.', 'err');
+      return;
+    }
+    var items = cards.map(cardPayload);
+    setStatus('A guardar ' + items.length + ' colecções…');
+    cmsApi('fabrics.php', {
+      method: 'POST',
+      body: { action: 'update_all', items: items },
+    }).then(function (data) {
+      if (data.collections) collections = data.collections;
+      fillGamaFilter(collections);
+      render();
+      setStatus(data.message || (items.length + ' colecções guardadas.'), data.synced ? 'ok' : '');
+    }).catch(function (err) {
+      setStatus(err.error || 'Erro ao guardar todos.', 'err');
+    });
+  }
+
+  listEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-save]');
+    if (!btn) return;
+    var card = btn.closest('[data-id]');
+    if (!card) return;
+    saveOne(card);
   });
+
+  document.getElementById('btn-save-all').addEventListener('click', saveAll);
+  document.getElementById('btn-save-all-bottom').addEventListener('click', saveAll);
 
   document.getElementById('btn-reload').addEventListener('click', load);
   document.getElementById('btn-sync').addEventListener('click', function () {

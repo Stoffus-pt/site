@@ -69,6 +69,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
 
+        if ($action === 'update_all') {
+            $items = $input['items'] ?? null;
+            if (!is_array($items) || $items === []) {
+                cms_json(['ok' => false, 'error' => 'Lista de colecções em falta.'], 400);
+            }
+            $result = cms_fabrics_update_many($items);
+            $merged = cms_fabrics_list_merged();
+            cms_json([
+                'ok' => true,
+                'count' => $result['count'],
+                'ids' => $result['ids'],
+                'synced' => $result['synced'],
+                'message' => $result['count'] . ' colecções guardadas. ' . $result['syncMessage'],
+                'collections' => $merged['collections'],
+                'meta' => $merged['meta'],
+            ]);
+        }
+
         if ($action === 'sync') {
             $sync = cms_fabrics_try_sync();
             $merged = cms_fabrics_list_merged();

@@ -134,8 +134,11 @@ function cms_fabrics_normalize_specs(array $raw): array
 
 /**
  * Actualiza overrides e regenera fabrics.json se o sync Node estiver disponível.
+ *
+ * @param array<string, mixed> $fields
+ * @return array{id:string,override:array<string,mixed>,synced:bool,syncMessage:string}
  */
-function cms_fabrics_update_override(string $id, array $fields): array
+function cms_fabrics_update_override(string $id, array $fields, bool $sync = true): array
 {
     $id = strtolower(trim($id));
     if ($id === '' || !preg_match('/^[a-z0-9][a-z0-9\-]*$/', $id)) {
@@ -194,13 +197,65 @@ function cms_fabrics_update_override(string $id, array $fields): array
     }
 
     cms_save_fabrics_site($site);
-    $sync = cms_fabrics_try_sync();
+
+    $syncResult = ['ok' => false, 'message' => 'Sync adiado.'];
+    if ($sync) {
+        $syncResult = cms_fabrics_try_sync();
+    }
 
     return [
         'id' => $id,
         'override' => $clean,
-        'synced' => $sync['ok'],
-        'syncMessage' => $sync['message'],
+        'synced' => !empty($syncResult['ok']),
+        'syncMessage' => (string) ($syncResult['message'] ?? ''),
+    ];
+}
+
+/**
+ * Actualiza várias colecções de uma vez e corre o sync só no fim.
+ *
+ * @param list<array<string, mixed>> $items
+ * @return array{count:int,synced:bool,syncMessage:string,ids:list<string>}
+ */
+function cms_fabrics_update_many(array $items): array
+{
+    $ids = [];
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $id = (string) ($item['id'] ?? '');
+        $fields = [];
+        if (array_key_exists('show', $item)) {
+            $fields['show'] = $item['show'];
+        }
+        if (array_key_exists('cover', $item)) {
+            $fields['cover'] = $item['cover'];
+        }
+        if (array_key_exists('description', $item)) {
+            $fields['description'] = $item['description'];
+        }
+        if (array_key_exists('specs', $item) && is_array($item['specs'])) {
+            $fields['specs'] = $item['specs'];
+        }
+        if ($id === '' || $fields === []) {
+            continue;
+        }
+        $result = cms_fabrics_update_override($id, $fields, false);
+        $ids[] = $result['id'];
+    }
+
+    if ($ids === []) {
+        throw new InvalidArgumentException('Nenhuma colecção válida para guardar.');
+    }
+
+    $sync = cms_fabrics_try_sync();
+
+    return [
+        'count' => count($ids),
+        'ids' => $ids,
+        'synced' => !empty($sync['ok']),
+        'syncMessage' => (string) ($sync['message'] ?? ''),
     ];
 }
 

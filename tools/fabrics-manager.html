@@ -16,6 +16,10 @@
     h1 { margin:0 0 .35rem; font-size:1.35rem; }
     .lead { margin:0 0 1rem; color:var(--muted); line-height:1.5; max-width:52rem; }
     .toolbar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+    .toolbar--sticky {
+      position:sticky; bottom:0; z-index:5; margin:1rem 0 0; padding:.65rem 0;
+      background:linear-gradient(180deg, transparent, var(--bg) 28%);
+    }
     .btn { border:none; padding:.55rem .85rem; cursor:pointer; font-size:.75rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
     .btn--brand { background:var(--brand); color:#fff; }
     .btn--outline { background:#fff; border:1px solid var(--ink); color:var(--ink); }
@@ -61,9 +65,15 @@
     </p>
 
     <div class="toolbar">
+      <button type="button" class="btn btn--brand" id="btn-save-all">Guardar todos</button>
       <button type="button" class="btn btn--outline" id="btn-reload">Actualizar lista</button>
-      <button type="button" class="btn btn--brand" id="btn-sync">Sincronizar catálogo</button>
+      <button type="button" class="btn btn--outline" id="btn-sync">Sincronizar catálogo</button>
       <span class="status" id="status"></span>
+    </div>
+
+    <div class="toolbar toolbar--sticky">
+      <button type="button" class="btn btn--brand" id="btn-save-all-bottom">Guardar todos</button>
+      <span class="status" id="status-hint">Preenche os campos e grava tudo de uma vez.</span>
     </div>
 
     <div class="filters">
