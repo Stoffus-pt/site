@@ -1992,9 +1992,9 @@ body.page-minimal:not(.page-rich) .section--warm {
 
 .fabric-tech {
   margin: 0 1.25rem 0.35rem;
-  background: #111;
-  color: #f2f2f2;
-  border: 1px solid #3a3a3a;
+  background: var(--surface-card);
+  color: var(--ink-deep);
+  border: 1px solid var(--border);
 }
 
 .fabric-tech__head {
@@ -2003,7 +2003,8 @@ body.page-minimal:not(.page-rich) .section--warm {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.7rem 0.85rem 0.55rem;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
 }
 
 .fabric-tech__head h3 {
@@ -2011,13 +2012,13 @@ body.page-minimal:not(.page-rich) .section--warm {
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #fff;
+  color: var(--ink-deep);
 }
 
 .fabric-tech__head span {
   font-size: 0.68rem;
   font-weight: 400;
-  color: #9a9a9a;
+  color: var(--ink-muted);
   white-space: nowrap;
 }
 
@@ -2028,7 +2029,7 @@ body.page-minimal:not(.page-rich) .section--warm {
 .fabric-tech__row {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid var(--border);
 }
 
 .fabric-tech__row:last-child {
@@ -2043,14 +2044,15 @@ body.page-minimal:not(.page-rich) .section--warm {
 }
 
 .fabric-tech__row dt {
-  border-right: 1px solid #3a3a3a;
+  border-right: 1px solid var(--border);
+  background: rgba(240, 238, 236, 0.45);
 }
 
 .fabric-tech__label {
   display: block;
   font-size: 0.92rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--ink-deep);
   line-height: 1.2;
 }
 
@@ -2059,7 +2061,7 @@ body.page-minimal:not(.page-rich) .section--warm {
   margin-top: 0.18rem;
   font-size: 0.68rem;
   font-weight: 400;
-  color: #9a9a9a;
+  color: var(--ink-muted);
   line-height: 1.2;
 }
 
@@ -2070,12 +2072,12 @@ body.page-minimal:not(.page-rich) .section--warm {
   text-align: center;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--ink-deep);
 }
 
 .fabric-tech__row dd.is-empty,
 .fabric-tech__empty {
-  color: #7a7a7a;
+  color: var(--silver);
 }
 
 .fabric-tech__pilling {
@@ -2083,16 +2085,16 @@ body.page-minimal:not(.page-rich) .section--warm {
   align-items: center;
   gap: 0.35rem;
   padding: 0.2rem 0.45rem 0.2rem 0.3rem;
-  border: 1px solid #555;
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: #1a1a1a;
+  background: var(--surface-2);
 }
 
 .fabric-tech__knob {
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 50%;
-  background: #8a8a8a;
+  background: var(--ink-muted);
   flex-shrink: 0;
 }
 
@@ -2104,18 +2106,18 @@ body.page-minimal:not(.page-rich) .section--warm {
 
 .fabric-tech__star {
   font-size: 0.72rem;
-  color: #4a4a4a;
+  color: #d5d0cc;
 }
 
 .fabric-tech__star.is-on {
-  color: #bdbdbd;
+  color: var(--brand);
 }
 
 .fabric-tech__score {
   font-size: 0.82rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: #fff;
+  color: var(--ink-deep);
   min-width: 1.6rem;
   text-align: right;
 }
