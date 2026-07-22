@@ -3030,6 +3030,13 @@ body.page-minimal:not(.page-rich) .section--warm {
 
 .contact-emails__list a:hover { color: var(--brand); }
 
+.contact-emails__multi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
 .contact-form-wrap {
   padding: 1.5rem 1.35rem;
   background: var(--surface-card);
