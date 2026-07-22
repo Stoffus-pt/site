@@ -1,0 +1,560 @@
+{
+  "meta": {
+    "title": "Rascunho site — tecidos 2026 (características)",
+    "status": "draft-only",
+    "warning": "NÃO substitui site/data/fabrics.json nem fabrics-site.json. Quando a colecção 2026 for activada no configurador, importar estes specs para o CMS / fabrics-site.json e correr fabrics:sync.",
+    "createdAt": "2026-07-22T16:38:36.471Z",
+    "sourcePdfs": [
+      "Cabanes e Ortuno.pdf",
+      "Davis.pdf",
+      "Froca.pdf",
+      "Stilo Textil.pdf",
+      "Vertex.pdf",
+      "Vicotex.pdf"
+    ],
+    "catalogDraft": "data/catalog/fabrics-2026-draft.json",
+    "collectionCount": 29,
+    "withSpecs": 29,
+    "missingSpecs": [],
+    "orphanFromPdfs": []
+  },
+  "collections": {
+    "artis": {
+      "name": "Artis",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "142 cm",
+        "peso": "450 gr/m²",
+        "abrasao": "> 40 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Vicotex.pdf",
+      "specsStatus": "ok"
+    },
+    "evolution": {
+      "name": "Evolution",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "430 gr/m²",
+        "abrasao": "> 25 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Vicotex.pdf",
+      "specsStatus": "ok"
+    },
+    "onyx": {
+      "name": "Onyx",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "480 gr/m²",
+        "abrasao": "> 50 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Vicotex.pdf",
+      "specsStatus": "ok"
+    },
+    "garby": {
+      "name": "Garby",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "320 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Vicotex.pdf",
+      "specsStatus": "ok"
+    },
+    "falcon": {
+      "name": "Falcon",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "420 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Vicotex.pdf",
+      "specsStatus": "ok"
+    },
+    "rissani": {
+      "name": "Rissani",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "92% Pes / 8% Nylon",
+        "largura": "140 cm",
+        "peso": "390 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Vicotex.pdf",
+      "specsStatus": "ok"
+    },
+    "arly": {
+      "name": "Arly",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "142 cm",
+        "peso": "600 gr/m²",
+        "abrasao": "> 50 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Vicotex.pdf",
+      "specsStatus": "ok"
+    },
+    "ortis": {
+      "name": "Ortis",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "390 gr/m²",
+        "abrasao": "> 52 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Vertex.pdf",
+      "specsStatus": "ok"
+    },
+    "tory": {
+      "name": "Tory",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "142 cm",
+        "peso": "425 gr/m²",
+        "abrasao": "> 47 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Vertex.pdf",
+      "specsStatus": "ok"
+    },
+    "kira": {
+      "name": "Kira",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "94% Pes / 6% Nylon",
+        "largura": "140 cm",
+        "peso": "380 gr/m²",
+        "abrasao": "> 20 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Stilo Textil.pdf",
+      "specsStatus": "ok"
+    },
+    "venturi": {
+      "name": "Venturi",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "485 gr/m²",
+        "abrasao": "> 40 000",
+        "borboto": "5.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Stilo Textil.pdf",
+      "specsStatus": "ok"
+    },
+    "rusty": {
+      "name": "Rusty",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "142 cm",
+        "peso": "380 gr/m²",
+        "abrasao": "> 40 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Stilo Textil.pdf",
+      "specsStatus": "ok"
+    },
+    "sierra": {
+      "name": "Sierra",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "143 cm",
+        "peso": "600 gr/m²",
+        "abrasao": "> 25 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Stilo Textil.pdf",
+      "specsStatus": "ok"
+    },
+    "alty": {
+      "name": "Alty",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "143 cm",
+        "peso": "500 gr/m²",
+        "abrasao": "> 25 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Stilo Textil.pdf",
+      "specsStatus": "ok"
+    },
+    "nemo": {
+      "name": "Nemo",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "350 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Stilo Textil.pdf",
+      "specsStatus": "ok"
+    },
+    "carmy": {
+      "name": "Carmy",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "475 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "prelude": {
+      "name": "Prelude",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "450 gr/m²",
+        "abrasao": "> 70 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "yuma": {
+      "name": "Yuma",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "520 gr/m²",
+        "abrasao": "> 70 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "atlas": {
+      "name": "Atlas",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "380 gr/m²",
+        "abrasao": "> 50 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "kamala": {
+      "name": "Kamala",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "380 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "jade": {
+      "name": "Jade",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "400 gr/m²",
+        "abrasao": "> 64 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "syrai": {
+      "name": "Syrai",
+      "prefix": "D",
+      "gama": "DELTA",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "530 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "kyto": {
+      "name": "Kyto",
+      "prefix": "D",
+      "gama": "DELTA",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "430 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Froca.pdf",
+      "specsStatus": "ok"
+    },
+    "boris": {
+      "name": "Boris",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "430 gr/m²",
+        "abrasao": "> 35 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Davis.pdf",
+      "specsStatus": "ok"
+    },
+    "karma": {
+      "name": "Karma",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "440 gr/m²",
+        "abrasao": "> 120 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Davis.pdf",
+      "specsStatus": "ok"
+    },
+    "elegance": {
+      "name": "Elegance",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "350 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Davis.pdf",
+      "specsStatus": "ok"
+    },
+    "polar": {
+      "name": "Polar",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "465 gr/m²",
+        "abrasao": "> 70 000",
+        "borboto": "5.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Davis.pdf",
+      "specsStatus": "ok"
+    },
+    "stratos": {
+      "name": "Stratos",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "280 gr/m²",
+        "abrasao": "> 100 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean",
+        "antibacterial"
+      ],
+      "sourcePdf": "Davis.pdf",
+      "specsStatus": "ok"
+    },
+    "baltic": {
+      "name": "Baltic",
+      "prefix": "B",
+      "gama": "BLISS",
+      "show": true,
+      "specs": {
+        "composicao": "100% Pes",
+        "largura": "142 cm",
+        "peso": "490 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
+      },
+      "traits": [
+        "easyClean"
+      ],
+      "sourcePdf": "Cabanes e Ortuno.pdf",
+      "specsStatus": "ok"
+    }
+  }
+}
