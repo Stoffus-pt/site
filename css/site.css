@@ -1493,6 +1493,18 @@ a.hero__tag:hover {
   margin-right: 0.45rem;
 }
 
+.btn--sketchup {
+  gap: 0.55rem;
+}
+
+.btn__logo-sketchup {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
 @media (min-width: 768px) {
   .download-feature {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
