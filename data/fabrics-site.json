@@ -131,7 +131,7 @@
       }
     },
     "mirage": {
-      "show": true,
+      "show": false,
       "specs": {
         "composicao": "100% Pes",
         "largura": "",
@@ -273,7 +273,7 @@
     "river": {
       "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pele genuína",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -283,7 +283,7 @@
     "siza": {
       "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pele genuína",
         "largura": "",
         "peso": "",
         "abrasao": "",
