@@ -492,7 +492,9 @@
   function init(data) {
     GAMAS = data.gamas || {};
     TEXTURE_LABELS = data.textureLabels || TEXTURE_LABELS;
-    COLLECTIONS = sortCollections(data.collections || []);
+    COLLECTIONS = sortCollections((data.collections || []).filter(function (col) {
+      return col && col.show !== false;
+    }));
 
     bindUi();
     renderGrid();

@@ -135,7 +135,9 @@
       var idx = collections.findIndex(function (c) { return c.id === id; });
       if (idx >= 0 && data.collection) collections[idx] = data.collection;
       render();
-      setStatus(data.message || 'Guardado.', data.synced ? 'ok' : '');
+      var msg = data.message || 'Guardado.';
+      if (payload.show === false) msg = 'Oculto no site. ' + msg;
+      setStatus(msg, data.synced ? 'ok' : '');
     }).catch(function (err) {
       setStatus(err.error || 'Erro ao guardar.', 'err');
     });
@@ -166,6 +168,14 @@
     var btn = e.target.closest('[data-save]');
     if (!btn) return;
     var card = btn.closest('[data-id]');
+    if (!card) return;
+    saveOne(card);
+  });
+
+  listEl.addEventListener('change', function (e) {
+    var input = e.target.closest('input[name=show]');
+    if (!input) return;
+    var card = input.closest('[data-id]');
     if (!card) return;
     saveOne(card);
   });

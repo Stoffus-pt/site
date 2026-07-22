@@ -121,8 +121,8 @@ const collections = (catalog.collections || [])
   .filter((col) => !SKIP_NAMES.has(collectionId(col.name)))
   .filter((col) => col.enabled !== false)
   .map((col) => mapCollection(col, overrides[collectionId(col.name)]))
-  .filter(Boolean)
-  .filter((col) => col.show);
+  .filter(Boolean);
+  // Mantém também show:false — o site filtra na UI; o CMS precisa de os ver para voltar a activar.
 
 collections.sort((a, b) => {
   const oa = GAMA_ORDER.indexOf(a.gama);

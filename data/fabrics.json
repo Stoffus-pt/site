@@ -1,6 +1,6 @@
 {
   "meta": {
-    "syncedAt": "2026-07-22T16:45:53.972Z",
+    "syncedAt": "2026-07-22T17:09:21.755Z",
     "catalogSource": "C:/Users/User/Desktop/Stoffus 3D/data/catalog/catalog-draft.json",
     "overrideSource": "data/fabrics-site.json",
     "catalogVersion": null,
@@ -332,7 +332,7 @@
       "gama": "bliss",
       "gamaLabel": "Bliss",
       "colorCount": 7,
-      "show": true,
+      "show": false,
       "cover": null,
       "description": null,
       "specs": {
@@ -644,7 +644,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pele genuína",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -666,7 +666,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pele genuína",
         "largura": "",
         "peso": "",
         "abrasao": "",

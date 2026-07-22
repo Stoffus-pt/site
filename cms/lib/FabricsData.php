@@ -71,6 +71,74 @@ function cms_load_fabrics_catalog(): array
     return $data;
 }
 
+function cms_save_fabrics_catalog(array $data): void
+{
+    $path = cms_fabrics_catalog_path();
+    $dir = dirname($path);
+    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        throw new RuntimeException('Não foi possível criar a pasta de dados.');
+    }
+    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($json === false) {
+        throw new RuntimeException('Erro ao serializar fabrics.json.');
+    }
+    if (file_put_contents($path, $json . "\n") === false) {
+        throw new RuntimeException('Não foi possível gravar fabrics.json.');
+    }
+}
+
+/**
+ * Actualiza fabrics.json sem depender do Node (essencial em produção).
+ * Mantém colecções ocultas com show=false.
+ *
+ * @param array<string, mixed> $fields
+ */
+function cms_fabrics_patch_public_json(string $id, array $fields): bool
+{
+    $catalog = cms_load_fabrics_catalog();
+    $found = false;
+
+    foreach ($catalog['collections'] as $i => $col) {
+        if (!is_array($col) || (string) ($col['id'] ?? '') !== $id) {
+            continue;
+        }
+        $found = true;
+        if (array_key_exists('show', $fields)) {
+            $catalog['collections'][$i]['show'] = !empty($fields['show']);
+        }
+        if (array_key_exists('cover', $fields)) {
+            $cover = trim((string) $fields['cover']);
+            $catalog['collections'][$i]['cover'] = $cover === '' ? null : $cover;
+        }
+        if (array_key_exists('description', $fields)) {
+            $desc = trim((string) $fields['description']);
+            $catalog['collections'][$i]['description'] = $desc === '' ? null : $desc;
+        }
+        if (array_key_exists('specs', $fields) && is_array($fields['specs'])) {
+            $catalog['collections'][$i]['specs'] = cms_fabrics_normalize_specs($fields['specs']);
+        }
+        break;
+    }
+
+    if (!$found) {
+        return false;
+    }
+
+    if (isset($catalog['meta']) && is_array($catalog['meta'])) {
+        $catalog['meta']['patchedAt'] = gmdate('c');
+        $visible = 0;
+        foreach ($catalog['collections'] as $col) {
+            if (!isset($col['show']) || !empty($col['show'])) {
+                $visible++;
+            }
+        }
+        $catalog['meta']['collectionCount'] = $visible;
+    }
+
+    cms_save_fabrics_catalog($catalog);
+    return true;
+}
+
 function cms_fabrics_list_merged(): array
 {
     $catalog = cms_load_fabrics_catalog();
@@ -78,11 +146,13 @@ function cms_fabrics_list_merged(): array
     $overrides = $site['collections'] ?? [];
 
     $items = [];
+    $seen = [];
     foreach ($catalog['collections'] as $col) {
         if (!is_array($col) || empty($col['id'])) {
             continue;
         }
         $id = (string) $col['id'];
+        $seen[$id] = true;
         $override = isset($overrides[$id]) && is_array($overrides[$id]) ? $overrides[$id] : [];
         $specsSource = [];
         if (isset($override['specs']) && is_array($override['specs'])) {
@@ -106,6 +176,33 @@ function cms_fabrics_list_merged(): array
             'description' => isset($override['description']) ? (string) $override['description'] : (isset($col['description']) ? (string) $col['description'] : ''),
             'specs' => cms_fabrics_normalize_specs($specsSource),
             'hasOverride' => $override !== [],
+        ];
+    }
+
+    // Recuperar colecções só no override (ex.: ocultas removidas por sync antigo)
+    foreach ($overrides as $id => $override) {
+        $id = (string) $id;
+        if ($id === '' || isset($seen[$id]) || !is_array($override)) {
+            continue;
+        }
+        if (!array_key_exists('show', $override) || !empty($override['show'])) {
+            continue;
+        }
+        $items[] = [
+            'id' => $id,
+            'name' => ucfirst($id),
+            'prefix' => '',
+            'start' => 0,
+            'end' => 0,
+            'gama' => '',
+            'gamaLabel' => '',
+            'texture' => 'default',
+            'colorCount' => 0,
+            'show' => false,
+            'cover' => isset($override['cover']) ? (string) $override['cover'] : '',
+            'description' => isset($override['description']) ? (string) $override['description'] : '',
+            'specs' => cms_fabrics_normalize_specs(isset($override['specs']) && is_array($override['specs']) ? $override['specs'] : []),
+            'hasOverride' => true,
         ];
     }
 
@@ -198,9 +295,21 @@ function cms_fabrics_update_override(string $id, array $fields, bool $sync = tru
 
     cms_save_fabrics_site($site);
 
+    // Sempre reflectir no fabrics.json (mesmo sem Node no servidor)
+    $patched = cms_fabrics_patch_public_json($id, $fields);
+
     $syncResult = ['ok' => false, 'message' => 'Sync adiado.'];
     if ($sync) {
         $syncResult = cms_fabrics_try_sync();
+        if (empty($syncResult['ok']) && $patched) {
+            $syncResult = [
+                'ok' => true,
+                'message' => 'Override gravado e fabrics.json actualizado (sem Node).',
+            ];
+        } elseif (empty($syncResult['ok']) && !$patched) {
+            $syncResult['message'] = ($syncResult['message'] ?? 'Sync falhou.') .
+                ' Override gravado; execute npm run fabrics:sync localmente para republicar a colecção.';
+        }
     }
 
     return [
