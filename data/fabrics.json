@@ -1,6 +1,6 @@
 {
   "meta": {
-    "syncedAt": "2026-07-21T12:10:55.402Z",
+    "syncedAt": "2026-07-22T16:45:53.972Z",
     "catalogSource": "C:/Users/User/Desktop/Stoffus 3D/data/catalog/catalog-draft.json",
     "overrideSource": "data/fabrics-site.json",
     "catalogVersion": null,
@@ -50,11 +50,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "142 cm",
+        "peso": "450 gr/m²",
+        "abrasao": "> 40 000",
+        "borboto": "4.0"
       }
     },
     {
@@ -72,7 +72,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -94,7 +94,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -116,11 +116,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "420 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
       }
     },
     {
@@ -138,7 +138,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -160,11 +160,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "320 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
       }
     },
     {
@@ -182,7 +182,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -204,7 +204,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -226,11 +226,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "400 gr/m²",
+        "abrasao": "> 64 000",
+        "borboto": "4.0"
       }
     },
     {
@@ -248,11 +248,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "380 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
       }
     },
     {
@@ -270,7 +270,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -292,11 +292,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "440 gr/m²",
+        "abrasao": "> 120 000",
+        "borboto": "4.0"
       }
     },
     {
@@ -314,7 +314,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -336,7 +336,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -358,7 +358,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -380,7 +380,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -402,7 +402,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -424,11 +424,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "92% Pes / 8% Nylon",
+        "largura": "140 cm",
+        "peso": "390 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
       }
     },
     {
@@ -446,7 +446,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -468,7 +468,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -490,7 +490,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -512,7 +512,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -534,11 +534,11 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "485 gr/m²",
+        "abrasao": "> 40 000",
+        "borboto": "5.0"
       }
     },
     {
@@ -556,7 +556,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -578,7 +578,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -600,7 +600,7 @@
       "cover": null,
       "description": null,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",

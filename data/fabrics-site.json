@@ -1,17 +1,19 @@
 {
   "collections": {
     "artis": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "142 cm",
+        "peso": "450 gr/m²",
+        "abrasao": "> 40 000",
+        "borboto": "4.0"
       }
     },
     "bella": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -19,8 +21,9 @@
       }
     },
     "carmen": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -28,17 +31,19 @@
       }
     },
     "falcon": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "420 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
       }
     },
     "funky": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -46,17 +51,19 @@
       }
     },
     "garby": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "320 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
       }
     },
     "grift": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -64,8 +71,9 @@
       }
     },
     "ifrane": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -73,26 +81,29 @@
       }
     },
     "jade": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "400 gr/m²",
+        "abrasao": "> 64 000",
+        "borboto": "4.0"
       }
     },
     "kamala": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "380 gr/m²",
+        "abrasao": "> 60 000",
+        "borboto": "5.0"
       }
     },
     "kamala2": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -100,17 +111,19 @@
       }
     },
     "karma": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "440 gr/m²",
+        "abrasao": "> 120 000",
+        "borboto": "4.0"
       }
     },
     "matchy": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -118,8 +131,9 @@
       }
     },
     "mirage": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -127,8 +141,9 @@
       }
     },
     "pisa": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -136,8 +151,9 @@
       }
     },
     "prisma": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -145,8 +161,9 @@
       }
     },
     "ramses": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -154,17 +171,19 @@
       }
     },
     "rissani": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "92% Pes / 8% Nylon",
+        "largura": "140 cm",
+        "peso": "390 gr/m²",
+        "abrasao": "> 30 000",
+        "borboto": "4.0"
       }
     },
     "soft": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -172,8 +191,9 @@
       }
     },
     "stancy": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -181,8 +201,9 @@
       }
     },
     "talia": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -190,8 +211,9 @@
       }
     },
     "touareg": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -199,17 +221,19 @@
       }
     },
     "venturi": {
+      "show": true,
       "specs": {
-        "composicao": "",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
+        "composicao": "100% Pes",
+        "largura": "140 cm",
+        "peso": "485 gr/m²",
+        "abrasao": "> 40 000",
+        "borboto": "5.0"
       }
     },
     "zemy": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -217,8 +241,9 @@
       }
     },
     "fumiko": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -226,8 +251,9 @@
       }
     },
     "madoka": {
+      "show": true,
       "specs": {
-        "composicao": "",
+        "composicao": "100% Pes",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -235,6 +261,7 @@
       }
     },
     "barbados": {
+      "show": true,
       "specs": {
         "composicao": "",
         "largura": "",
@@ -244,6 +271,7 @@
       }
     },
     "river": {
+      "show": true,
       "specs": {
         "composicao": "",
         "largura": "",
@@ -253,6 +281,7 @@
       }
     },
     "siza": {
+      "show": true,
       "specs": {
         "composicao": "",
         "largura": "",
