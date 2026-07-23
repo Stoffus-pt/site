@@ -558,7 +558,7 @@ button, input, textarea, select {
 
 @media (min-width: 1100px) {
   .cms-social__grid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr) minmax(17rem, 0.95fr);
     align-items: start;
   }
 }
@@ -813,6 +813,199 @@ button, input, textarea, select {
 .cms-cal-post.is-selected {
   border-color: rgba(224, 78, 38, 0.55);
   box-shadow: 0 0 0 2px var(--brand-soft);
+}
+
+.cms-surface--preview {
+  position: sticky;
+  top: 1rem;
+}
+
+.cms-preview-wrap {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.85rem;
+}
+
+.cms-preview-phone {
+  width: min(100%, 22rem);
+  margin: 0 auto;
+  background: #141210;
+  color: #f7f4f1;
+  border-radius: 1.15rem;
+  overflow: hidden;
+  box-shadow: 0 28px 50px -28px rgba(20, 18, 16, 0.75);
+}
+
+.cms-preview-phone--empty {
+  min-height: 22rem;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, #2a2421, #1a1715);
+}
+
+.cms-preview-phone--empty .cms-preview-phone__body {
+  text-align: center;
+  padding: 1.5rem;
+  color: rgba(255, 252, 248, 0.72);
+}
+
+.cms-preview-phone--empty i {
+  font-size: 1.8rem;
+  color: var(--brand);
+  margin-bottom: 0.6rem;
+  display: block;
+}
+
+.cms-preview-phone--empty p {
+  margin: 0.25rem 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.cms-preview-phone__chrome {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem 0.35rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 248, 0.55);
+}
+
+.cms-preview-phone__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.35rem 0.85rem 0.7rem;
+}
+
+.cms-preview-phone__avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.cms-preview-phone__head strong {
+  display: block;
+  font-size: 0.88rem;
+}
+
+.cms-preview-phone__head span {
+  display: block;
+  font-size: 0.68rem;
+  color: rgba(255, 252, 248, 0.5);
+}
+
+.cms-preview-phone__media {
+  position: relative;
+  aspect-ratio: 1;
+  background: #0d0b0a;
+}
+
+.cms-preview-phone__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cms-preview-phone__missing {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.cms-preview-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #1a1715;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cms-preview-nav--prev { left: 0.45rem; }
+.cms-preview-nav--next { right: 0.45rem; }
+
+.cms-preview-counter {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.cms-preview-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.55rem 0 0.2rem;
+}
+
+.cms-preview-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  padding: 0;
+}
+
+.cms-preview-dot.is-active {
+  background: var(--brand);
+  width: 0.85rem;
+}
+
+.cms-preview-phone__caption {
+  padding: 0.75rem 0.9rem 0.45rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cms-preview-phone__caption strong {
+  margin-right: 0.25rem;
+}
+
+.cms-preview-phone__foot {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0.9rem 0.9rem;
+  font-size: 0.7rem;
+  color: rgba(255, 252, 248, 0.45);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cms-post-edit {
+  padding-top: 0.25rem;
+}
+
+.cms-post-edit h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
 
 .cms-post-drawer {

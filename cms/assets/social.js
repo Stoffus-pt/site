@@ -14,6 +14,7 @@
     pool: [],
     weekStart: null,
     selectedPostId: null,
+    previewSlide: 0,
     uploading: false,
   };
 
@@ -155,14 +156,73 @@
     return days.join('');
   }
 
+  function renderPreview(post) {
+    if (!post) {
+      return '<div class="cms-preview-phone cms-preview-phone--empty">' +
+        '<div class="cms-preview-phone__body">' +
+        '<i class="fa-regular fa-images"></i>' +
+        '<p><strong>Pré-visualização</strong></p>' +
+        '<p>Clique numa publicação no calendário para ver aqui como fica no feed.</p>' +
+        '</div></div>';
+    }
+
+    var media = post.media || [];
+    if (state.previewSlide >= media.length) state.previewSlide = 0;
+    if (state.previewSlide < 0) state.previewSlide = 0;
+    var slide = media[state.previewSlide];
+    var plats = post.platforms || [];
+    var isIg = plats.indexOf('instagram') >= 0;
+    var brand = isIg ? 'stoffus' : 'Stoffus';
+    var when = '';
+    try {
+      when = new Date(post.scheduledAt).toLocaleString('pt-PT', {
+        weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+      });
+    } catch (e) { when = ''; }
+
+    var dots = media.map(function (_, i) {
+      return '<button type="button" class="cms-preview-dot' + (i === state.previewSlide ? ' is-active' : '') + '" data-preview-slide="' + i + '" aria-label="Foto ' + (i + 1) + '"></button>';
+    }).join('');
+
+    return '<div class="cms-preview-phone" data-preview-post="' + esc(post.id) + '">' +
+      '<div class="cms-preview-phone__chrome">' +
+      '<span class="cms-preview-phone__plat">' +
+      (isIg ? '<i class="fa-brands fa-instagram"></i> Instagram' : '<i class="fa-brands fa-facebook"></i> Facebook') +
+      '</span>' +
+      '<span class="cms-preview-phone__when">' + esc(when) + '</span>' +
+      '</div>' +
+      '<div class="cms-preview-phone__head">' +
+      '<div class="cms-preview-phone__avatar">S</div>' +
+      '<div><strong>' + esc(brand) + '</strong><span>Pré-visualização</span></div>' +
+      '</div>' +
+      '<div class="cms-preview-phone__media">' +
+      (slide
+        ? '<img src="' + esc(mediaUrl(slide)) + '" alt="Pré-visualização" />'
+        : '<div class="cms-preview-phone__missing">Sem imagem</div>') +
+      (media.length > 1
+        ? '<button type="button" class="cms-preview-nav cms-preview-nav--prev" id="cms-preview-prev" aria-label="Anterior">‹</button>' +
+          '<button type="button" class="cms-preview-nav cms-preview-nav--next" id="cms-preview-next" aria-label="Seguinte">›</button>' +
+          '<div class="cms-preview-counter">' + (state.previewSlide + 1) + ' / ' + media.length + '</div>'
+        : '') +
+      '</div>' +
+      (media.length > 1 ? '<div class="cms-preview-dots">' + dots + '</div>' : '') +
+      '<div class="cms-preview-phone__caption">' +
+      '<strong>' + esc(brand) + '</strong> ' +
+      '<span id="cms-preview-caption-live">' + esc(post.caption || 'Sem legenda') + '</span>' +
+      '</div>' +
+      '<div class="cms-preview-phone__foot">' +
+      '<span>' + media.length + ' foto' + (media.length === 1 ? '' : 's') + '</span>' +
+      '<span>' + esc((plats.map(function (p) { return p === 'instagram' ? 'IG' : 'FB'; }).join(' · ')) || '—') + '</span>' +
+      '</div></div>';
+  }
+
   function renderDrawer() {
     var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
     if (!post) {
-      return '<p class="cms-hint">Clique numa publicação do calendário para editar legenda, hora e redes.</p>';
+      return '<div class="cms-post-edit">' +
+        '<p class="cms-hint" style="margin:0">Seleccione um cartão no calendário para editar e pré-visualizar.</p>' +
+        '</div>';
     }
-    var media = (post.media || []).map(function (m) {
-      return '<img src="' + esc(mediaUrl(m)) + '" alt="" />';
-    }).join('');
     var fb = (post.platforms || []).indexOf('facebook') >= 0;
     var ig = (post.platforms || []).indexOf('instagram') >= 0;
     var local = '';
@@ -170,16 +230,16 @@
       local = toLocalInputValue(new Date(post.scheduledAt));
     } catch (e) { local = ''; }
 
-    return '<div class="cms-post-drawer" data-drawer-id="' + esc(post.id) + '">' +
-      '<h2>Publicação</h2>' +
-      '<div class="cms-post-drawer__media">' + media + '</div>' +
-      '<label class="cms-field"><span>Legenda</span><textarea id="cms-social-caption" rows="3">' + esc(post.caption) + '</textarea></label>' +
+    return '<div class="cms-post-edit" data-drawer-id="' + esc(post.id) + '">' +
+      '<h2>Editar publicação</h2>' +
+      '<label class="cms-field"><span>Legenda</span><textarea id="cms-social-caption" rows="4" placeholder="Escreva a legenda…">' + esc(post.caption) + '</textarea></label>' +
       '<label class="cms-field"><span>Data e hora</span><input type="datetime-local" id="cms-social-when" value="' + esc(local) + '" /></label>' +
       '<div class="cms-pill-row" style="margin-bottom:.85rem">' +
       '<label class="cms-pill"><input type="checkbox" id="cms-social-fb"' + (fb ? ' checked' : '') + ' /> Facebook</label>' +
       '<label class="cms-pill"><input type="checkbox" id="cms-social-ig"' + (ig ? ' checked' : '') + ' /> Instagram</label>' +
-      '<span class="cms-hint" style="margin:0">Estado: ' + esc(post.status) + (post.error ? ' — ' + post.error : '') + '</span>' +
       '</div>' +
+      '<p class="cms-hint" style="margin:0 0 .85rem">Estado: <strong>' + esc(post.status) + '</strong>' +
+      (post.error ? ' — ' + esc(post.error) : '') + '</p>' +
       '<div style="display:flex;flex-wrap:wrap;gap:.45rem">' +
       '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-save-post">Guardar</button>' +
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-publish-now">Publicar agora</button>' +
@@ -191,6 +251,8 @@
     var metaBadge = state.meta.configured
       ? '<span class="cms-meta-badge is-ok"><i class="fa-brands fa-meta"></i> Meta ligada</span>'
       : '<span class="cms-meta-badge is-warn"><i class="fa-brands fa-meta"></i> Meta por configurar</span>';
+
+    var selected = state.posts.find(function (p) { return p.id === state.selectedPostId; }) || null;
 
     return '<div class="cms-social">' +
       renderStats() +
@@ -213,9 +275,9 @@
       '<button type="button" class="cms-btn cms-btn--brand" id="cms-social-split-btn">Partir e agendar</button>' +
       '</div>' +
       '<label class="cms-field" style="margin-top:1rem"><span>Legenda por defeito</span><textarea id="cms-social-default-caption" rows="2">' + esc(state.settings.defaultCaption) + '</textarea></label>' +
-      '<p class="cms-hint">Anúncios (€40): continue a patrocinar no Meta Ads / Boost nos posts já publicados. Esta página agenda e publica conteúdo; não substitui o gestor de anúncios.</p>' +
+      '<p class="cms-hint">Anúncios (€40): continue a patrocinar no Meta Ads / Boost nos posts já publicados.</p>' +
       (!state.meta.configured
-        ? '<p class="cms-hint">Para publicar automaticamente, adicione em <code>cms/config.php</code> a chave <code>meta</code> com <code>page_id</code>, <code>page_access_token</code> e <code>instagram_business_id</code>. As imagens têm de estar acessíveis na Internet (não em localhost) para a Meta as ler.</p>'
+        ? '<p class="cms-hint">Para publicar automaticamente, configure <code>meta</code> em <code>cms/config.php</code>. As imagens têm de estar online (não em localhost).</p>'
         : '') +
       '</section>' +
       '<section class="cms-surface">' +
@@ -228,8 +290,15 @@
       '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-publish-due">Publicar vencidas</button>' +
       '</div></div>' +
       '<div class="cms-cal" id="cms-social-cal">' + renderCalendar() + '</div>' +
+      '</section>' +
+      '<section class="cms-surface cms-surface--preview">' +
+      '<h2>Pré-visualização</h2>' +
+      '<p class="cms-hint">Assim fica no feed (aproximação). Use as setas para percorrer o carrossel.</p>' +
+      '<div class="cms-preview-wrap">' +
+      renderPreview(selected) +
       renderDrawer() +
-      '</section></div></div>';
+      '</div></section>' +
+      '</div></div>';
   }
 
   function setDefaultStartInput() {
@@ -388,7 +457,9 @@
 
     document.querySelectorAll('[data-post-id]').forEach(function (el) {
       el.addEventListener('click', function () {
-        state.selectedPostId = el.getAttribute('data-post-id');
+        var id = el.getAttribute('data-post-id');
+        if (state.selectedPostId !== id) state.previewSlide = 0;
+        state.selectedPostId = id;
         global.StoffusCmsRerender();
       });
       el.addEventListener('dragstart', function (e) {
@@ -397,6 +468,59 @@
       });
     });
 
+    var captionEl = document.getElementById('cms-social-caption');
+    if (captionEl) {
+      captionEl.addEventListener('input', function () {
+        var live = document.getElementById('cms-preview-caption-live');
+        if (live) live.textContent = captionEl.value || 'Sem legenda';
+      });
+    }
+
+    var prevSlide = document.getElementById('cms-preview-prev');
+    var nextSlide = document.getElementById('cms-preview-next');
+    if (prevSlide) {
+      prevSlide.onclick = function (e) {
+        e.stopPropagation();
+        var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
+        var n = (post && post.media) ? post.media.length : 0;
+        if (!n) return;
+        state.previewSlide = (state.previewSlide - 1 + n) % n;
+        global.StoffusCmsRerender();
+      };
+    }
+    if (nextSlide) {
+      nextSlide.onclick = function (e) {
+        e.stopPropagation();
+        var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
+        var n = (post && post.media) ? post.media.length : 0;
+        if (!n) return;
+        state.previewSlide = (state.previewSlide + 1) % n;
+        global.StoffusCmsRerender();
+      };
+    }
+    document.querySelectorAll('[data-preview-slide]').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.stopPropagation();
+        state.previewSlide = Number(btn.getAttribute('data-preview-slide')) || 0;
+        global.StoffusCmsRerender();
+      };
+    });
+
+    var fbCheck = document.getElementById('cms-social-fb');
+    var igCheck = document.getElementById('cms-social-ig');
+    function syncPlatformPreview() {
+      var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
+      if (!post) return;
+      var captionElLive = document.getElementById('cms-social-caption');
+      if (captionElLive) post.caption = captionElLive.value;
+      var platforms = [];
+      if (fbCheck && fbCheck.checked) platforms.push('facebook');
+      if (igCheck && igCheck.checked) platforms.push('instagram');
+      post.platforms = platforms;
+      global.StoffusCmsRerender();
+    }
+    if (fbCheck) fbCheck.addEventListener('change', syncPlatformPreview);
+    if (igCheck) igCheck.addEventListener('change', syncPlatformPreview);
     document.querySelectorAll('[data-cal-day]').forEach(function (dayEl) {
       dayEl.addEventListener('dragover', function (e) {
         e.preventDefault();
