@@ -28,6 +28,30 @@ Painel visual em `https://stoffus.pt/cms/` para editar textos das páginas, tít
 
 No separador **Menu** pode alterar as ligações do menu principal. Ao guardar, actualiza automaticamente todas as páginas `.html`.
 
+## Redes (Facebook / Instagram)
+
+No separador **Redes**:
+
+1. Arraste um lote de fotos (ex.: as 40 da quarta).
+2. Defina quantas fotos por publicação (máx. 10 — limite da API Instagram), intervalo e hora de início.
+3. Clique **Partir e agendar** — o calendário mostra as publicações.
+4. Arraste cartões entre dias; edite legenda e redes (FB/IG).
+5. **Publicar agora** ou **Publicar vencidas** (requer Meta em `config.php`).
+
+Anúncios (€40 Boost): continuam no Meta Ads / Business Suite. Esta área gere conteúdo e calendário, não campanhas.
+
+Configuração Meta (em `cms/config.php`, nunca no Git):
+
+```php
+'meta' => [
+  'page_id' => '...',
+  'page_access_token' => '...',
+  'instagram_business_id' => '...',
+],
+```
+
+As imagens têm de estar acessíveis na Internet para a Meta as descarregar (em localhost a publicação remota falha).
+
 ## Catálogo (modelos e fotos)
 
 No separador **Catálogo**:
