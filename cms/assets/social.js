@@ -592,13 +592,30 @@
     return html;
   }
 
-  function renderPreview(post) {
+  function composePreviewPost() {
+    var paths = selectedPaths();
+    if (!paths.length) return null;
+    var split = Math.max(1, Math.min(10, Number(state.settings.autoSplitSize) || 10));
+    var target = ensureTargetDay();
+    return {
+      id: '__compose__',
+      status: 'compose',
+      caption: state.settings.defaultCaption || '',
+      scheduledAt: target.toISOString(),
+      platforms: (state.settings.defaultPlatforms || []).slice(),
+      media: paths.slice(0, split),
+    };
+  }
+
+  function renderPreview(post, opts) {
+    opts = opts || {};
+    var isCompose = !!opts.compose || (post && post.status === 'compose');
     if (!post) {
       return '<div class="cms-preview-phone cms-preview-phone--empty">' +
         '<div class="cms-preview-phone__body">' +
         '<i class="fa-regular fa-images"></i>' +
-        '<p><strong>Pré-visualização</strong></p>' +
-        '<p>Escolha uma publicação na lista ou no calendário.</p>' +
+        '<p><strong>Pré-visualização do post</strong></p>' +
+        '<p>Adicione fotos ao lote para ver como fica no telemóvel.</p>' +
         '</div></div>';
     }
 
@@ -610,6 +627,7 @@
     var isIg = hasPlatform(plats, 'instagram');
     var info = currentBrandInfo();
     var brand = isIg ? (info.handle || info.short || 'marca') : (info.label || 'Marca');
+    var mark = brandMarkUrl(info);
     var when = '';
     try {
       when = new Date(post.scheduledAt).toLocaleString('pt-PT', {
@@ -617,23 +635,41 @@
       });
     } catch (e) { when = ''; }
 
+    var statusTxt = isCompose ? 'Em criação' : statusLabel(post.status);
+    var chromeNet = isIg
+      ? '<i class="fa-brands fa-instagram"></i> Instagram'
+      : '<i class="fa-brands fa-facebook"></i> Facebook';
+    if (isCompose && plats.length > 1) {
+      chromeNet = '<i class="fa-brands fa-facebook"></i>/<i class="fa-brands fa-instagram"></i> Redes';
+    }
+
     var dots = media.map(function (_, i) {
       return '<button type="button" class="cms-preview-dot' + (i === state.previewSlide ? ' is-active' : '') +
         '" data-preview-slide="' + i + '" aria-label="Foto ' + (i + 1) + '"></button>';
     }).join('');
 
-    return '<div class="cms-preview-phone">' +
+    var slideSrc = '';
+    if (slide) {
+      var poolHit = state.pool.find(function (f) { return f.path === slide; });
+      slideSrc = (poolHit && poolHit.url) ? poolHit.url : mediaUrl(slide);
+    }
+
+    return '<div class="cms-preview-phone' + (isCompose ? ' is-compose' : '') + '">' +
       '<div class="cms-preview-phone__chrome">' +
-      '<span>' + (isIg
-        ? '<i class="fa-brands fa-instagram"></i> Instagram'
-        : '<i class="fa-brands fa-facebook"></i> Facebook') + '</span>' +
+      '<span>' + chromeNet + '</span>' +
       '<span>' + esc(when) + '</span></div>' +
       '<div class="cms-preview-phone__head">' +
-      '<div class="cms-preview-phone__avatar">S</div>' +
-      '<div><strong>' + esc(brand) + '</strong><span>' + esc(statusLabel(post.status)) + '</span></div></div>' +
+      (mark
+        ? '<img class="cms-preview-phone__avatar-img" src="' + esc(mark) + '" alt="" />'
+        : '<div class="cms-preview-phone__avatar">' + esc((info.short || 'S').charAt(0)) + '</div>') +
+      '<div><strong>' + esc(brand) + '</strong><span>' + esc(statusTxt) + '</span></div></div>' +
+      (isCompose
+        ? '<p class="cms-preview-compose-note">1.º post do lote · ' + media.length +
+          ' de ' + selectedPaths().length + ' foto(s) seleccionada(s)</p>'
+        : '') +
       '<div class="cms-preview-phone__media">' +
-      (slide
-        ? '<img src="' + esc(mediaUrl(slide)) + '" alt="Pré-visualização" />'
+      (slideSrc
+        ? '<img src="' + esc(slideSrc) + '" alt="Pré-visualização" />'
         : '<div class="cms-preview-phone__missing">Sem imagem</div>') +
       (media.length > 1
         ? '<button type="button" class="cms-preview-nav cms-preview-nav--prev" id="cms-preview-prev">‹</button>' +
@@ -652,8 +688,7 @@
   function renderDrawer() {
     var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
     if (!post) {
-      return '<div class="cms-post-edit"><p class="cms-hint" style="margin:0">' +
-        'Seleccione uma publicação para editar dia, redes e legenda.</p></div>';
+      return '';
     }
 
     var local = '';
@@ -766,21 +801,24 @@
       : '<span class="cms-meta-badge is-warn"><i class="fa-brands fa-meta"></i> Meta · ' + esc(info.short) + ' por configurar</span>';
 
     var selected = state.posts.find(function (p) { return p.id === state.selectedPostId; }) || null;
+    var composePost = composePreviewPost();
     var target = ensureTargetDay();
     var targetLabel = target.toLocaleDateString('pt-PT', {
       weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
     });
 
-    return '<div class="cms-social" data-brand="' + esc(state.brand) + '">' +
+    return '<div class="cms-social' + (selected ? ' has-edit' : '') + '" data-brand="' + esc(state.brand) + '">' +
       renderBrandSwitcher() +
       renderMetaConfig() +
       renderStats() +
       '<div class="cms-social__grid">' +
 
-      '<section class="cms-surface">' +
+      '<section class="cms-surface cms-surface--compose">' +
+      '<div class="cms-compose">' +
+      '<div class="cms-compose__form">' +
       '<div style="display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap">' +
-      '<div><h2>1. Lote de fotos · ' + esc(info.label) + '</h2>' +
-      '<p class="cms-hint">Conteúdo desta marca fica separado da outra. Arraste imagens e escolha as redes.</p></div>' +
+      '<div><h2>1. Criar post · ' + esc(info.label) + '</h2>' +
+      '<p class="cms-hint">Arraste fotos, escolha redes e legenda — a pré-visualização actualiza ao lado.</p></div>' +
       metaBadge + '</div>' +
       '<div class="cms-drop" id="cms-social-drop">' +
       '<input type="file" id="cms-social-file" accept="image/jpeg,image/png,image/webp,image/gif" multiple />' +
@@ -806,13 +844,20 @@
       '<button type="button" class="cms-btn cms-btn--ghost" id="cms-social-draft-btn">Guardar rascunhos</button>' +
       '<button type="button" class="cms-btn cms-btn--brand" id="cms-social-split-btn">Partir e agendar</button>' +
       '</div></div>' +
-      '<label class="cms-field" style="margin-top:1rem"><span>Legenda por defeito</span>' +
-      '<textarea id="cms-social-default-caption" rows="2">' + esc(state.settings.defaultCaption) +
+      '<label class="cms-field" style="margin-top:1rem"><span>Legenda do post</span>' +
+      '<textarea id="cms-social-default-caption" rows="3" placeholder="Escreva a legenda — vê-se já na pré-visualização">' +
+      esc(state.settings.defaultCaption) +
       '</textarea></label>' +
       (!state.meta.configured
         ? '<p class="cms-hint">Configure a Meta acima (botão «Configurar Meta») para esta marca.</p>'
         : '') +
-      '</section>' +
+      '</div>' +
+      '<aside class="cms-compose__preview">' +
+      '<h2>Pré-visualização</h2>' +
+      '<p class="cms-hint">Como fica o post enquanto o cria.</p>' +
+      renderPreview(composePost, { compose: true }) +
+      '</aside>' +
+      '</div></section>' +
 
       '<section class="cms-surface">' +
       '<div class="cms-cal-head">' +
@@ -842,11 +887,13 @@
       renderPostsList() +
       '</section>' +
 
-      '<section class="cms-surface cms-surface--preview">' +
-      '<h2>3. Pré-visualização</h2>' +
-      '<p class="cms-hint">Edite aqui a data, as redes e a legenda da publicação seleccionada.</p>' +
-      '<div class="cms-preview-wrap">' + renderPreview(selected) + renderDrawer() + '</div>' +
-      '</section>' +
+      (selected
+        ? '<section class="cms-surface cms-surface--preview">' +
+          '<h2>3. Editar publicação</h2>' +
+          '<p class="cms-hint">Ajuste data, redes e legenda da publicação seleccionada na agenda.</p>' +
+          renderDrawer() +
+          '</section>'
+        : '') +
 
       '</div></div>';
   }
@@ -1009,7 +1056,8 @@
         if (e.target.closest('[data-pool-remove]')) return;
         var i = Number(el.getAttribute('data-pool-i'));
         state.pool[i].selected = state.pool[i].selected === false;
-        el.classList.toggle('is-selected', state.pool[i].selected !== false);
+        state.previewSlide = 0;
+        global.StoffusCmsRerender();
       });
     });
 
@@ -1038,11 +1086,11 @@
         }
         if (scope === 'batch') {
           state.settings.defaultPlatforms = on;
+          global.StoffusCmsRerender();
         } else if (scope === 'edit') {
           var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
           if (post) {
             post.platforms = on;
-            // Actualizar só o chrome da pré-visualização
             global.StoffusCmsRerender();
           }
         }
@@ -1353,6 +1401,26 @@
       };
     }
 
+    var captionDefault = document.getElementById('cms-social-default-caption');
+    if (captionDefault) {
+      captionDefault.addEventListener('input', function () {
+        state.settings.defaultCaption = captionDefault.value || '';
+        var live = document.getElementById('cms-preview-caption-live');
+        if (live) live.textContent = captionDefault.value || 'Sem legenda';
+      });
+    }
+
+    var splitInput = document.getElementById('cms-social-split');
+    if (splitInput) {
+      splitInput.addEventListener('change', function () {
+        var n = Math.max(1, Math.min(10, Number(splitInput.value) || 10));
+        state.settings.autoSplitSize = n;
+        splitInput.value = String(n);
+        state.previewSlide = 0;
+        global.StoffusCmsRerender();
+      });
+    }
+
     var captionEl = document.getElementById('cms-social-caption');
     if (captionEl) {
       captionEl.addEventListener('input', function () {
@@ -1361,13 +1429,19 @@
       });
     }
 
+    function previewMediaCount() {
+      var compose = composePreviewPost();
+      if (compose && compose.media) return compose.media.length;
+      var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
+      return (post && post.media) ? post.media.length : 0;
+    }
+
     var prevSlide = document.getElementById('cms-preview-prev');
     var nextSlide = document.getElementById('cms-preview-next');
     if (prevSlide) {
       prevSlide.onclick = function (e) {
         e.stopPropagation();
-        var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
-        var n = (post && post.media) ? post.media.length : 0;
+        var n = previewMediaCount();
         if (!n) return;
         state.previewSlide = (state.previewSlide - 1 + n) % n;
         global.StoffusCmsRerender();
@@ -1376,8 +1450,7 @@
     if (nextSlide) {
       nextSlide.onclick = function (e) {
         e.stopPropagation();
-        var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
-        var n = (post && post.media) ? post.media.length : 0;
+        var n = previewMediaCount();
         if (!n) return;
         state.previewSlide = (state.previewSlide + 1) % n;
         global.StoffusCmsRerender();
