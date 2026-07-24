@@ -11,13 +11,25 @@ return [
     'password_hash' => '$2y$10$8Yq0vJm5xqH0nGqG0nGqGuK8xqH0nGqG0nGqG0nGqG0nGqG0nGqG0m',
 
     /**
-     * Meta (Facebook Page + Instagram Business) — opcional.
-     * Necessário para «Publicar agora» / «Publicar vencidas» no separador Redes.
+     * Contas Meta por marca (Redes no CMS).
+     * Cada marca tem a sua Página Facebook + Instagram Business.
      * Nunca faça commit do config.php com tokens reais.
-     *
-     * page_id: ID da Página Facebook
-     * page_access_token: token de longa duração da Página (com permissões pages_manage_posts, instagram_content_publish, etc.)
-     * instagram_business_id: ID do Instagram Business ligado à Página
+     */
+    'meta_accounts' => [
+        'stoffus' => [
+            'page_id' => '',
+            'page_access_token' => '',
+            'instagram_business_id' => '',
+        ],
+        'divinus' => [
+            'page_id' => '',
+            'page_access_token' => '',
+            'instagram_business_id' => '',
+        ],
+    ],
+
+    /**
+     * Legado (opcional): se meta_accounts.stoffus estiver vazio, usa-se isto para Stoffus.
      */
     'meta' => [
         'page_id' => '',

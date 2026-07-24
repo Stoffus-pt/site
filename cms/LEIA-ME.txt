@@ -30,23 +30,33 @@ No separador **Menu** pode alterar as ligações do menu principal. Ao guardar, 
 
 ## Redes (Facebook / Instagram)
 
-No separador **Redes**:
+No separador **Redes** pode gerir **duas marcas**:
 
-1. Arraste um lote de fotos (ex.: as 40 da quarta).
-2. Defina quantas fotos por publicação (máx. 10 — limite da API Instagram), intervalo e hora de início.
-3. Clique **Partir e agendar** — o calendário mostra as publicações.
-4. Arraste cartões entre dias; edite legenda e redes (FB/IG).
-5. **Publicar agora** ou **Publicar vencidas** (requer Meta em `config.php`).
+- **Stoffus**
+- **Divinus Confort**
 
-Anúncios (€40 Boost): continuam no Meta Ads / Business Suite. Esta área gere conteúdo e calendário, não campanhas.
+Cada marca tem calendário, fotos e publicações separados. Use o selector no topo.
 
-Configuração Meta (em `cms/config.php`, nunca no Git):
+1. Escolha a marca.
+2. Arraste um lote de fotos.
+3. Escolha Facebook e/ou Instagram.
+4. Clique num dia no calendário e **Partir e agendar**.
+5. Edite na lista / pré-visualização; **Publicar agora** ou **Publicar vencidas**.
+
+Configuração Meta em `cms/config.php` (nunca no Git):
 
 ```php
-'meta' => [
-  'page_id' => '...',
-  'page_access_token' => '...',
-  'instagram_business_id' => '...',
+'meta_accounts' => [
+  'stoffus' => [
+    'page_id' => '...',
+    'page_access_token' => '...',
+    'instagram_business_id' => '...',
+  ],
+  'divinus' => [
+    'page_id' => '...',
+    'page_access_token' => '...',
+    'instagram_business_id' => '...',
+  ],
 ],
 ```
 

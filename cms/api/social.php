@@ -8,25 +8,30 @@ cms_require_auth();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = '';
+$input = [];
 
 if ($method === 'GET') {
     $action = (string) ($_GET['action'] ?? 'list');
+    $brand = cms_social_normalize_brand((string) ($_GET['brand'] ?? 'stoffus'));
 } else {
     $input = json_decode(file_get_contents('php://input') ?: '{}', true);
     if (!is_array($input)) {
         cms_json(['ok' => false, 'error' => 'JSON inválido.'], 400);
     }
     $action = (string) ($input['action'] ?? '');
+    $brand = cms_social_normalize_brand((string) ($input['brand'] ?? 'stoffus'));
 }
 
 try {
     if ($method === 'GET' && $action === 'list') {
-        $data = cms_social_load();
+        $data = cms_social_load($brand);
         cms_json([
             'ok' => true,
+            'brand' => $brand,
+            'brands' => cms_social_accounts_status(),
             'posts' => $data['posts'],
             'settings' => $data['settings'],
-            'meta' => cms_social_meta_ready(),
+            'meta' => cms_social_meta_ready($brand),
         ]);
     }
 
@@ -34,7 +39,7 @@ try {
         cms_json(['ok' => false, 'error' => 'Método inválido.'], 405);
     }
 
-    $data = cms_social_load();
+    $data = cms_social_load($brand);
 
     if ($action === 'save_settings') {
         $settings = is_array($input['settings'] ?? null) ? $input['settings'] : [];
@@ -49,8 +54,8 @@ try {
             $data['settings']['defaultPlatforms'] = ['facebook'];
         }
         $data['settings']['defaultCaption'] = trim((string) ($settings['defaultCaption'] ?? ''));
-        cms_social_save($data);
-        cms_json(['ok' => true, 'settings' => $data['settings']]);
+        cms_social_save($data, $brand);
+        cms_json(['ok' => true, 'brand' => $brand, 'settings' => $data['settings']]);
     }
 
     if ($action === 'create_from_media') {
@@ -81,6 +86,7 @@ try {
             $ts = $baseTs + ($i * $intervalHours * 3600);
             $post = [
                 'id' => cms_social_new_id(),
+                'brand' => $brand,
                 'caption' => $caption,
                 'platforms' => $platforms ?: ['facebook'],
                 'media' => $chunk,
@@ -94,8 +100,8 @@ try {
             $data['posts'][] = $post;
             $created[] = $post;
         }
-        cms_social_save($data);
-        cms_json(['ok' => true, 'created' => $created, 'posts' => $data['posts']]);
+        cms_social_save($data, $brand);
+        cms_json(['ok' => true, 'brand' => $brand, 'created' => $created, 'posts' => $data['posts']]);
     }
 
     if ($action === 'update') {
@@ -138,14 +144,15 @@ try {
                     $post['status'] = $st;
                 }
             }
+            $post['brand'] = $brand;
             break;
         }
         unset($post);
         if (!$found) {
             cms_json(['ok' => false, 'error' => 'Publicação não encontrada.'], 404);
         }
-        cms_social_save($data);
-        cms_json(['ok' => true, 'posts' => $data['posts']]);
+        cms_social_save($data, $brand);
+        cms_json(['ok' => true, 'brand' => $brand, 'posts' => $data['posts']]);
     }
 
     if ($action === 'delete') {
@@ -153,8 +160,8 @@ try {
         $data['posts'] = array_values(array_filter($data['posts'], static function ($p) use ($id) {
             return ($p['id'] ?? '') !== $id;
         }));
-        cms_social_save($data);
-        cms_json(['ok' => true, 'posts' => $data['posts']]);
+        cms_social_save($data, $brand);
+        cms_json(['ok' => true, 'brand' => $brand, 'posts' => $data['posts']]);
     }
 
     if ($action === 'publish') {
@@ -166,11 +173,11 @@ try {
             }
             $found = true;
             try {
-                cms_social_publish_post($post);
+                cms_social_publish_post($post, $brand);
             } catch (Throwable $e) {
                 $post['status'] = 'failed';
                 $post['error'] = $e->getMessage();
-                cms_social_save($data);
+                cms_social_save($data, $brand);
                 cms_json(['ok' => false, 'error' => $e->getMessage(), 'posts' => $data['posts']], 500);
             }
             break;
@@ -179,8 +186,8 @@ try {
         if (!$found) {
             cms_json(['ok' => false, 'error' => 'Publicação não encontrada.'], 404);
         }
-        cms_social_save($data);
-        cms_json(['ok' => true, 'posts' => $data['posts']]);
+        cms_social_save($data, $brand);
+        cms_json(['ok' => true, 'brand' => $brand, 'posts' => $data['posts']]);
     }
 
     if ($action === 'publish_due') {
@@ -196,7 +203,7 @@ try {
                 continue;
             }
             try {
-                cms_social_publish_post($post);
+                cms_social_publish_post($post, $brand);
                 $results[] = ['id' => $post['id'], 'ok' => true];
             } catch (Throwable $e) {
                 $post['status'] = 'failed';
@@ -205,8 +212,8 @@ try {
             }
         }
         unset($post);
-        cms_social_save($data);
-        cms_json(['ok' => true, 'results' => $results, 'posts' => $data['posts']]);
+        cms_social_save($data, $brand);
+        cms_json(['ok' => true, 'brand' => $brand, 'results' => $results, 'posts' => $data['posts']]);
     }
 
     cms_json(['ok' => false, 'error' => 'Acção inválida.'], 400);

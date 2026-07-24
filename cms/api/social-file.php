@@ -2,8 +2,9 @@
 declare(strict_types=1);
 
 /**
- * Serve imagens do módulo Redes (pré-visualização CMS + URL pública para a Meta).
- * Uso: /cms/api/social-file.php?f=2026/07/abc.jpg
+ * Serve imagens do módulo Redes.
+ * Uso: /cms/api/social-file.php?f=stoffus/2026/07/abc.jpg
+ * (também aceita caminhos legados YYYY/MM/abc.jpg)
  */
 require __DIR__ . '/../bootstrap.php';
 require_once CMS_DIR . '/lib/SocialData.php';
@@ -12,7 +13,11 @@ $rel = (string) ($_GET['f'] ?? '');
 $rel = str_replace('\\', '/', $rel);
 $rel = ltrim($rel, '/');
 
-if ($rel === '' || strpos($rel, '..') !== false || !preg_match('#^[0-9]{4}/[0-9]{2}/[a-zA-Z0-9._-]+$#', $rel)) {
+$ok =
+    preg_match('#^[a-z0-9_-]+/[0-9]{4}/[0-9]{2}/[a-zA-Z0-9._-]+$#', $rel) === 1
+    || preg_match('#^[0-9]{4}/[0-9]{2}/[a-zA-Z0-9._-]+$#', $rel) === 1;
+
+if ($rel === '' || strpos($rel, '..') !== false || !$ok) {
     http_response_code(400);
     header('Content-Type: text/plain; charset=utf-8');
     echo 'Pedido inválido.';

@@ -551,6 +551,53 @@ button, input, textarea, select {
   gap: 1.15rem;
 }
 
+.cms-brand-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.cms-brand-btn {
+  display: grid;
+  gap: 0.2rem;
+  text-align: left;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 250, 0.75);
+  cursor: pointer;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.cms-brand-btn strong {
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cms-brand-btn span {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.cms-brand-btn:hover {
+  border-color: rgba(224, 78, 38, 0.35);
+}
+
+.cms-brand-btn.is-active {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+  color: #fff;
+  box-shadow: 0 14px 28px -18px rgba(224, 78, 38, 0.9);
+}
+
+.cms-brand-btn.is-active span {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+
 .cms-social__grid {
   display: grid;
   gap: 1.15rem;

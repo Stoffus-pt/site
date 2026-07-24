@@ -4,6 +4,11 @@
  */
 (function (global) {
   var state = {
+    brand: 'stoffus',
+    brands: [
+      { id: 'stoffus', label: 'Stoffus', short: 'Stoffus', configured: false },
+      { id: 'divinus', label: 'Divinus Confort', short: 'Divinus', configured: false },
+    ],
     posts: [],
     settings: {
       autoSplitSize: 10,
@@ -113,17 +118,47 @@
     return state.targetDay;
   }
 
+  function currentBrandInfo() {
+    return state.brands.find(function (b) { return b.id === state.brand; }) || {
+      id: state.brand,
+      label: state.brand,
+      short: state.brand,
+      handle: state.brand,
+    };
+  }
+
   function load() {
     if (!state.weekStart) state.weekStart = startOfWeek(new Date());
     ensureTargetDay();
-    return api('social.php?action=list').then(function (data) {
+    return api('social.php?action=list&brand=' + encodeURIComponent(state.brand)).then(function (data) {
       state.posts = data.posts || [];
       state.settings = Object.assign({}, state.settings, data.settings || {});
       state.meta = data.meta || state.meta;
+      if (data.brands && data.brands.length) state.brands = data.brands;
+      if (data.brand) state.brand = data.brand;
       if (!state.settings.defaultPlatforms || !state.settings.defaultPlatforms.length) {
         state.settings.defaultPlatforms = ['facebook', 'instagram'];
       }
     });
+  }
+
+  function switchBrand(brandId) {
+    if (brandId === state.brand) return;
+    state.brand = brandId;
+    state.pool = [];
+    state.selectedPostId = null;
+    state.previewSlide = 0;
+    state.listFilter = 'all';
+    load().then(function () {
+      toast('A gerir: ' + (currentBrandInfo().label || brandId));
+      global.StoffusCmsRerender();
+    }).catch(function (err) {
+      toast(err.error || 'Erro ao mudar de marca.');
+    });
+  }
+
+  function apiBrandBody(extra) {
+    return Object.assign({ brand: state.brand }, extra || {});
   }
 
   function selectedPaths() {
@@ -284,7 +319,8 @@
     var slide = media[state.previewSlide];
     var plats = platformsOf(post);
     var isIg = hasPlatform(plats, 'instagram');
-    var brand = isIg ? 'stoffus' : 'Stoffus';
+    var info = currentBrandInfo();
+    var brand = isIg ? (info.handle || info.short || 'marca') : (info.label || 'Marca');
     var when = '';
     try {
       when = new Date(post.scheduledAt).toLocaleString('pt-PT', {
@@ -363,10 +399,23 @@
       '</div>';
   }
 
+  function renderBrandSwitcher() {
+    return '<div class="cms-brand-switch" role="tablist" aria-label="Marca">' +
+      state.brands.map(function (b) {
+        return '<button type="button" class="cms-brand-btn' + (state.brand === b.id ? ' is-active' : '') +
+          '" data-brand="' + esc(b.id) + '">' +
+          '<strong>' + esc(b.short || b.label) + '</strong>' +
+          '<span>' + (b.configured ? 'Meta OK' : 'Meta por configurar') + '</span>' +
+          '</button>';
+      }).join('') +
+      '</div>';
+  }
+
   function render() {
+    var info = currentBrandInfo();
     var metaBadge = state.meta.configured
-      ? '<span class="cms-meta-badge is-ok"><i class="fa-brands fa-meta"></i> Meta ligada</span>'
-      : '<span class="cms-meta-badge is-warn"><i class="fa-brands fa-meta"></i> Meta por configurar</span>';
+      ? '<span class="cms-meta-badge is-ok"><i class="fa-brands fa-meta"></i> Meta · ' + esc(info.short) + '</span>'
+      : '<span class="cms-meta-badge is-warn"><i class="fa-brands fa-meta"></i> Meta · ' + esc(info.short) + ' por configurar</span>';
 
     var selected = state.posts.find(function (p) { return p.id === state.selectedPostId; }) || null;
     var target = ensureTargetDay();
@@ -375,12 +424,14 @@
     });
 
     return '<div class="cms-social">' +
+      renderBrandSwitcher() +
       renderStats() +
       '<div class="cms-social__grid">' +
 
       '<section class="cms-surface">' +
       '<div style="display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap">' +
-      '<div><h2>1. Lote de fotos</h2><p class="cms-hint">Arraste as imagens e escolha as redes antes de agendar.</p></div>' +
+      '<div><h2>1. Lote de fotos · ' + esc(info.label) + '</h2>' +
+      '<p class="cms-hint">Conteúdo desta marca fica separado da outra. Arraste imagens e escolha as redes.</p></div>' +
       metaBadge + '</div>' +
       '<div class="cms-drop" id="cms-social-drop">' +
       '<input type="file" id="cms-social-file" accept="image/jpeg,image/png,image/webp,image/gif" multiple />' +
@@ -400,18 +451,21 @@
       esc(toLocalInputValue(target)) + '" /></label>' +
       '</div>' +
       '<div class="cms-target-banner">' +
-      '<div><strong>Dia de início</strong><span>' + esc(targetLabel) + '</span>' +
+      '<div><strong>Dia de início · ' + esc(info.short) + '</strong><span>' + esc(targetLabel) + '</span>' +
       '<em>Clique num dia no calendário para mudar.</em></div>' +
       '<button type="button" class="cms-btn cms-btn--brand" id="cms-social-split-btn">Partir e agendar</button>' +
       '</div>' +
       '<label class="cms-field" style="margin-top:1rem"><span>Legenda por defeito</span>' +
       '<textarea id="cms-social-default-caption" rows="2">' + esc(state.settings.defaultCaption) +
       '</textarea></label>' +
+      (!state.meta.configured
+        ? '<p class="cms-hint">Configure <code>meta_accounts.' + esc(state.brand) + '</code> em <code>cms/config.php</code>.</p>'
+        : '') +
       '</section>' +
 
       '<section class="cms-surface">' +
       '<div class="cms-cal-head">' +
-      '<div><h2>2. Calendário</h2><h3>' + esc(fmtWeekRange(state.weekStart)) + '</h3>' +
+      '<div><h2>2. Calendário · ' + esc(info.short) + '</h2><h3>' + esc(fmtWeekRange(state.weekStart)) + '</h3>' +
       '<p class="cms-hint" style="margin:.35rem 0 0">Clique no dia para o escolher. Arraste um post para outro dia, ou use a lista abaixo.</p></div>' +
       '<div style="display:flex;gap:.4rem;flex-wrap:wrap">' +
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-prev">← Semana</button>' +
@@ -457,7 +511,7 @@
     }
     api('social.php', {
       method: 'POST',
-      body: { action: 'update', id: id, post: patch },
+      body: apiBrandBody({ action: 'update', id: id, post: patch }),
     }).then(function (data) {
       state.posts = data.posts || [];
       state.selectedPostId = id;
@@ -478,6 +532,7 @@
   function uploadFiles(fileList) {
     if (!fileList || !fileList.length) return;
     var fd = new FormData();
+    fd.append('brand', state.brand);
     Array.prototype.forEach.call(fileList, function (f) { fd.append('files[]', f); });
     state.uploading = true;
     toast('A carregar ' + fileList.length + ' foto(s)…');
@@ -506,6 +561,12 @@
   }
 
   function bind() {
+    document.querySelectorAll('[data-brand]').forEach(function (btn) {
+      btn.onclick = function () {
+        switchBrand(btn.getAttribute('data-brand'));
+      };
+    });
+
     var drop = document.getElementById('cms-social-drop');
     var fileInput = document.getElementById('cms-social-file');
     if (drop && fileInput) {
@@ -605,7 +666,7 @@
         var caption = (document.getElementById('cms-social-default-caption') || {}).value || '';
         api('social.php', {
           method: 'POST',
-          body: {
+          body: apiBrandBody({
             action: 'create_from_media',
             files: paths,
             splitSize: split,
@@ -613,7 +674,7 @@
             startAt: startAt ? new Date(startAt).toISOString() : '',
             caption: caption,
             platforms: platforms,
-          },
+          }),
         }).then(function (data) {
           state.posts = data.posts || [];
           state.settings.defaultCaption = caption;
@@ -626,7 +687,7 @@
           toast((data.created || []).length + ' publicação(ões) criadas');
           api('social.php', {
             method: 'POST',
-            body: { action: 'save_settings', settings: state.settings },
+            body: apiBrandBody({ action: 'save_settings', settings: state.settings }),
           });
           global.StoffusCmsRerender();
         }).catch(function (err) {
@@ -654,7 +715,7 @@
     var publishDue = document.getElementById('cms-social-publish-due');
     if (publishDue) {
       publishDue.onclick = function () {
-        api('social.php', { method: 'POST', body: { action: 'publish_due' } })
+        api('social.php', { method: 'POST', body: apiBrandBody({ action: 'publish_due' }) })
           .then(function (data) {
             state.posts = data.posts || [];
             var n = (data.results || []).length;
@@ -773,7 +834,7 @@
         }
         api('social.php', {
           method: 'POST',
-          body: { action: 'update', id: id, post: patch },
+          body: apiBrandBody({ action: 'update', id: id, post: patch }),
         }).then(function (data) {
           state.posts = data.posts || [];
           if (when) state.targetDay = new Date(when);
@@ -806,7 +867,7 @@
 
         var go = function () {
           if (!confirm('Publicar agora no Meta?')) return;
-          api('social.php', { method: 'POST', body: { action: 'publish', id: state.selectedPostId } })
+          api('social.php', { method: 'POST', body: apiBrandBody({ action: 'publish', id: state.selectedPostId }) })
             .then(function (data) {
               state.posts = data.posts || [];
               state.listFilter = 'published';
@@ -818,7 +879,7 @@
 
         api('social.php', {
           method: 'POST',
-          body: { action: 'update', id: state.selectedPostId, post: prep },
+          body: apiBrandBody({ action: 'update', id: state.selectedPostId, post: prep }),
         }).then(function (data) {
           state.posts = data.posts || [];
           go();
@@ -833,7 +894,7 @@
         var platforms = readEditPlatforms();
         api('social.php', {
           method: 'POST',
-          body: {
+          body: apiBrandBody({
             action: 'update',
             id: state.selectedPostId,
             post: {
@@ -842,7 +903,7 @@
               platforms: platforms,
               scheduledAt: when ? new Date(when).toISOString() : undefined,
             },
-          },
+          }),
         }).then(function (data) {
           state.posts = data.posts || [];
           state.listFilter = 'scheduled';
@@ -856,7 +917,7 @@
     if (delPost) {
       delPost.onclick = function () {
         if (!confirm('Apagar esta publicação do CMS? (Não remove do Facebook/Instagram se já estiver online.)')) return;
-        api('social.php', { method: 'POST', body: { action: 'delete', id: state.selectedPostId } })
+        api('social.php', { method: 'POST', body: apiBrandBody({ action: 'delete', id: state.selectedPostId }) })
           .then(function (data) {
             state.posts = data.posts || [];
             state.selectedPostId = null;

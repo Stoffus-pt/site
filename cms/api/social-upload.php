@@ -10,7 +10,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     cms_json(['ok' => false, 'error' => 'Método inválido.'], 405);
 }
 
-// Aceitar files[] (PHP → files) ou file
+$brand = cms_social_normalize_brand((string) ($_POST['brand'] ?? 'stoffus'));
+
 $files = null;
 if (!empty($_FILES['files'])) {
     $files = $_FILES['files'];
@@ -27,7 +28,6 @@ if ($files === null) {
     ], 422);
 }
 
-// Normalizar multi-upload
 $items = [];
 if (is_array($files['name'])) {
     $count = count($files['name']);
@@ -53,8 +53,8 @@ $allowed = [
     'image/gif' => 'gif',
 ];
 
-$subdir = date('Y') . '/' . date('m');
-$destDir = cms_social_media_dir() . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m');
+$subdir = $brand . '/' . date('Y') . '/' . date('m');
+$destDir = cms_social_media_dir() . DIRECTORY_SEPARATOR . $brand . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m');
 if (!is_dir($destDir) && !mkdir($destDir, 0755, true) && !is_dir($destDir)) {
     cms_json(['ok' => false, 'error' => 'Não foi possível criar a pasta de media.'], 500);
 }
@@ -85,7 +85,6 @@ foreach ($items as $item) {
     if ($mime === '' || $mime === 'application/octet-stream') {
         $mime = (string) ($item['type'] ?? '');
     }
-    // Fallback por extensão (ex.: alguns Windows / HEIC convertidos)
     if (!isset($allowed[$mime])) {
         $extGuess = strtolower(pathinfo($label, PATHINFO_EXTENSION));
         $byExt = [
@@ -123,11 +122,13 @@ foreach ($items as $item) {
         'url' => 'api/social-file.php?f=' . rawurlencode($rel),
         'name' => $label,
         'size' => (int) $item['size'],
+        'brand' => $brand,
     ];
 }
 
 cms_json([
     'ok' => count($saved) > 0,
+    'brand' => $brand,
     'files' => $saved,
     'errors' => $errors,
 ]);

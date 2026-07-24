@@ -2,10 +2,45 @@
 declare(strict_types=1);
 
 /**
- * Planeamento de publicações Facebook / Instagram (ficheiros locais + Meta API opcional).
+ * Planeamento de publicações Facebook / Instagram (multi-marca).
+ * Marcas: stoffus | divinus
  */
 
-function cms_social_data_file(): string
+function cms_social_brands(): array
+{
+    return [
+        'stoffus' => [
+            'id' => 'stoffus',
+            'label' => 'Stoffus',
+            'short' => 'Stoffus',
+            'handle' => 'stoffus',
+        ],
+        'divinus' => [
+            'id' => 'divinus',
+            'label' => 'Divinus Confort',
+            'short' => 'Divinus',
+            'handle' => 'divinusconfort',
+        ],
+    ];
+}
+
+function cms_social_normalize_brand(?string $brand): string
+{
+    $brand = strtolower(trim((string) $brand));
+    $brands = cms_social_brands();
+    if ($brand !== '' && isset($brands[$brand])) {
+        return $brand;
+    }
+    return 'stoffus';
+}
+
+function cms_social_data_file(?string $brand = null): string
+{
+    $brand = cms_social_normalize_brand($brand);
+    return CMS_DIR . '/data/social-posts-' . $brand . '.json';
+}
+
+function cms_social_legacy_data_file(): string
 {
     return CMS_DIR . '/data/social-posts.json';
 }
@@ -27,9 +62,16 @@ function cms_social_default_data(): array
     ];
 }
 
-function cms_social_load(): array
+function cms_social_load(?string $brand = null): array
 {
-    $file = cms_social_data_file();
+    $brand = cms_social_normalize_brand($brand);
+    $file = cms_social_data_file($brand);
+
+    // Migração: ficheiro antigo → Stoffus
+    if ($brand === 'stoffus' && !is_file($file) && is_file(cms_social_legacy_data_file())) {
+        $file = cms_social_legacy_data_file();
+    }
+
     if (!is_file($file)) {
         return cms_social_default_data();
     }
@@ -44,9 +86,11 @@ function cms_social_load(): array
     return $data;
 }
 
-function cms_social_save(array $data): void
+function cms_social_save(array $data, ?string $brand = null): void
 {
-    $dir = dirname(cms_social_data_file());
+    $brand = cms_social_normalize_brand($brand);
+    $path = cms_social_data_file($brand);
+    $dir = dirname($path);
     if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
         throw new RuntimeException('Não foi possível criar a pasta de dados.');
     }
@@ -54,7 +98,7 @@ function cms_social_save(array $data): void
     if ($json === false) {
         throw new RuntimeException('Erro ao serializar publicações.');
     }
-    if (file_put_contents(cms_social_data_file(), $json . "\n", LOCK_EX) === false) {
+    if (file_put_contents($path, $json . "\n", LOCK_EX) === false) {
         throw new RuntimeException('Não foi possível guardar as publicações.');
     }
 }
@@ -68,29 +112,63 @@ function cms_social_new_id(): string
     }
 }
 
-function cms_social_meta_config(): array
+/**
+ * Credenciais Meta por marca.
+ * Preferência: meta_accounts[brand]; fallback legado: meta → stoffus.
+ */
+function cms_social_meta_config_for(string $brand): array
 {
     global $CMS_CONFIG;
-    $meta = is_array($CMS_CONFIG['meta'] ?? null) ? $CMS_CONFIG['meta'] : [];
+    $brand = cms_social_normalize_brand($brand);
+    $accounts = is_array($CMS_CONFIG['meta_accounts'] ?? null) ? $CMS_CONFIG['meta_accounts'] : [];
+    $meta = is_array($accounts[$brand] ?? null) ? $accounts[$brand] : [];
+
+    if ($brand === 'stoffus' && !$meta) {
+        $legacy = is_array($CMS_CONFIG['meta'] ?? null) ? $CMS_CONFIG['meta'] : [];
+        $meta = $legacy;
+    }
+
     return [
         'page_id' => trim((string) ($meta['page_id'] ?? '')),
         'page_access_token' => trim((string) ($meta['page_access_token'] ?? '')),
         'instagram_business_id' => trim((string) ($meta['instagram_business_id'] ?? '')),
-        'configured' => false,
     ];
 }
 
-function cms_social_meta_ready(): array
+function cms_social_meta_ready(?string $brand = null): array
 {
-    $meta = cms_social_meta_config();
-    $meta['configured'] = $meta['page_id'] !== '' && $meta['page_access_token'] !== '';
-    $meta['instagram_ready'] = $meta['configured'] && $meta['instagram_business_id'] !== '';
-    // Nunca expor o token completo ao frontend
-    $meta['token_preview'] = $meta['page_access_token'] !== ''
-        ? (substr($meta['page_access_token'], 0, 6) . '…' . substr($meta['page_access_token'], -4))
-        : '';
-    unset($meta['page_access_token']);
-    return $meta;
+    $brand = cms_social_normalize_brand($brand);
+    $meta = cms_social_meta_config_for($brand);
+    $out = [
+        'brand' => $brand,
+        'configured' => $meta['page_id'] !== '' && $meta['page_access_token'] !== '',
+        'instagram_ready' => false,
+        'page_id' => $meta['page_id'],
+        'instagram_business_id' => $meta['instagram_business_id'],
+        'token_preview' => '',
+    ];
+    $out['instagram_ready'] = $out['configured'] && $meta['instagram_business_id'] !== '';
+    if ($meta['page_access_token'] !== '') {
+        $out['token_preview'] = substr($meta['page_access_token'], 0, 6) . '…' . substr($meta['page_access_token'], -4);
+    }
+    return $out;
+}
+
+function cms_social_accounts_status(): array
+{
+    $list = [];
+    foreach (cms_social_brands() as $id => $info) {
+        $ready = cms_social_meta_ready($id);
+        $list[] = [
+            'id' => $id,
+            'label' => $info['label'],
+            'short' => $info['short'],
+            'handle' => $info['handle'],
+            'configured' => $ready['configured'],
+            'instagram_ready' => $ready['instagram_ready'],
+        ];
+    }
+    return $list;
 }
 
 function cms_social_public_url(string $relativePath): string
@@ -99,7 +177,6 @@ function cms_social_public_url(string $relativePath): string
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host = (string) ($_SERVER['HTTP_HOST'] ?? 'localhost');
     $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
-    // /site/cms/api/social.php → /site/cms/api/
     $apiBase = preg_replace('#/[^/]+$#', '/', $script) ?: '/cms/api/';
     return $scheme . '://' . $host . $apiBase . 'social-file.php?f=' . rawurlencode($relativePath);
 }
@@ -143,9 +220,6 @@ function cms_social_http_json(string $url, array $params = [], string $method = 
     return $data;
 }
 
-/**
- * Publica um post na Page do Facebook (álbum/feed).
- */
 function cms_social_publish_facebook(array $post, array $meta): string
 {
     $token = $meta['page_access_token'];
@@ -193,9 +267,6 @@ function cms_social_publish_facebook(array $post, array $meta): string
     return (string) $feed['id'];
 }
 
-/**
- * Publica no Instagram (1 foto ou carrossel até 10).
- */
 function cms_social_publish_instagram(array $post, array $meta): string
 {
     $igId = $meta['instagram_business_id'];
@@ -254,7 +325,6 @@ function cms_social_publish_instagram(array $post, array $meta): string
         throw new RuntimeException('Instagram não devolveu contentor de media.');
     }
 
-    // Aguardar processamento breve
     usleep(1500000);
 
     $pub = cms_social_http_json(
@@ -271,17 +341,13 @@ function cms_social_publish_instagram(array $post, array $meta): string
     return (string) $pub['id'];
 }
 
-function cms_social_publish_post(array &$post): void
+function cms_social_publish_post(array &$post, ?string $brand = null): void
 {
-    global $CMS_CONFIG;
-    $metaFull = is_array($CMS_CONFIG['meta'] ?? null) ? $CMS_CONFIG['meta'] : [];
-    $meta = [
-        'page_id' => trim((string) ($metaFull['page_id'] ?? '')),
-        'page_access_token' => trim((string) ($metaFull['page_access_token'] ?? '')),
-        'instagram_business_id' => trim((string) ($metaFull['instagram_business_id'] ?? '')),
-    ];
+    $brand = cms_social_normalize_brand($brand ?: ($post['brand'] ?? 'stoffus'));
+    $meta = cms_social_meta_config_for($brand);
     if ($meta['page_id'] === '' || $meta['page_access_token'] === '') {
-        throw new RuntimeException('Meta não configurada em config.php (page_id + page_access_token).');
+        $label = cms_social_brands()[$brand]['label'] ?? $brand;
+        throw new RuntimeException('Meta não configurada para ' . $label . ' (meta_accounts em config.php).');
     }
 
     $platforms = $post['platforms'] ?? ['facebook'];
@@ -295,11 +361,12 @@ function cms_social_publish_post(array &$post): void
     }
     if (in_array('instagram', $platforms, true) && empty($ids['instagram'])) {
         if ($meta['instagram_business_id'] === '') {
-            throw new RuntimeException('Falta instagram_business_id em config.php.');
+            throw new RuntimeException('Falta instagram_business_id para ' . $brand . '.');
         }
         $ids['instagram'] = cms_social_publish_instagram($post, $meta);
     }
 
+    $post['brand'] = $brand;
     $post['metaPostIds'] = $ids;
     $post['status'] = 'published';
     $post['publishedAt'] = date('c');

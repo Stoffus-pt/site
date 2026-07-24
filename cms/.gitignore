@@ -1,4 +1,5 @@
 config.php
 data/visits-count.json
 data/social-posts.json
+data/social-posts-*.json
 data/social-media/
