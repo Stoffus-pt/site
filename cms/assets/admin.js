@@ -87,6 +87,35 @@
     }
   }
 
+  function preferredTab() {
+    var hash = (location.hash || '').replace(/^#/, '').toLowerCase();
+    var query = '';
+    try {
+      query = String(new URLSearchParams(location.search).get('tab') || '').toLowerCase();
+    } catch (e) { /* ignore */ }
+    var tab = query || hash;
+    if (tab === 'redes') return 'social';
+    if (['pages', 'fabrics', 'photos', 'nav', 'social'].indexOf(tab) >= 0) return tab;
+    return null;
+  }
+
+  function applyPreferredTab() {
+    var tab = preferredTab();
+    if (!tab) return;
+    if (tab === 'social') {
+      openSocialTab();
+      return;
+    }
+    state.dashboardTab = tab;
+  }
+
+  function enterDashboard() {
+    state.view = 'dashboard';
+    loadPages();
+    loadNav();
+    applyPreferredTab();
+  }
+
   function boot() {
     api('me.php').then(function (data) {
       state.configured = !!data.configured;
@@ -96,9 +125,7 @@
       } else if (!data.authenticated) {
         state.view = 'login';
       } else {
-        state.view = 'dashboard';
-        loadPages();
-        loadNav();
+        enterDashboard();
       }
       render();
     }).catch(function () {
@@ -374,9 +401,7 @@
           method: 'POST',
           body: { username: fd.get('username'), password: fd.get('password') },
         }).then(function () {
-          state.view = 'dashboard';
-          loadPages();
-          loadNav();
+          enterDashboard();
           render();
         }).catch(function (err) {
           var el = document.getElementById('cms-login-error');
@@ -394,10 +419,8 @@
           method: 'POST',
           body: { username: fd.get('username'), password: fd.get('password') },
         }).then(function () {
-          state.view = 'dashboard';
           state.configured = true;
-          loadPages();
-          loadNav();
+          enterDashboard();
           render();
         }).catch(function (err) {
           var el = document.getElementById('cms-setup-error');
