@@ -1,5 +1,5 @@
 /**
- * Módulo Redes — planeamento em bulk + calendário drag-and-drop.
+ * Módulo Redes — planeamento em bulk + calendário + gestão de publicações.
  * Expõe window.StoffusSocial
  */
 (function (global) {
@@ -13,8 +13,10 @@
     meta: { configured: false, instagram_ready: false },
     pool: [],
     weekStart: null,
+    targetDay: null,
     selectedPostId: null,
     previewSlide: 0,
+    listFilter: 'all',
     uploading: false,
   };
 
@@ -38,6 +40,7 @@
   }
 
   function sameDay(a, b) {
+    if (!a || !b) return false;
     return a.getFullYear() === b.getFullYear() &&
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate();
@@ -73,7 +76,6 @@
   function mediaUrl(path) {
     var rel = String(path || '').replace(/^\/+/, '').replace(/\\/g, '/');
     if (!rel) return '';
-    // Endpoint PHP fiável (funciona com o router local e no alojamento)
     return 'api/social-file.php?f=' + encodeURIComponent(rel);
   }
 
@@ -85,17 +87,55 @@
     global.StoffusCmsToast(msg);
   }
 
+  function statusLabel(st) {
+    if (st === 'published') return 'Publicada';
+    if (st === 'failed') return 'Falhou';
+    if (st === 'draft') return 'Rascunho';
+    return 'Agendada';
+  }
+
+  function platformsOf(post) {
+    return Array.isArray(post && post.platforms) ? post.platforms.slice() : [];
+  }
+
+  function hasPlatform(list, name) {
+    return list.indexOf(name) >= 0;
+  }
+
+  function ensureTargetDay() {
+    if (!state.targetDay) {
+      var d = startOfWeek(new Date());
+      var wed = addDays(d, 2);
+      wed.setHours(10, 0, 0, 0);
+      if (wed < new Date()) wed = addDays(wed, 7);
+      state.targetDay = wed;
+    }
+    return state.targetDay;
+  }
+
   function load() {
     if (!state.weekStart) state.weekStart = startOfWeek(new Date());
+    ensureTargetDay();
     return api('social.php?action=list').then(function (data) {
       state.posts = data.posts || [];
       state.settings = Object.assign({}, state.settings, data.settings || {});
       state.meta = data.meta || state.meta;
+      if (!state.settings.defaultPlatforms || !state.settings.defaultPlatforms.length) {
+        state.settings.defaultPlatforms = ['facebook', 'instagram'];
+      }
     });
   }
 
   function selectedPaths() {
     return state.pool.filter(function (f) { return f.selected !== false; }).map(function (f) { return f.path; });
+  }
+
+  function filteredPosts() {
+    var list = state.posts.slice().sort(function (a, b) {
+      return new Date(a.scheduledAt || 0) - new Date(b.scheduledAt || 0);
+    });
+    if (state.listFilter === 'all') return list;
+    return list.filter(function (p) { return p.status === state.listFilter; });
   }
 
   function renderStats() {
@@ -107,6 +147,17 @@
       '<div class="cms-stat"><strong>' + scheduled + '</strong><span>Agendadas</span></div>' +
       '<div class="cms-stat"><strong>' + published + '</strong><span>Publicadas</span></div>' +
       '<div class="cms-stat"><strong>' + failed + '</strong><span>Falhas</span></div>' +
+      '</div>';
+  }
+
+  function renderPlatformToggles(idPrefix, selected) {
+    var fb = hasPlatform(selected, 'facebook');
+    var ig = hasPlatform(selected, 'instagram');
+    return '<div class="cms-platform-toggles" role="group" aria-label="Redes">' +
+      '<button type="button" class="cms-platform-btn' + (fb ? ' is-on' : '') + '" data-platform-toggle="facebook" data-platform-scope="' + idPrefix + '">' +
+      '<i class="fa-brands fa-facebook"></i> Facebook</button>' +
+      '<button type="button" class="cms-platform-btn' + (ig ? ' is-on' : '') + '" data-platform-toggle="instagram" data-platform-scope="' + idPrefix + '">' +
+      '<i class="fa-brands fa-instagram"></i> Instagram</button>' +
       '</div>';
   }
 
@@ -126,8 +177,7 @@
   function postsForDay(day) {
     return state.posts.filter(function (p) {
       if (!p.scheduledAt) return false;
-      var d = new Date(p.scheduledAt);
-      return sameDay(d, day);
+      return sameDay(new Date(p.scheduledAt), day);
     }).sort(function (a, b) {
       return new Date(a.scheduledAt) - new Date(b.scheduledAt);
     });
@@ -137,27 +187,85 @@
     var start = state.weekStart;
     var days = [];
     var today = new Date();
+    var target = ensureTargetDay();
     for (var i = 0; i < 7; i++) {
       var day = addDays(start, i);
       var posts = postsForDay(day);
+      var isTarget = sameDay(day, target);
       days.push(
-        '<div class="cms-cal-day' + (sameDay(day, today) ? ' is-today' : '') + '" data-cal-day="' + dayKey(day) + '">' +
-        '<div class="cms-cal-day__label"><span>' + esc(fmtDayLabel(day)) + '</span><span>' + posts.length + '</span></div>' +
+        '<div class="cms-cal-day' +
+          (sameDay(day, today) ? ' is-today' : '') +
+          (isTarget ? ' is-target' : '') +
+          '" data-cal-day="' + dayKey(day) + '" title="Clique para escolher este dia">' +
+        '<div class="cms-cal-day__label">' +
+        '<span>' + esc(fmtDayLabel(day)) + '</span>' +
+        '<span>' + (isTarget ? '●' : posts.length) + '</span></div>' +
+        (isTarget ? '<div class="cms-cal-day__pick">Dia escolhido</div>' : '<div class="cms-cal-day__pick">Clique para agendar aqui</div>') +
         posts.map(function (p) {
           var thumbs = (p.media || []).slice(0, 3).map(function (m) {
             return '<img src="' + esc(mediaUrl(m)) + '" alt="" />';
           }).join('');
           var time = new Date(p.scheduledAt).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-          var plats = (p.platforms || []).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join('+');
-          return '<div class="cms-cal-post is-' + esc(p.status || 'draft') + (state.selectedPostId === p.id ? ' is-selected' : '') + '" draggable="true" data-post-id="' + esc(p.id) + '">' +
+          var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join('+');
+          return '<div class="cms-cal-post is-' + esc(p.status || 'draft') +
+            (state.selectedPostId === p.id ? ' is-selected' : '') +
+            '" draggable="true" data-post-id="' + esc(p.id) + '">' +
             '<div class="cms-cal-post__thumbs">' + thumbs + '</div>' +
-            '<div class="cms-cal-post__meta">' + esc(time) + ' · ' + (p.media || []).length + ' fotos · ' + esc(plats) + '</div>' +
-            '</div>';
+            '<div class="cms-cal-post__meta">' + esc(time) + ' · ' + (p.media || []).length + ' · ' + esc(plats || '—') +
+            ' · ' + esc(statusLabel(p.status)) + '</div></div>';
         }).join('') +
         '</div>'
       );
     }
     return days.join('');
+  }
+
+  function renderPostsList() {
+    var filters = [
+      { id: 'all', label: 'Todas' },
+      { id: 'scheduled', label: 'Agendadas' },
+      { id: 'published', label: 'Publicadas' },
+      { id: 'failed', label: 'Falhas' },
+      { id: 'draft', label: 'Rascunhos' },
+    ];
+    var posts = filteredPosts();
+    var html = '<div class="cms-posts-list">' +
+      '<div class="cms-posts-list__head">' +
+      '<h2>Publicações</h2>' +
+      '<div class="cms-tabs cms-tabs--sub">' +
+      filters.map(function (f) {
+        return '<button type="button" class="cms-tab' + (state.listFilter === f.id ? ' is-active' : '') +
+          '" data-list-filter="' + f.id + '">' + f.label + '</button>';
+      }).join('') +
+      '</div></div>';
+
+    if (!posts.length) {
+      html += '<p class="cms-hint">Nenhuma publicação neste filtro.</p></div>';
+      return html;
+    }
+
+    html += '<div class="cms-posts-list__rows">';
+    posts.forEach(function (p) {
+      var when = '';
+      try {
+        when = new Date(p.scheduledAt).toLocaleString('pt-PT', {
+          day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+        });
+      } catch (e) { when = '—'; }
+      var thumb = (p.media && p.media[0]) ? mediaUrl(p.media[0]) : '';
+      var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
+      html += '<button type="button" class="cms-post-row' +
+        (state.selectedPostId === p.id ? ' is-selected' : '') +
+        '" data-post-id="' + esc(p.id) + '">' +
+        (thumb ? '<img src="' + esc(thumb) + '" alt="" />' : '<span class="cms-post-row__ph"></span>') +
+        '<span class="cms-post-row__body">' +
+        '<strong>' + esc(when) + '</strong>' +
+        '<span>' + (p.media || []).length + ' fotos · ' + esc(plats || 'sem rede') + ' · ' + esc(statusLabel(p.status)) + '</span>' +
+        '<span class="cms-post-row__cap">' + esc((p.caption || '').slice(0, 80) || 'Sem legenda') + '</span>' +
+        '</span></button>';
+    });
+    html += '</div></div>';
+    return html;
   }
 
   function renderPreview(post) {
@@ -166,7 +274,7 @@
         '<div class="cms-preview-phone__body">' +
         '<i class="fa-regular fa-images"></i>' +
         '<p><strong>Pré-visualização</strong></p>' +
-        '<p>Clique numa publicação no calendário para ver aqui como fica no feed.</p>' +
+        '<p>Escolha uma publicação na lista ou no calendário.</p>' +
         '</div></div>';
     }
 
@@ -174,8 +282,8 @@
     if (state.previewSlide >= media.length) state.previewSlide = 0;
     if (state.previewSlide < 0) state.previewSlide = 0;
     var slide = media[state.previewSlide];
-    var plats = post.platforms || [];
-    var isIg = plats.indexOf('instagram') >= 0;
+    var plats = platformsOf(post);
+    var isIg = hasPlatform(plats, 'instagram');
     var brand = isIg ? 'stoffus' : 'Stoffus';
     var when = '';
     try {
@@ -185,70 +293,74 @@
     } catch (e) { when = ''; }
 
     var dots = media.map(function (_, i) {
-      return '<button type="button" class="cms-preview-dot' + (i === state.previewSlide ? ' is-active' : '') + '" data-preview-slide="' + i + '" aria-label="Foto ' + (i + 1) + '"></button>';
+      return '<button type="button" class="cms-preview-dot' + (i === state.previewSlide ? ' is-active' : '') +
+        '" data-preview-slide="' + i + '" aria-label="Foto ' + (i + 1) + '"></button>';
     }).join('');
 
-    return '<div class="cms-preview-phone" data-preview-post="' + esc(post.id) + '">' +
+    return '<div class="cms-preview-phone">' +
       '<div class="cms-preview-phone__chrome">' +
-      '<span class="cms-preview-phone__plat">' +
-      (isIg ? '<i class="fa-brands fa-instagram"></i> Instagram' : '<i class="fa-brands fa-facebook"></i> Facebook') +
-      '</span>' +
-      '<span class="cms-preview-phone__when">' + esc(when) + '</span>' +
-      '</div>' +
+      '<span>' + (isIg
+        ? '<i class="fa-brands fa-instagram"></i> Instagram'
+        : '<i class="fa-brands fa-facebook"></i> Facebook') + '</span>' +
+      '<span>' + esc(when) + '</span></div>' +
       '<div class="cms-preview-phone__head">' +
       '<div class="cms-preview-phone__avatar">S</div>' +
-      '<div><strong>' + esc(brand) + '</strong><span>Pré-visualização</span></div>' +
-      '</div>' +
+      '<div><strong>' + esc(brand) + '</strong><span>' + esc(statusLabel(post.status)) + '</span></div></div>' +
       '<div class="cms-preview-phone__media">' +
       (slide
         ? '<img src="' + esc(mediaUrl(slide)) + '" alt="Pré-visualização" />'
         : '<div class="cms-preview-phone__missing">Sem imagem</div>') +
       (media.length > 1
-        ? '<button type="button" class="cms-preview-nav cms-preview-nav--prev" id="cms-preview-prev" aria-label="Anterior">‹</button>' +
-          '<button type="button" class="cms-preview-nav cms-preview-nav--next" id="cms-preview-next" aria-label="Seguinte">›</button>' +
+        ? '<button type="button" class="cms-preview-nav cms-preview-nav--prev" id="cms-preview-prev">‹</button>' +
+          '<button type="button" class="cms-preview-nav cms-preview-nav--next" id="cms-preview-next">›</button>' +
           '<div class="cms-preview-counter">' + (state.previewSlide + 1) + ' / ' + media.length + '</div>'
         : '') +
       '</div>' +
       (media.length > 1 ? '<div class="cms-preview-dots">' + dots + '</div>' : '') +
-      '<div class="cms-preview-phone__caption">' +
-      '<strong>' + esc(brand) + '</strong> ' +
-      '<span id="cms-preview-caption-live">' + esc(post.caption || 'Sem legenda') + '</span>' +
-      '</div>' +
-      '<div class="cms-preview-phone__foot">' +
-      '<span>' + media.length + ' foto' + (media.length === 1 ? '' : 's') + '</span>' +
-      '<span>' + esc((plats.map(function (p) { return p === 'instagram' ? 'IG' : 'FB'; }).join(' · ')) || '—') + '</span>' +
-      '</div></div>';
+      '<div class="cms-preview-phone__caption"><strong>' + esc(brand) + '</strong> ' +
+      '<span id="cms-preview-caption-live">' + esc(post.caption || 'Sem legenda') + '</span></div>' +
+      '<div class="cms-preview-phone__foot"><span>' + media.length + ' fotos</span>' +
+      '<span>' + esc(plats.map(function (p) { return p === 'instagram' ? 'IG' : 'FB'; }).join(' · ') || '—') +
+      '</span></div></div>';
   }
 
   function renderDrawer() {
     var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
     if (!post) {
-      return '<div class="cms-post-edit">' +
-        '<p class="cms-hint" style="margin:0">Seleccione um cartão no calendário para editar e pré-visualizar.</p>' +
-        '</div>';
+      return '<div class="cms-post-edit"><p class="cms-hint" style="margin:0">' +
+        'Seleccione uma publicação para editar dia, redes e legenda.</p></div>';
     }
-    var fb = (post.platforms || []).indexOf('facebook') >= 0;
-    var ig = (post.platforms || []).indexOf('instagram') >= 0;
+
     var local = '';
-    try {
-      local = toLocalInputValue(new Date(post.scheduledAt));
-    } catch (e) { local = ''; }
+    try { local = toLocalInputValue(new Date(post.scheduledAt)); } catch (e) { local = ''; }
+    var published = post.status === 'published';
 
     return '<div class="cms-post-edit" data-drawer-id="' + esc(post.id) + '">' +
       '<h2>Editar publicação</h2>' +
-      '<label class="cms-field"><span>Legenda</span><textarea id="cms-social-caption" rows="4" placeholder="Escreva a legenda…">' + esc(post.caption) + '</textarea></label>' +
-      '<label class="cms-field"><span>Data e hora</span><input type="datetime-local" id="cms-social-when" value="' + esc(local) + '" /></label>' +
-      '<div class="cms-pill-row" style="margin-bottom:.85rem">' +
-      '<label class="cms-pill"><input type="checkbox" id="cms-social-fb"' + (fb ? ' checked' : '') + ' /> Facebook</label>' +
-      '<label class="cms-pill"><input type="checkbox" id="cms-social-ig"' + (ig ? ' checked' : '') + ' /> Instagram</label>' +
-      '</div>' +
-      '<p class="cms-hint" style="margin:0 0 .85rem">Estado: <strong>' + esc(post.status) + '</strong>' +
+      '<p class="cms-hint" style="margin:0 0 .75rem">Estado: <strong>' + esc(statusLabel(post.status)) + '</strong>' +
       (post.error ? ' — ' + esc(post.error) : '') + '</p>' +
+      '<label class="cms-field"><span>Legenda</span>' +
+      '<textarea id="cms-social-caption" rows="4">' + esc(post.caption) + '</textarea></label>' +
+      '<label class="cms-field"><span>Data e hora</span>' +
+      '<input type="datetime-local" id="cms-social-when" value="' + esc(local) + '" /></label>' +
+      '<div class="cms-field"><span>Publicar em</span>' +
+      renderPlatformToggles('edit', platformsOf(post)) +
+      '<p class="cms-hint">Clique para ligar/desligar Facebook e Instagram.</p></div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:.45rem">' +
-      '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-save-post">Guardar</button>' +
-      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-publish-now">Publicar agora</button>' +
-      '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-post">Apagar</button>' +
-      '</div></div>';
+      '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-save-post">Guardar alterações</button>' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-move-target">Mover para o dia escolhido</button>' +
+      (!published
+        ? '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-publish-now">Publicar agora</button>'
+        : '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-requeue">Voltar a agendar</button>') +
+      (post.status === 'failed'
+        ? '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-publish-now">Tentar de novo</button>'
+        : '') +
+      '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-post">Apagar do CMS</button>' +
+      '</div>' +
+      (published
+        ? '<p class="cms-hint">Já publicada no Meta. «Voltar a agendar» só muda o estado no CMS (não apaga no Facebook/Instagram).</p>'
+        : '<p class="cms-hint">Para mudar o dia: altere a data acima, use «Mover para o dia escolhido», ou arraste no calendário.</p>') +
+      '</div>';
   }
 
   function render() {
@@ -257,36 +369,50 @@
       : '<span class="cms-meta-badge is-warn"><i class="fa-brands fa-meta"></i> Meta por configurar</span>';
 
     var selected = state.posts.find(function (p) { return p.id === state.selectedPostId; }) || null;
+    var target = ensureTargetDay();
+    var targetLabel = target.toLocaleDateString('pt-PT', {
+      weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
+    });
 
     return '<div class="cms-social">' +
       renderStats() +
       '<div class="cms-social__grid">' +
+
       '<section class="cms-surface">' +
       '<div style="display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap">' +
-      '<div><h2>Lote de fotos</h2><p class="cms-hint">Arraste e largue. Depois partimos automaticamente em posts de até 10 fotos (limite da API Instagram).</p></div>' +
-      metaBadge +
-      '</div>' +
+      '<div><h2>1. Lote de fotos</h2><p class="cms-hint">Arraste as imagens e escolha as redes antes de agendar.</p></div>' +
+      metaBadge + '</div>' +
       '<div class="cms-drop" id="cms-social-drop">' +
-      '<input type="file" id="cms-social-file" accept="image/jpeg,image/png,image/webp" multiple />' +
-      '<strong>Largar fotos aqui</strong>' +
-      '<span>JPG, PNG ou WebP · até 12 MB cada</span>' +
-      '</div>' +
+      '<input type="file" id="cms-social-file" accept="image/jpeg,image/png,image/webp,image/gif" multiple />' +
+      '<strong>Largar fotos aqui</strong><span>JPG, PNG ou WebP · até 12 MB cada</span></div>' +
       renderPool() +
+      '<div class="cms-field" style="margin-top:1rem"><span>Publicar em</span>' +
+      renderPlatformToggles('batch', state.settings.defaultPlatforms || []) +
+      '</div>' +
       '<div class="cms-social-toolbar">' +
-      '<label class="cms-field"><span>Fotos / post</span><input class="cms-input" type="number" id="cms-social-split" min="1" max="10" value="' + esc(state.settings.autoSplitSize) + '" /></label>' +
-      '<label class="cms-field"><span>Intervalo (h)</span><input class="cms-input" type="number" id="cms-social-interval" min="1" max="72" value="24" /></label>' +
-      '<label class="cms-field"><span>Início</span><input class="cms-input" type="datetime-local" id="cms-social-start" /></label>' +
+      '<label class="cms-field"><span>Fotos / post</span>' +
+      '<input class="cms-input" type="number" id="cms-social-split" min="1" max="10" value="' +
+      esc(state.settings.autoSplitSize) + '" /></label>' +
+      '<label class="cms-field"><span>Intervalo (h)</span>' +
+      '<input class="cms-input" type="number" id="cms-social-interval" min="1" max="72" value="24" /></label>' +
+      '<label class="cms-field"><span>Hora no dia escolhido</span>' +
+      '<input class="cms-input" type="datetime-local" id="cms-social-start" value="' +
+      esc(toLocalInputValue(target)) + '" /></label>' +
+      '</div>' +
+      '<div class="cms-target-banner">' +
+      '<div><strong>Dia de início</strong><span>' + esc(targetLabel) + '</span>' +
+      '<em>Clique num dia no calendário para mudar.</em></div>' +
       '<button type="button" class="cms-btn cms-btn--brand" id="cms-social-split-btn">Partir e agendar</button>' +
       '</div>' +
-      '<label class="cms-field" style="margin-top:1rem"><span>Legenda por defeito</span><textarea id="cms-social-default-caption" rows="2">' + esc(state.settings.defaultCaption) + '</textarea></label>' +
-      '<p class="cms-hint">Anúncios (€40): continue a patrocinar no Meta Ads / Boost nos posts já publicados.</p>' +
-      (!state.meta.configured
-        ? '<p class="cms-hint">Para publicar automaticamente, configure <code>meta</code> em <code>cms/config.php</code>. As imagens têm de estar online (não em localhost).</p>'
-        : '') +
+      '<label class="cms-field" style="margin-top:1rem"><span>Legenda por defeito</span>' +
+      '<textarea id="cms-social-default-caption" rows="2">' + esc(state.settings.defaultCaption) +
+      '</textarea></label>' +
       '</section>' +
+
       '<section class="cms-surface">' +
       '<div class="cms-cal-head">' +
-      '<div><h2>Calendário</h2><h3>' + esc(fmtWeekRange(state.weekStart)) + '</h3></div>' +
+      '<div><h2>2. Calendário</h2><h3>' + esc(fmtWeekRange(state.weekStart)) + '</h3>' +
+      '<p class="cms-hint" style="margin:.35rem 0 0">Clique no dia para o escolher. Arraste um post para outro dia, ou use a lista abaixo.</p></div>' +
       '<div style="display:flex;gap:.4rem;flex-wrap:wrap">' +
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-prev">← Semana</button>' +
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-today">Hoje</button>' +
@@ -294,34 +420,65 @@
       '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-publish-due">Publicar vencidas</button>' +
       '</div></div>' +
       '<div class="cms-cal" id="cms-social-cal">' + renderCalendar() + '</div>' +
+      renderPostsList() +
       '</section>' +
+
       '<section class="cms-surface cms-surface--preview">' +
-      '<h2>Pré-visualização</h2>' +
-      '<p class="cms-hint">Assim fica no feed (aproximação). Use as setas para percorrer o carrossel.</p>' +
-      '<div class="cms-preview-wrap">' +
-      renderPreview(selected) +
-      renderDrawer() +
-      '</div></section>' +
+      '<h2>3. Pré-visualização</h2>' +
+      '<p class="cms-hint">Edite aqui a data, as redes e a legenda da publicação seleccionada.</p>' +
+      '<div class="cms-preview-wrap">' + renderPreview(selected) + renderDrawer() + '</div>' +
+      '</section>' +
+
       '</div></div>';
   }
 
-  function setDefaultStartInput() {
-    var el = document.getElementById('cms-social-start');
-    if (!el || el.value) return;
-    var d = startOfWeek(new Date());
-    // próxima quarta 10:00
-    var wed = addDays(d, 2);
-    wed.setHours(10, 0, 0, 0);
-    if (wed < new Date()) wed = addDays(wed, 7);
-    el.value = toLocalInputValue(wed);
+  function selectPost(id, jumpWeek) {
+    if (state.selectedPostId !== id) state.previewSlide = 0;
+    state.selectedPostId = id;
+    var post = state.posts.find(function (p) { return p.id === id; });
+    if (jumpWeek && post && post.scheduledAt) {
+      state.weekStart = startOfWeek(new Date(post.scheduledAt));
+      state.targetDay = new Date(post.scheduledAt);
+    }
+    global.StoffusCmsRerender();
+  }
+
+  function movePostToDay(id, dayKeyStr) {
+    var post = state.posts.find(function (p) { return p.id === id; });
+    if (!post) return;
+    var prev = post.scheduledAt ? new Date(post.scheduledAt) : new Date();
+    var nextDate = parseDayKey(dayKeyStr);
+    nextDate.setHours(prev.getHours(), prev.getMinutes(), 0, 0);
+    var patch = { scheduledAt: nextDate.toISOString() };
+    if (post.status === 'published') {
+      // Só move a data de referência no CMS; não republica
+    } else if (post.status === 'failed' || post.status === 'draft') {
+      patch.status = 'scheduled';
+    }
+    api('social.php', {
+      method: 'POST',
+      body: { action: 'update', id: id, post: patch },
+    }).then(function (data) {
+      state.posts = data.posts || [];
+      state.selectedPostId = id;
+      state.targetDay = nextDate;
+      toast('Movida para ' + nextDate.toLocaleDateString('pt-PT'));
+      global.StoffusCmsRerender();
+    }).catch(function (err) { toast(err.error || 'Erro ao mover.'); });
+  }
+
+  function readEditPlatforms() {
+    var plats = [];
+    document.querySelectorAll('[data-platform-scope="edit"].is-on').forEach(function (btn) {
+      plats.push(btn.getAttribute('data-platform-toggle'));
+    });
+    return plats;
   }
 
   function uploadFiles(fileList) {
     if (!fileList || !fileList.length) return;
     var fd = new FormData();
-    Array.prototype.forEach.call(fileList, function (f) {
-      fd.append('files[]', f);
-    });
+    Array.prototype.forEach.call(fileList, function (f) { fd.append('files[]', f); });
     state.uploading = true;
     toast('A carregar ' + fileList.length + ' foto(s)…');
     fetch('api/social-upload.php', { method: 'POST', body: fd, credentials: 'same-origin' })
@@ -339,24 +496,16 @@
         (data.files || []).forEach(function (f) {
           state.pool.push({ path: f.path, name: f.name, selected: true, url: f.url || mediaUrl(f.path) });
         });
-        if (data.errors && data.errors.length) {
-          toast(data.errors[0]);
-        } else if (!(data.files || []).length) {
-          toast(data.error || 'Nenhuma imagem gravada.');
-        } else {
-          toast((data.files || []).length + ' foto(s) na fila');
-        }
+        if (data.errors && data.errors.length) toast(data.errors[0]);
+        else if (!(data.files || []).length) toast(data.error || 'Nenhuma imagem gravada.');
+        else toast((data.files || []).length + ' foto(s) na fila');
         global.StoffusCmsRerender();
       })
-      .catch(function (err) {
-        toast(err.error || err.detail || 'Falha no upload.');
-      })
+      .catch(function (err) { toast(err.error || err.detail || 'Falha no upload.'); })
       .finally(function () { state.uploading = false; });
   }
 
   function bind() {
-    setDefaultStartInput();
-
     var drop = document.getElementById('cms-social-drop');
     var fileInput = document.getElementById('cms-social-file');
     if (drop && fileInput) {
@@ -398,6 +547,44 @@
       });
     });
 
+    // Toggle FB / IG (lote ou edição) — sem re-render imediato no lote
+    document.querySelectorAll('[data-platform-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var scope = btn.getAttribute('data-platform-scope');
+        var name = btn.getAttribute('data-platform-toggle');
+        btn.classList.toggle('is-on');
+        var on = [];
+        document.querySelectorAll('[data-platform-scope="' + scope + '"].is-on').forEach(function (b) {
+          on.push(b.getAttribute('data-platform-toggle'));
+        });
+        if (!on.length) {
+          btn.classList.add('is-on');
+          toast('Escolha pelo menos uma rede.');
+          return;
+        }
+        if (scope === 'batch') {
+          state.settings.defaultPlatforms = on;
+        } else if (scope === 'edit') {
+          var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
+          if (post) {
+            post.platforms = on;
+            // Actualizar só o chrome da pré-visualização
+            global.StoffusCmsRerender();
+          }
+        }
+      });
+    });
+
+    var startInput = document.getElementById('cms-social-start');
+    if (startInput) {
+      startInput.addEventListener('change', function () {
+        if (!startInput.value) return;
+        state.targetDay = new Date(startInput.value);
+        state.weekStart = startOfWeek(state.targetDay);
+        global.StoffusCmsRerender();
+      });
+    }
+
     var splitBtn = document.getElementById('cms-social-split-btn');
     if (splitBtn) {
       splitBtn.onclick = function () {
@@ -406,9 +593,15 @@
           toast('Seleccione fotos na fila.');
           return;
         }
+        var platforms = state.settings.defaultPlatforms || [];
+        if (!platforms.length) {
+          toast('Escolha Facebook e/ou Instagram.');
+          return;
+        }
         var split = Number((document.getElementById('cms-social-split') || {}).value || 10);
         var interval = Number((document.getElementById('cms-social-interval') || {}).value || 24);
         var startAt = (document.getElementById('cms-social-start') || {}).value || '';
+        if (!startAt && state.targetDay) startAt = toLocalInputValue(state.targetDay);
         var caption = (document.getElementById('cms-social-default-caption') || {}).value || '';
         api('social.php', {
           method: 'POST',
@@ -419,13 +612,17 @@
             intervalHours: interval,
             startAt: startAt ? new Date(startAt).toISOString() : '',
             caption: caption,
-            platforms: state.settings.defaultPlatforms,
+            platforms: platforms,
           },
         }).then(function (data) {
           state.posts = data.posts || [];
           state.settings.defaultCaption = caption;
           state.settings.autoSplitSize = split;
           state.pool = [];
+          if (data.created && data.created[0]) {
+            state.selectedPostId = data.created[0].id;
+            state.listFilter = 'scheduled';
+          }
           toast((data.created || []).length + ' publicação(ões) criadas');
           api('social.php', {
             method: 'POST',
@@ -468,17 +665,53 @@
       };
     }
 
-    document.querySelectorAll('[data-post-id]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        var id = el.getAttribute('data-post-id');
-        if (state.selectedPostId !== id) state.previewSlide = 0;
-        state.selectedPostId = id;
+    document.querySelectorAll('[data-list-filter]').forEach(function (btn) {
+      btn.onclick = function () {
+        state.listFilter = btn.getAttribute('data-list-filter');
+        global.StoffusCmsRerender();
+      };
+    });
+
+    // Clique no dia = escolher dia de agendamento do próximo lote
+    document.querySelectorAll('[data-cal-day]').forEach(function (dayEl) {
+      dayEl.addEventListener('click', function (e) {
+        if (e.target.closest('[data-post-id]')) return;
+        var key = dayEl.getAttribute('data-cal-day');
+        var day = parseDayKey(key);
+        var prev = state.targetDay || new Date();
+        day.setHours(prev.getHours(), prev.getMinutes(), 0, 0);
+        state.targetDay = day;
+        toast('Dia escolhido: ' + day.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' }));
         global.StoffusCmsRerender();
       });
-      el.addEventListener('dragstart', function (e) {
-        e.dataTransfer.setData('text/post-id', el.getAttribute('data-post-id'));
-        e.dataTransfer.effectAllowed = 'move';
+
+      dayEl.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dayEl.classList.add('is-over');
       });
+      dayEl.addEventListener('dragleave', function () {
+        dayEl.classList.remove('is-over');
+      });
+      dayEl.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dayEl.classList.remove('is-over');
+        var id = e.dataTransfer.getData('text/post-id');
+        if (!id) return;
+        movePostToDay(id, dayEl.getAttribute('data-cal-day'));
+      });
+    });
+
+    document.querySelectorAll('[data-post-id]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.stopPropagation();
+        selectPost(el.getAttribute('data-post-id'), true);
+      });
+      if (el.classList.contains('cms-cal-post')) {
+        el.addEventListener('dragstart', function (e) {
+          e.dataTransfer.setData('text/post-id', el.getAttribute('data-post-id'));
+          e.dataTransfer.effectAllowed = 'move';
+        });
+      }
     });
 
     var captionEl = document.getElementById('cms-social-caption');
@@ -519,102 +752,115 @@
       };
     });
 
-    var fbCheck = document.getElementById('cms-social-fb');
-    var igCheck = document.getElementById('cms-social-ig');
-    function syncPlatformPreview() {
-      var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
-      if (!post) return;
-      var captionElLive = document.getElementById('cms-social-caption');
-      if (captionElLive) post.caption = captionElLive.value;
-      var platforms = [];
-      if (fbCheck && fbCheck.checked) platforms.push('facebook');
-      if (igCheck && igCheck.checked) platforms.push('instagram');
-      post.platforms = platforms;
-      global.StoffusCmsRerender();
-    }
-    if (fbCheck) fbCheck.addEventListener('change', syncPlatformPreview);
-    if (igCheck) igCheck.addEventListener('change', syncPlatformPreview);
-    document.querySelectorAll('[data-cal-day]').forEach(function (dayEl) {
-      dayEl.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dayEl.classList.add('is-over');
-      });
-      dayEl.addEventListener('dragleave', function () {
-        dayEl.classList.remove('is-over');
-      });
-      dayEl.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dayEl.classList.remove('is-over');
-        var id = e.dataTransfer.getData('text/post-id');
-        if (!id) return;
-        var dayIso = dayEl.getAttribute('data-cal-day');
-        var post = state.posts.find(function (p) { return p.id === id; });
-        if (!post) return;
-        var prev = post.scheduledAt ? new Date(post.scheduledAt) : new Date();
-        var nextDate = parseDayKey(dayIso);
-        nextDate.setHours(prev.getHours(), prev.getMinutes(), 0, 0);
-        api('social.php', {
-          method: 'POST',
-          body: { action: 'update', id: id, post: { scheduledAt: nextDate.toISOString() } },
-        }).then(function (data) {
-          state.posts = data.posts || [];
-          state.selectedPostId = id;
-          toast('Data actualizada');
-          global.StoffusCmsRerender();
-        }).catch(function (err) { toast(err.error || 'Erro ao mover.'); });
-      });
-    });
-
     var savePost = document.getElementById('cms-social-save-post');
     if (savePost) {
       savePost.onclick = function () {
         var id = state.selectedPostId;
-        var platforms = [];
-        if (document.getElementById('cms-social-fb').checked) platforms.push('facebook');
-        if (document.getElementById('cms-social-ig').checked) platforms.push('instagram');
+        var platforms = readEditPlatforms();
+        if (!platforms.length) {
+          toast('Escolha pelo menos uma rede.');
+          return;
+        }
         var when = document.getElementById('cms-social-when').value;
+        var post = state.posts.find(function (p) { return p.id === id; });
+        var patch = {
+          caption: document.getElementById('cms-social-caption').value,
+          platforms: platforms,
+        };
+        if (when) {
+          patch.scheduledAt = new Date(when).toISOString();
+          if (post && post.status !== 'published') patch.status = 'scheduled';
+        }
         api('social.php', {
           method: 'POST',
-          body: {
-            action: 'update',
-            id: id,
-            post: {
-              caption: document.getElementById('cms-social-caption').value,
-              scheduledAt: when ? new Date(when).toISOString() : undefined,
-              platforms: platforms,
-            },
-          },
+          body: { action: 'update', id: id, post: patch },
         }).then(function (data) {
           state.posts = data.posts || [];
+          if (when) state.targetDay = new Date(when);
           toast('Publicação guardada');
           global.StoffusCmsRerender();
         }).catch(function (err) { toast(err.error || 'Erro ao guardar.'); });
       };
     }
 
+    var moveTarget = document.getElementById('cms-social-move-target');
+    if (moveTarget) {
+      moveTarget.onclick = function () {
+        if (!state.selectedPostId || !state.targetDay) return;
+        movePostToDay(state.selectedPostId, dayKey(state.targetDay));
+      };
+    }
+
     var pubNow = document.getElementById('cms-social-publish-now');
     if (pubNow) {
       pubNow.onclick = function () {
-        if (!confirm('Publicar agora no Meta?')) return;
-        api('social.php', { method: 'POST', body: { action: 'publish', id: state.selectedPostId } })
-          .then(function (data) {
-            state.posts = data.posts || [];
-            toast('Publicado');
-            global.StoffusCmsRerender();
-          })
-          .catch(function (err) { toast(err.error || 'Falha na publicação.'); });
+        // Guardar plataformas/legenda antes de publicar
+        var platforms = readEditPlatforms();
+        var caption = (document.getElementById('cms-social-caption') || {}).value || '';
+        var when = (document.getElementById('cms-social-when') || {}).value || '';
+        var prep = {
+          caption: caption,
+          platforms: platforms.length ? platforms : undefined,
+        };
+        if (when) prep.scheduledAt = new Date(when).toISOString();
+
+        var go = function () {
+          if (!confirm('Publicar agora no Meta?')) return;
+          api('social.php', { method: 'POST', body: { action: 'publish', id: state.selectedPostId } })
+            .then(function (data) {
+              state.posts = data.posts || [];
+              state.listFilter = 'published';
+              toast('Publicado');
+              global.StoffusCmsRerender();
+            })
+            .catch(function (err) { toast(err.error || 'Falha na publicação.'); });
+        };
+
+        api('social.php', {
+          method: 'POST',
+          body: { action: 'update', id: state.selectedPostId, post: prep },
+        }).then(function (data) {
+          state.posts = data.posts || [];
+          go();
+        }).catch(function () { go(); });
+      };
+    }
+
+    var requeue = document.getElementById('cms-social-requeue');
+    if (requeue) {
+      requeue.onclick = function () {
+        var when = (document.getElementById('cms-social-when') || {}).value || '';
+        var platforms = readEditPlatforms();
+        api('social.php', {
+          method: 'POST',
+          body: {
+            action: 'update',
+            id: state.selectedPostId,
+            post: {
+              status: 'scheduled',
+              caption: (document.getElementById('cms-social-caption') || {}).value || '',
+              platforms: platforms,
+              scheduledAt: when ? new Date(when).toISOString() : undefined,
+            },
+          },
+        }).then(function (data) {
+          state.posts = data.posts || [];
+          state.listFilter = 'scheduled';
+          toast('Voltou ao estado agendada');
+          global.StoffusCmsRerender();
+        }).catch(function (err) { toast(err.error || 'Erro.'); });
       };
     }
 
     var delPost = document.getElementById('cms-social-delete-post');
     if (delPost) {
       delPost.onclick = function () {
-        if (!confirm('Apagar esta publicação do calendário?')) return;
+        if (!confirm('Apagar esta publicação do CMS? (Não remove do Facebook/Instagram se já estiver online.)')) return;
         api('social.php', { method: 'POST', body: { action: 'delete', id: state.selectedPostId } })
           .then(function (data) {
             state.posts = data.posts || [];
             state.selectedPostId = null;
-            toast('Publicação apagada');
+            toast('Publicação apagada do CMS');
             global.StoffusCmsRerender();
           })
           .catch(function (err) { toast(err.error || 'Erro ao apagar.'); });
