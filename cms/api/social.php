@@ -41,6 +41,68 @@ try {
 
     $data = cms_social_load($brand);
 
+    if ($action === 'save_meta') {
+        $pageId = trim((string) ($input['page_id'] ?? ''));
+        $token = trim((string) ($input['page_access_token'] ?? ''));
+        $igId = trim((string) ($input['instagram_business_id'] ?? ''));
+        $clearToken = !empty($input['clear_token']);
+
+        $all = cms_social_meta_accounts_stored();
+        // Garantir chaves das duas marcas
+        foreach (array_keys(cms_social_brands()) as $id) {
+            if (!isset($all[$id]) || !is_array($all[$id])) {
+                $all[$id] = [
+                    'page_id' => '',
+                    'page_access_token' => '',
+                    'instagram_business_id' => '',
+                ];
+            }
+        }
+
+    // Se ainda não há ficheiro CMS, importar o que existir no config.php
+    // (usa só config/legado — o ficheiro CMS ainda não existe)
+    if (!is_file(cms_social_meta_accounts_file())) {
+        global $CMS_CONFIG;
+        foreach (array_keys(cms_social_brands()) as $id) {
+            $accountsCfg = is_array($CMS_CONFIG['meta_accounts'] ?? null) ? $CMS_CONFIG['meta_accounts'] : [];
+            $cfg = is_array($accountsCfg[$id] ?? null) ? $accountsCfg[$id] : [];
+            if ($id === 'stoffus' && !$cfg) {
+                $cfg = is_array($CMS_CONFIG['meta'] ?? null) ? $CMS_CONFIG['meta'] : [];
+            }
+            $all[$id] = [
+                'page_id' => trim((string) ($cfg['page_id'] ?? '')),
+                'page_access_token' => trim((string) ($cfg['page_access_token'] ?? '')),
+                'instagram_business_id' => trim((string) ($cfg['instagram_business_id'] ?? '')),
+            ];
+        }
+    }
+
+        $current = is_array($all[$brand] ?? null) ? $all[$brand] : [
+            'page_id' => '',
+            'page_access_token' => '',
+            'instagram_business_id' => '',
+        ];
+
+        $current['page_id'] = $pageId;
+        $current['instagram_business_id'] = $igId;
+        if ($clearToken) {
+            $current['page_access_token'] = '';
+        } elseif ($token !== '') {
+            $current['page_access_token'] = $token;
+        }
+        // Se token vazio e não clear → mantém o anterior
+
+        $all[$brand] = $current;
+        cms_social_meta_accounts_save($all);
+
+        cms_json([
+            'ok' => true,
+            'brand' => $brand,
+            'meta' => cms_social_meta_ready($brand),
+            'brands' => cms_social_accounts_status(),
+        ]);
+    }
+
     if ($action === 'save_settings') {
         $settings = is_array($input['settings'] ?? null) ? $input['settings'] : [];
         $split = (int) ($settings['autoSplitSize'] ?? $data['settings']['autoSplitSize']);

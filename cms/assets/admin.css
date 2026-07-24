@@ -597,6 +597,32 @@ button, input, textarea, select {
   color: rgba(255, 255, 255, 0.82);
 }
 
+.cms-meta-config__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cms-meta-config__head h2 {
+  margin: 0 0 0.25rem;
+}
+
+.cms-meta-config__form {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+
+.cms-meta-config__form em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
 
 .cms-social__grid {
   display: grid;

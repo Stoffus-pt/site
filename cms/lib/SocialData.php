@@ -114,24 +114,90 @@ function cms_social_new_id(): string
 
 /**
  * Credenciais Meta por marca.
- * Preferência: meta_accounts[brand]; fallback legado: meta → stoffus.
+ * Ordem: ficheiro CMS (data/meta-accounts.json) → config.php meta_accounts → legado meta.
  */
+function cms_social_meta_accounts_file(): string
+{
+    return CMS_DIR . '/data/meta-accounts.json';
+}
+
+function cms_social_meta_accounts_stored(): array
+{
+    $file = cms_social_meta_accounts_file();
+    if (!is_file($file)) {
+        return [];
+    }
+    $raw = file_get_contents($file);
+    $data = json_decode($raw !== false ? $raw : '', true);
+    return is_array($data) ? $data : [];
+}
+
+function cms_social_meta_accounts_save(array $accounts): void
+{
+    $dir = dirname(cms_social_meta_accounts_file());
+    if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+        throw new RuntimeException('Não foi possível criar a pasta de dados.');
+    }
+    $clean = [];
+    foreach (cms_social_brands() as $id => $_info) {
+        $row = is_array($accounts[$id] ?? null) ? $accounts[$id] : [];
+        $clean[$id] = [
+            'page_id' => trim((string) ($row['page_id'] ?? '')),
+            'page_access_token' => trim((string) ($row['page_access_token'] ?? '')),
+            'instagram_business_id' => trim((string) ($row['instagram_business_id'] ?? '')),
+        ];
+    }
+    $json = json_encode($clean, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    if ($json === false) {
+        throw new RuntimeException('Erro ao serializar credenciais Meta.');
+    }
+    if (file_put_contents(cms_social_meta_accounts_file(), $json . "\n", LOCK_EX) === false) {
+        throw new RuntimeException('Não foi possível guardar as credenciais Meta.');
+    }
+}
+
 function cms_social_meta_config_for(string $brand): array
 {
     global $CMS_CONFIG;
     $brand = cms_social_normalize_brand($brand);
-    $accounts = is_array($CMS_CONFIG['meta_accounts'] ?? null) ? $CMS_CONFIG['meta_accounts'] : [];
-    $meta = is_array($accounts[$brand] ?? null) ? $accounts[$brand] : [];
 
-    if ($brand === 'stoffus' && !$meta) {
+    $stored = cms_social_meta_accounts_stored();
+    $fromCms = is_array($stored[$brand] ?? null) ? $stored[$brand] : [];
+
+    $accounts = is_array($CMS_CONFIG['meta_accounts'] ?? null) ? $CMS_CONFIG['meta_accounts'] : [];
+    $fromConfig = is_array($accounts[$brand] ?? null) ? $accounts[$brand] : [];
+
+    if ($brand === 'stoffus' && !$fromConfig) {
         $legacy = is_array($CMS_CONFIG['meta'] ?? null) ? $CMS_CONFIG['meta'] : [];
-        $meta = $legacy;
+        $fromConfig = $legacy;
+    }
+
+    // CMS (painel) tem prioridade se tiver page_id ou token; senão config.php
+    $pageId = trim((string) ($fromCms['page_id'] ?? ''));
+    $token = trim((string) ($fromCms['page_access_token'] ?? ''));
+    $ig = trim((string) ($fromCms['instagram_business_id'] ?? ''));
+
+    if ($pageId === '' && $token === '' && $ig === '') {
+        $pageId = trim((string) ($fromConfig['page_id'] ?? ''));
+        $token = trim((string) ($fromConfig['page_access_token'] ?? ''));
+        $ig = trim((string) ($fromConfig['instagram_business_id'] ?? ''));
+    } else {
+        // Preencher campos em falta a partir do config
+        if ($pageId === '') {
+            $pageId = trim((string) ($fromConfig['page_id'] ?? ''));
+        }
+        if ($token === '') {
+            $token = trim((string) ($fromConfig['page_access_token'] ?? ''));
+        }
+        if ($ig === '') {
+            $ig = trim((string) ($fromConfig['instagram_business_id'] ?? ''));
+        }
     }
 
     return [
-        'page_id' => trim((string) ($meta['page_id'] ?? '')),
-        'page_access_token' => trim((string) ($meta['page_access_token'] ?? '')),
-        'instagram_business_id' => trim((string) ($meta['instagram_business_id'] ?? '')),
+        'page_id' => $pageId,
+        'page_access_token' => $token,
+        'instagram_business_id' => $ig,
     ];
 }
 
@@ -151,6 +217,8 @@ function cms_social_meta_ready(?string $brand = null): array
     if ($meta['page_access_token'] !== '') {
         $out['token_preview'] = substr($meta['page_access_token'], 0, 6) . '…' . substr($meta['page_access_token'], -4);
     }
+    $out['has_token'] = $meta['page_access_token'] !== '';
+    $out['source'] = is_file(cms_social_meta_accounts_file()) ? 'cms' : 'config';
     return $out;
 }
 

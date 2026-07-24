@@ -24,6 +24,7 @@
     previewSlide: 0,
     listFilter: 'all',
     uploading: false,
+    metaFormOpen: false,
   };
 
   function esc(s) {
@@ -305,6 +306,9 @@
       if (!state.settings.defaultPlatforms || !state.settings.defaultPlatforms.length) {
         state.settings.defaultPlatforms = ['facebook', 'instagram'];
       }
+      if (state.meta && !state.meta.configured) {
+        state.metaFormOpen = true;
+      }
     });
   }
 
@@ -540,6 +544,40 @@
       '</div>';
   }
 
+  function renderMetaConfig() {
+    var info = currentBrandInfo();
+    var meta = state.meta || {};
+    var open = !!state.metaFormOpen;
+    return '<section class="cms-surface cms-meta-config">' +
+      '<div class="cms-meta-config__head">' +
+      '<div><h2>Configuração Meta · ' + esc(info.label) + '</h2>' +
+      '<p class="cms-hint">Page ID e token da Página. O token completo nunca é mostrado depois de guardado.</p></div>' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-toggle">' +
+      (open ? 'Fechar' : 'Configurar Meta') + '</button></div>' +
+      (open
+        ? '<div class="cms-meta-config__form">' +
+          '<label class="cms-field"><span>Page ID</span>' +
+          '<input class="cms-input" type="text" id="cms-meta-page-id" value="' + esc(meta.page_id || '') +
+          '" placeholder="Ex.: 232459563473506" autocomplete="off" /></label>' +
+          '<label class="cms-field"><span>Page Access Token' +
+          (meta.has_token ? ' <em>(actual: ' + esc(meta.token_preview || '••••') + ')</em>' : '') +
+          '</span>' +
+          '<input class="cms-input" type="password" id="cms-meta-token" value="" ' +
+          'placeholder="' + (meta.has_token ? 'Deixe vazio para manter o token actual' : 'Cole o token da Página') +
+          '" autocomplete="new-password" /></label>' +
+          '<label class="cms-field"><span>Instagram Business ID (opcional)</span>' +
+          '<input class="cms-input" type="text" id="cms-meta-ig" value="' + esc(meta.instagram_business_id || '') +
+          '" placeholder="Deixe vazio por agora" autocomplete="off" /></label>' +
+          '<label class="cms-pill"><input type="checkbox" id="cms-meta-clear-token" /> Apagar token guardado</label>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.75rem">' +
+          '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-meta-save">Guardar Meta</button>' +
+          '</div>' +
+          '<p class="cms-hint">Para publicar, o CMS tem de estar online (a Meta precisa de ler as imagens por URL público).</p>' +
+          '</div>'
+        : '') +
+      '</section>';
+  }
+
   function render() {
     var info = currentBrandInfo();
     var metaBadge = state.meta.configured
@@ -554,6 +592,7 @@
 
     return '<div class="cms-social">' +
       renderBrandSwitcher() +
+      renderMetaConfig() +
       renderStats() +
       '<div class="cms-social__grid">' +
 
@@ -588,7 +627,7 @@
       '<textarea id="cms-social-default-caption" rows="2">' + esc(state.settings.defaultCaption) +
       '</textarea></label>' +
       (!state.meta.configured
-        ? '<p class="cms-hint">Configure <code>meta_accounts.' + esc(state.brand) + '</code> em <code>cms/config.php</code>.</p>'
+        ? '<p class="cms-hint">Configure a Meta acima (botão «Configurar Meta») para esta marca.</p>'
         : '') +
       '</section>' +
 
@@ -697,6 +736,54 @@
         switchBrand(btn.getAttribute('data-brand'));
       };
     });
+
+    var metaToggle = document.getElementById('cms-meta-toggle');
+    if (metaToggle) {
+      metaToggle.onclick = function () {
+        state.metaFormOpen = !state.metaFormOpen;
+        global.StoffusCmsRerender();
+      };
+    }
+
+    var metaSave = document.getElementById('cms-meta-save');
+    if (metaSave) {
+      metaSave.onclick = function () {
+        var pageId = ((document.getElementById('cms-meta-page-id') || {}).value || '').trim();
+        var token = ((document.getElementById('cms-meta-token') || {}).value || '').trim();
+        var ig = ((document.getElementById('cms-meta-ig') || {}).value || '').trim();
+        var clearToken = !!(document.getElementById('cms-meta-clear-token') || {}).checked;
+        if (!pageId && !token && !ig && !clearToken && !state.meta.has_token) {
+          toast('Indique pelo menos o Page ID e o token.');
+          return;
+        }
+        if (!pageId) {
+          toast('O Page ID é obrigatório.');
+          return;
+        }
+        if (!state.meta.has_token && !token && !clearToken) {
+          toast('Cole o Page Access Token.');
+          return;
+        }
+        api('social.php', {
+          method: 'POST',
+          body: apiBrandBody({
+            action: 'save_meta',
+            page_id: pageId,
+            page_access_token: token,
+            instagram_business_id: ig,
+            clear_token: clearToken,
+          }),
+        }).then(function (data) {
+          state.meta = data.meta || state.meta;
+          if (data.brands) state.brands = data.brands;
+          state.metaFormOpen = false;
+          toast(state.meta.configured ? 'Meta guardada' : 'Meta actualizada (ainda incompleta)');
+          global.StoffusCmsRerender();
+        }).catch(function (err) {
+          toast(err.error || 'Erro ao guardar Meta.');
+        });
+      };
+    }
 
     var drop = document.getElementById('cms-social-drop');
     var fileInput = document.getElementById('cms-social-file');

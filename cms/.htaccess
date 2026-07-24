@@ -1,3 +1,7 @@
 <Files "config.php">
   Require all denied
 </Files>
+
+<Files "meta-accounts.json">
+  Require all denied
+</Files>
