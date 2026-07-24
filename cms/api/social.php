@@ -136,6 +136,10 @@ try {
         $caption = trim((string) ($input['caption'] ?? $data['settings']['defaultCaption']));
         $startAt = trim((string) ($input['startAt'] ?? ''));
         $intervalHours = max(1, min(72, (int) ($input['intervalHours'] ?? 24)));
+        $status = trim((string) ($input['status'] ?? 'scheduled'));
+        if (!in_array($status, ['draft', 'scheduled'], true)) {
+            $status = 'scheduled';
+        }
 
         $chunks = array_chunk($files, $split);
         $baseTs = $startAt !== '' ? strtotime($startAt) : strtotime('next wednesday 10:00');
@@ -153,7 +157,7 @@ try {
                 'platforms' => $platforms ?: ['facebook'],
                 'media' => $chunk,
                 'scheduledAt' => date('c', $ts),
-                'status' => 'scheduled',
+                'status' => $status,
                 'publishedAt' => null,
                 'metaPostIds' => [],
                 'error' => null,
@@ -222,6 +226,28 @@ try {
         $data['posts'] = array_values(array_filter($data['posts'], static function ($p) use ($id) {
             return ($p['id'] ?? '') !== $id;
         }));
+        cms_social_save($data, $brand);
+        cms_json(['ok' => true, 'brand' => $brand, 'posts' => $data['posts']]);
+    }
+
+    if ($action === 'delete_many') {
+        $ids = $input['ids'] ?? null;
+        $status = trim((string) ($input['status'] ?? ''));
+
+        if (is_array($ids) && $ids) {
+            $ids = array_map('strval', $ids);
+            $data['posts'] = array_values(array_filter($data['posts'], static function ($p) use ($ids) {
+                return !in_array((string) ($p['id'] ?? ''), $ids, true);
+            }));
+        } elseif ($status !== '' && in_array($status, ['draft', 'scheduled', 'failed', 'published'], true)) {
+            // Por segurança, published só se pedir explicitamente confirm no cliente
+            $data['posts'] = array_values(array_filter($data['posts'], static function ($p) use ($status) {
+                return ($p['status'] ?? '') !== $status;
+            }));
+        } else {
+            cms_json(['ok' => false, 'error' => 'Indique ids ou um estado para apagar.'], 422);
+        }
+
         cms_social_save($data, $brand);
         cms_json(['ok' => true, 'brand' => $brand, 'posts' => $data['posts']]);
     }

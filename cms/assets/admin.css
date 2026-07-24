@@ -1059,9 +1059,13 @@ button, input, textarea, select {
   overflow: auto;
 }
 
+.cms-posts-list__actions {
+  margin: 0 0 0.65rem;
+}
+
 .cms-post-row {
   display: grid;
-  grid-template-columns: 3.2rem 1fr;
+  grid-template-columns: 3.2rem 1fr auto;
   gap: 0.7rem;
   align-items: center;
   width: 100%;
@@ -1072,6 +1076,11 @@ button, input, textarea, select {
   background: rgba(255, 255, 255, 0.55);
   cursor: pointer;
   color: inherit;
+}
+
+.cms-post-row__del {
+  flex-shrink: 0;
+  min-width: 2rem;
 }
 
 .cms-post-row:hover,

@@ -397,6 +397,7 @@
       { id: 'draft', label: 'Rascunhos' },
     ];
     var posts = filteredPosts();
+    var draftCount = state.posts.filter(function (p) { return p.status === 'draft'; }).length;
     var html = '<div class="cms-posts-list">' +
       '<div class="cms-posts-list__head">' +
       '<h2>Publicações</h2>' +
@@ -406,6 +407,12 @@
           '" data-list-filter="' + f.id + '">' + f.label + '</button>';
       }).join('') +
       '</div></div>';
+
+    if (draftCount > 0) {
+      html += '<div class="cms-posts-list__actions">' +
+        '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-drafts">' +
+        'Apagar todos os rascunhos (' + draftCount + ')</button></div>';
+    }
 
     if (!posts.length) {
       html += '<p class="cms-hint">Nenhuma publicação neste filtro.</p></div>';
@@ -422,7 +429,8 @@
       } catch (e) { when = '—'; }
       var thumb = (p.media && p.media[0]) ? mediaUrl(p.media[0]) : '';
       var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
-      html += '<button type="button" class="cms-post-row' +
+      var canQuickDelete = p.status === 'draft' || p.status === 'failed' || p.status === 'scheduled';
+      html += '<div class="cms-post-row' +
         (state.selectedPostId === p.id ? ' is-selected' : '') +
         '" data-post-id="' + esc(p.id) + '">' +
         (thumb ? '<img src="' + esc(thumb) + '" alt="" />' : '<span class="cms-post-row__ph"></span>') +
@@ -430,7 +438,12 @@
         '<strong>' + esc(when) + '</strong>' +
         '<span>' + (p.media || []).length + ' fotos · ' + esc(plats || 'sem rede') + ' · ' + esc(statusLabel(p.status)) + '</span>' +
         '<span class="cms-post-row__cap">' + esc((p.caption || '').slice(0, 80) || 'Sem legenda') + '</span>' +
-        '</span></button>';
+        '</span>' +
+        (canQuickDelete
+          ? '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-post-row__del" data-delete-post="' +
+            esc(p.id) + '" title="Apagar">×</button>'
+          : '') +
+        '</div>';
     });
     html += '</div></div>';
     return html;
@@ -518,6 +531,9 @@
       '<div style="display:flex;flex-wrap:wrap;gap:.45rem">' +
       '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-save-post">Guardar alterações</button>' +
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-move-target">Mover para o dia escolhido</button>' +
+      (!published
+        ? '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-save-draft">Guardar como rascunho</button>'
+        : '') +
       (!published
         ? '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-publish-now">Publicar agora</button>'
         : '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-requeue">Voltar a agendar</button>') +
@@ -621,8 +637,10 @@
       '<div class="cms-target-banner">' +
       '<div><strong>Dia de início · ' + esc(info.short) + '</strong><span>' + esc(targetLabel) + '</span>' +
       '<em>Clique num dia no calendário para mudar.</em></div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:.4rem">' +
+      '<button type="button" class="cms-btn cms-btn--ghost" id="cms-social-draft-btn">Guardar rascunhos</button>' +
       '<button type="button" class="cms-btn cms-btn--brand" id="cms-social-split-btn">Partir e agendar</button>' +
-      '</div>' +
+      '</div></div>' +
       '<label class="cms-field" style="margin-top:1rem"><span>Legenda por defeito</span>' +
       '<textarea id="cms-social-default-caption" rows="2">' + esc(state.settings.defaultCaption) +
       '</textarea></label>' +
@@ -865,54 +883,58 @@
     }
 
     var splitBtn = document.getElementById('cms-social-split-btn');
-    if (splitBtn) {
-      splitBtn.onclick = function () {
-        var paths = selectedPaths();
-        if (!paths.length) {
-          toast('Seleccione fotos na fila.');
-          return;
+    var draftBtn = document.getElementById('cms-social-draft-btn');
+
+    function createFromPool(asDraft) {
+      var paths = selectedPaths();
+      if (!paths.length) {
+        toast('Seleccione fotos na fila.');
+        return;
+      }
+      var platforms = state.settings.defaultPlatforms || [];
+      if (!platforms.length) {
+        toast('Escolha Facebook e/ou Instagram.');
+        return;
+      }
+      var split = Number((document.getElementById('cms-social-split') || {}).value || 10);
+      var interval = Number((document.getElementById('cms-social-interval') || {}).value || 24);
+      var startAt = (document.getElementById('cms-social-start') || {}).value || '';
+      if (!startAt && state.targetDay) startAt = toLocalInputValue(state.targetDay);
+      var caption = (document.getElementById('cms-social-default-caption') || {}).value || '';
+      api('social.php', {
+        method: 'POST',
+        body: apiBrandBody({
+          action: 'create_from_media',
+          files: paths,
+          splitSize: split,
+          intervalHours: interval,
+          startAt: startAt ? new Date(startAt).toISOString() : '',
+          caption: caption,
+          platforms: platforms,
+          status: asDraft ? 'draft' : 'scheduled',
+        }),
+      }).then(function (data) {
+        state.posts = data.posts || [];
+        state.settings.defaultCaption = caption;
+        state.settings.autoSplitSize = split;
+        state.pool = [];
+        if (data.created && data.created[0]) {
+          state.selectedPostId = data.created[0].id;
+          state.listFilter = asDraft ? 'draft' : 'scheduled';
         }
-        var platforms = state.settings.defaultPlatforms || [];
-        if (!platforms.length) {
-          toast('Escolha Facebook e/ou Instagram.');
-          return;
-        }
-        var split = Number((document.getElementById('cms-social-split') || {}).value || 10);
-        var interval = Number((document.getElementById('cms-social-interval') || {}).value || 24);
-        var startAt = (document.getElementById('cms-social-start') || {}).value || '';
-        if (!startAt && state.targetDay) startAt = toLocalInputValue(state.targetDay);
-        var caption = (document.getElementById('cms-social-default-caption') || {}).value || '';
+        toast((data.created || []).length + (asDraft ? ' rascunho(s) criado(s)' : ' publicação(ões) criadas'));
         api('social.php', {
           method: 'POST',
-          body: apiBrandBody({
-            action: 'create_from_media',
-            files: paths,
-            splitSize: split,
-            intervalHours: interval,
-            startAt: startAt ? new Date(startAt).toISOString() : '',
-            caption: caption,
-            platforms: platforms,
-          }),
-        }).then(function (data) {
-          state.posts = data.posts || [];
-          state.settings.defaultCaption = caption;
-          state.settings.autoSplitSize = split;
-          state.pool = [];
-          if (data.created && data.created[0]) {
-            state.selectedPostId = data.created[0].id;
-            state.listFilter = 'scheduled';
-          }
-          toast((data.created || []).length + ' publicação(ões) criadas');
-          api('social.php', {
-            method: 'POST',
-            body: apiBrandBody({ action: 'save_settings', settings: state.settings }),
-          });
-          global.StoffusCmsRerender();
-        }).catch(function (err) {
-          toast(err.error || 'Erro ao agendar.');
+          body: apiBrandBody({ action: 'save_settings', settings: state.settings }),
         });
-      };
+        global.StoffusCmsRerender();
+      }).catch(function (err) {
+        toast(err.error || 'Erro ao criar.');
+      });
     }
+
+    if (splitBtn) splitBtn.onclick = function () { createFromPool(false); };
+    if (draftBtn) draftBtn.onclick = function () { createFromPool(true); };
 
     var prev = document.getElementById('cms-social-prev');
     var next = document.getElementById('cms-social-next');
@@ -1008,6 +1030,7 @@
 
     document.querySelectorAll('[data-post-id]').forEach(function (el) {
       el.addEventListener('click', function (e) {
+        if (e.target.closest('[data-delete-post]')) return;
         e.stopPropagation();
         selectPost(el.getAttribute('data-post-id'), true);
       });
@@ -1018,6 +1041,42 @@
         });
       }
     });
+
+    document.querySelectorAll('[data-delete-post]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.getAttribute('data-delete-post');
+        if (!id || !confirm('Apagar esta publicação do CMS?')) return;
+        api('social.php', { method: 'POST', body: apiBrandBody({ action: 'delete', id: id }) })
+          .then(function (data) {
+            state.posts = data.posts || [];
+            if (state.selectedPostId === id) state.selectedPostId = null;
+            toast('Publicação apagada');
+            global.StoffusCmsRerender();
+          })
+          .catch(function (err) { toast(err.error || 'Erro ao apagar.'); });
+      });
+    });
+
+    var deleteDrafts = document.getElementById('cms-social-delete-drafts');
+    if (deleteDrafts) {
+      deleteDrafts.onclick = function () {
+        if (!confirm('Apagar todos os rascunhos desta marca?')) return;
+        api('social.php', {
+          method: 'POST',
+          body: apiBrandBody({ action: 'delete_many', status: 'draft' }),
+        }).then(function (data) {
+          state.posts = data.posts || [];
+          if (state.selectedPostId) {
+            var still = state.posts.some(function (p) { return p.id === state.selectedPostId; });
+            if (!still) state.selectedPostId = null;
+          }
+          state.listFilter = 'draft';
+          toast('Rascunhos apagados');
+          global.StoffusCmsRerender();
+        }).catch(function (err) { toast(err.error || 'Erro ao apagar.'); });
+      };
+    }
 
     var captionEl = document.getElementById('cms-social-caption');
     if (captionEl) {
@@ -1154,6 +1213,33 @@
           toast('Voltou ao estado agendada');
           global.StoffusCmsRerender();
         }).catch(function (err) { toast(err.error || 'Erro.'); });
+      };
+    }
+
+    var saveDraft = document.getElementById('cms-social-save-draft');
+    if (saveDraft) {
+      saveDraft.onclick = function () {
+        var id = state.selectedPostId;
+        var platforms = readEditPlatforms();
+        var when = (document.getElementById('cms-social-when') || {}).value || '';
+        api('social.php', {
+          method: 'POST',
+          body: apiBrandBody({
+            action: 'update',
+            id: id,
+            post: {
+              caption: (document.getElementById('cms-social-caption') || {}).value || '',
+              platforms: platforms,
+              status: 'draft',
+              scheduledAt: when ? new Date(when).toISOString() : undefined,
+            },
+          }),
+        }).then(function (data) {
+          state.posts = data.posts || [];
+          state.listFilter = 'draft';
+          toast('Guardado como rascunho');
+          global.StoffusCmsRerender();
+        }).catch(function (err) { toast(err.error || 'Erro ao guardar.'); });
       };
     }
 
