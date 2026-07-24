@@ -14,12 +14,18 @@ function cms_social_brands(): array
             'label' => 'Stoffus',
             'short' => 'Stoffus',
             'handle' => 'stoffus',
+            'logo' => 'assets/brands/stoffus-logo.png',
+            'mark' => 'assets/brands/stoffus-mark.png',
+            'color' => '#e04e26',
         ],
         'divinus' => [
             'id' => 'divinus',
             'label' => 'Divinus Confort',
             'short' => 'Divinus',
             'handle' => 'divinusconfort',
+            'logo' => 'assets/brands/divinus-logo.png',
+            'mark' => 'assets/brands/divinus-mark.png',
+            'color' => '#00a8d6',
         ],
     ];
 }
@@ -232,6 +238,9 @@ function cms_social_accounts_status(): array
             'label' => $info['label'],
             'short' => $info['short'],
             'handle' => $info['handle'],
+            'logo' => (string) ($info['logo'] ?? ''),
+            'mark' => (string) ($info['mark'] ?? ''),
+            'color' => (string) ($info['color'] ?? ''),
             'configured' => $ready['configured'],
             'instagram_ready' => $ready['instagram_ready'],
         ];

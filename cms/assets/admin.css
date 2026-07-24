@@ -559,9 +559,11 @@ button, input, textarea, select {
 
 .cms-brand-btn {
   display: grid;
-  gap: 0.2rem;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: center;
   text-align: left;
-  padding: 0.9rem 1rem;
+  padding: 0.85rem 1rem;
   border-radius: var(--radius-lg);
   border: 1px solid var(--line);
   background: rgba(255, 252, 250, 0.75);
@@ -570,31 +572,116 @@ button, input, textarea, select {
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
+.cms-brand-btn__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7.5rem;
+  height: 2.6rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.55rem;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.cms-brand-btn__logo,
+.cms-brand-btn__mark {
+  display: block;
+  max-height: 1.85rem;
+  max-width: 7.2rem;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.cms-brand-btn__meta {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
 .cms-brand-btn strong {
-  font-size: 1rem;
+  font-size: 0.95rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.cms-brand-btn span {
+.cms-brand-btn__meta > span {
   font-size: 0.72rem;
   color: var(--muted);
   letter-spacing: 0.04em;
 }
 
-.cms-brand-btn:hover {
-  border-color: rgba(224, 78, 38, 0.35);
+.cms-brand-btn--stoffus:hover {
+  border-color: rgba(224, 78, 38, 0.4);
 }
 
-.cms-brand-btn.is-active {
+.cms-brand-btn--divinus:hover {
+  border-color: rgba(0, 168, 214, 0.45);
+}
+
+.cms-brand-btn--stoffus.is-active {
   border-color: transparent;
-  background: linear-gradient(135deg, var(--brand), var(--brand-mid));
+  background: linear-gradient(135deg, #e04e26, #d96f26);
   color: #fff;
   box-shadow: 0 14px 28px -18px rgba(224, 78, 38, 0.9);
 }
 
-.cms-brand-btn.is-active span {
+.cms-brand-btn--divinus.is-active {
+  border-color: transparent;
+  background: linear-gradient(135deg, #00a8d6 0%, #0082a8 100%);
+  color: #fff;
+  box-shadow: 0 14px 28px -18px rgba(0, 130, 168, 0.85);
+}
+
+.cms-brand-btn.is-active .cms-brand-btn__meta > span {
   color: rgba(255, 255, 255, 0.82);
+}
+
+.cms-brand-btn--divinus.is-active .cms-brand-btn__visual {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.cms-brand-btn--stoffus.is-active .cms-brand-btn__visual {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Tema Divinus no módulo Redes */
+.cms-social[data-brand="divinus"] {
+  --brand: #00a8d6;
+  --brand-mid: #4cc9f0;
+  --brand-dark: #0082a8;
+  --brand-soft: rgba(0, 168, 214, 0.14);
+  --surface: #f4fafc;
+  --surface-2: #e8f4f8;
+  --card: #fbfdfe;
+}
+
+.cms-social[data-brand="divinus"] .cms-surface {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 250, 252, 0.95));
+  border-color: rgba(0, 168, 214, 0.14);
+}
+
+.cms-social[data-brand="divinus"] .cms-meta-badge.is-ok {
+  background: rgba(0, 168, 214, 0.12);
+  color: #0082a8;
+}
+
+.cms-social[data-brand="divinus"] .cms-target-banner {
+  border-color: rgba(0, 168, 214, 0.22);
+  background: linear-gradient(135deg, rgba(0, 168, 214, 0.1), rgba(76, 201, 240, 0.08));
+}
+
+@media (max-width: 720px) {
+  .cms-brand-switch {
+    grid-template-columns: 1fr;
+  }
+
+  .cms-brand-btn__visual {
+    min-width: 6.5rem;
+  }
 }
 
 .cms-meta-config__head {

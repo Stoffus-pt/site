@@ -6,8 +6,14 @@
   var state = {
     brand: 'stoffus',
     brands: [
-      { id: 'stoffus', label: 'Stoffus', short: 'Stoffus', configured: false },
-      { id: 'divinus', label: 'Divinus Confort', short: 'Divinus', configured: false },
+      {
+        id: 'stoffus', label: 'Stoffus', short: 'Stoffus', configured: false,
+        logo: 'assets/brands/stoffus-logo.png', mark: 'assets/brands/stoffus-mark.png', color: '#e04e26',
+      },
+      {
+        id: 'divinus', label: 'Divinus Confort', short: 'Divinus', configured: false,
+        logo: 'assets/brands/divinus-logo.png', mark: 'assets/brands/divinus-mark.png', color: '#00a8d6',
+      },
     ],
     posts: [],
     settings: {
@@ -690,14 +696,31 @@
       '</div>';
   }
 
+  function brandLogoUrl(b) {
+    return (b && b.logo) ? b.logo : '';
+  }
+
+  function brandMarkUrl(b) {
+    return (b && (b.mark || b.logo)) ? (b.mark || b.logo) : '';
+  }
+
   function renderBrandSwitcher() {
     return '<div class="cms-brand-switch" role="tablist" aria-label="Marca">' +
       state.brands.map(function (b) {
-        return '<button type="button" class="cms-brand-btn' + (state.brand === b.id ? ' is-active' : '') +
-          '" data-brand="' + esc(b.id) + '">' +
+        var logo = brandLogoUrl(b);
+        var mark = brandMarkUrl(b);
+        return '<button type="button" class="cms-brand-btn cms-brand-btn--' + esc(b.id) +
+          (state.brand === b.id ? ' is-active' : '') +
+          '" data-brand="' + esc(b.id) + '" aria-selected="' + (state.brand === b.id ? 'true' : 'false') + '">' +
+          '<span class="cms-brand-btn__visual">' +
+          (logo
+            ? '<img class="cms-brand-btn__logo" src="' + esc(logo) + '" alt="' + esc(b.label || b.short) + '" />'
+            : '<img class="cms-brand-btn__mark" src="' + esc(mark) + '" alt="" />') +
+          '</span>' +
+          '<span class="cms-brand-btn__meta">' +
           '<strong>' + esc(b.short || b.label) + '</strong>' +
           '<span>' + (b.configured ? 'Meta OK' : 'Meta por configurar') + '</span>' +
-          '</button>';
+          '</span></button>';
       }).join('') +
       '</div>';
   }
@@ -748,7 +771,7 @@
       weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
     });
 
-    return '<div class="cms-social">' +
+    return '<div class="cms-social" data-brand="' + esc(state.brand) + '">' +
       renderBrandSwitcher() +
       renderMetaConfig() +
       renderStats() +
