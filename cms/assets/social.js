@@ -388,6 +388,49 @@
     });
   }
 
+  function postHasMetaIds(post) {
+    var ids = post && post.metaPostIds;
+    if (!ids || typeof ids !== 'object') return false;
+    return !!(ids.facebook || ids.instagram);
+  }
+
+  function confirmDeletePost(post) {
+    if (!post) return { ok: false, deleteMeta: false };
+    var onMeta = post.status === 'published' || postHasMetaIds(post);
+    if (!onMeta) {
+      return {
+        ok: confirm('Apagar esta publicação do CMS?'),
+        deleteMeta: false,
+      };
+    }
+    var choice = confirm(
+      'Esta publicação pode estar no Facebook/Instagram.\n\n' +
+      'OK = apagar no CMS e no Meta\n' +
+      'Cancelar = não apagar'
+    );
+    if (!choice) return { ok: false, deleteMeta: false };
+    return { ok: true, deleteMeta: true };
+  }
+
+  function deletePostById(id, deleteMeta) {
+    return api('social.php', {
+      method: 'POST',
+      body: apiBrandBody({ action: 'delete', id: id, delete_meta: !!deleteMeta }),
+    }).then(function (data) {
+      state.posts = data.posts || [];
+      if (state.selectedPostId === id) state.selectedPostId = null;
+      var meta = data.meta_delete;
+      if (deleteMeta && meta && meta.errors && meta.errors.length) {
+        toast('Apagada no CMS. Meta: ' + meta.errors[0]);
+      } else if (deleteMeta) {
+        toast('Apagada no CMS e no Meta');
+      } else {
+        toast('Publicação apagada do CMS');
+      }
+      global.StoffusCmsRerender();
+    });
+  }
+
   function renderPostsList() {
     var filters = [
       { id: 'all', label: 'Todas' },
@@ -398,6 +441,7 @@
     ];
     var posts = filteredPosts();
     var draftCount = state.posts.filter(function (p) { return p.status === 'draft'; }).length;
+    var publishedCount = state.posts.filter(function (p) { return p.status === 'published'; }).length;
     var html = '<div class="cms-posts-list">' +
       '<div class="cms-posts-list__head">' +
       '<h2>Publicações</h2>' +
@@ -408,11 +452,16 @@
       }).join('') +
       '</div></div>';
 
+    html += '<div class="cms-posts-list__actions">';
     if (draftCount > 0) {
-      html += '<div class="cms-posts-list__actions">' +
-        '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-drafts">' +
-        'Apagar todos os rascunhos (' + draftCount + ')</button></div>';
+      html += '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-drafts">' +
+        'Apagar todos os rascunhos (' + draftCount + ')</button>';
     }
+    if (publishedCount > 0) {
+      html += '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-published">' +
+        'Apagar publicadas no CMS + Meta (' + publishedCount + ')</button>';
+    }
+    html += '</div>';
 
     if (!posts.length) {
       html += '<p class="cms-hint">Nenhuma publicação neste filtro.</p></div>';
@@ -429,20 +478,18 @@
       } catch (e) { when = '—'; }
       var thumb = (p.media && p.media[0]) ? mediaUrl(p.media[0]) : '';
       var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
-      var canQuickDelete = p.status === 'draft' || p.status === 'failed' || p.status === 'scheduled';
       html += '<div class="cms-post-row' +
         (state.selectedPostId === p.id ? ' is-selected' : '') +
         '" data-post-id="' + esc(p.id) + '">' +
         (thumb ? '<img src="' + esc(thumb) + '" alt="" />' : '<span class="cms-post-row__ph"></span>') +
         '<span class="cms-post-row__body">' +
         '<strong>' + esc(when) + '</strong>' +
-        '<span>' + (p.media || []).length + ' fotos · ' + esc(plats || 'sem rede') + ' · ' + esc(statusLabel(p.status)) + '</span>' +
+        '<span>' + (p.media || []).length + ' fotos · ' + esc(plats || 'sem rede') + ' · ' + esc(statusLabel(p.status)) +
+        (postHasMetaIds(p) ? ' · Meta' : '') + '</span>' +
         '<span class="cms-post-row__cap">' + esc((p.caption || '').slice(0, 80) || 'Sem legenda') + '</span>' +
         '</span>' +
-        (canQuickDelete
-          ? '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-post-row__del" data-delete-post="' +
-            esc(p.id) + '" title="Apagar">×</button>'
-          : '') +
+        '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-post-row__del" data-delete-post="' +
+        esc(p.id) + '" title="Apagar">×</button>' +
         '</div>';
     });
     html += '</div></div>';
@@ -540,10 +587,15 @@
       (post.status === 'failed'
         ? '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-publish-now">Tentar de novo</button>'
         : '') +
-      '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-post">Apagar do CMS</button>' +
+      '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-post">' +
+      (published || postHasMetaIds(post) ? 'Apagar CMS + Meta' : 'Apagar do CMS') +
+      '</button>' +
+      (published || postHasMetaIds(post)
+        ? '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-delete-cms-only">Só no CMS</button>'
+        : '') +
       '</div>' +
       (published
-        ? '<p class="cms-hint">Já publicada no Meta. «Voltar a agendar» só muda o estado no CMS (não apaga no Facebook/Instagram).</p>'
+        ? '<p class="cms-hint">«Apagar CMS + Meta» remove também do Facebook/Instagram (se o ID estiver guardado). «Só no CMS» mantém online na Meta.</p>'
         : '<p class="cms-hint">Para mudar o dia: altere a data acima, use «Mover para o dia escolhido», ou arraste no calendário.</p>') +
       '</div>';
   }
@@ -1046,15 +1098,12 @@
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
         var id = btn.getAttribute('data-delete-post');
-        if (!id || !confirm('Apagar esta publicação do CMS?')) return;
-        api('social.php', { method: 'POST', body: apiBrandBody({ action: 'delete', id: id }) })
-          .then(function (data) {
-            state.posts = data.posts || [];
-            if (state.selectedPostId === id) state.selectedPostId = null;
-            toast('Publicação apagada');
-            global.StoffusCmsRerender();
-          })
-          .catch(function (err) { toast(err.error || 'Erro ao apagar.'); });
+        var post = state.posts.find(function (p) { return p.id === id; });
+        var conf = confirmDeletePost(post);
+        if (!conf.ok) return;
+        deletePostById(id, conf.deleteMeta).catch(function (err) {
+          toast(err.error || 'Erro ao apagar.');
+        });
       });
     });
 
@@ -1064,7 +1113,7 @@
         if (!confirm('Apagar todos os rascunhos desta marca?')) return;
         api('social.php', {
           method: 'POST',
-          body: apiBrandBody({ action: 'delete_many', status: 'draft' }),
+          body: apiBrandBody({ action: 'delete_many', status: 'draft', delete_meta: false }),
         }).then(function (data) {
           state.posts = data.posts || [];
           if (state.selectedPostId) {
@@ -1073,6 +1122,23 @@
           }
           state.listFilter = 'draft';
           toast('Rascunhos apagados');
+          global.StoffusCmsRerender();
+        }).catch(function (err) { toast(err.error || 'Erro ao apagar.'); });
+      };
+    }
+
+    var deletePublished = document.getElementById('cms-social-delete-published');
+    if (deletePublished) {
+      deletePublished.onclick = function () {
+        if (!confirm('Apagar TODAS as publicações desta marca no CMS e no Meta (Facebook/Instagram)?\n\nEsta acção não se pode desfazer.')) return;
+        api('social.php', {
+          method: 'POST',
+          body: apiBrandBody({ action: 'delete_many', status: 'published', delete_meta: true }),
+        }).then(function (data) {
+          state.posts = data.posts || [];
+          state.selectedPostId = null;
+          state.listFilter = 'published';
+          toast((data.removed || 0) + ' publicação(ões) processada(s)');
           global.StoffusCmsRerender();
         }).catch(function (err) { toast(err.error || 'Erro ao apagar.'); });
       };
@@ -1246,15 +1312,29 @@
     var delPost = document.getElementById('cms-social-delete-post');
     if (delPost) {
       delPost.onclick = function () {
-        if (!confirm('Apagar esta publicação do CMS? (Não remove do Facebook/Instagram se já estiver online.)')) return;
-        api('social.php', { method: 'POST', body: apiBrandBody({ action: 'delete', id: state.selectedPostId }) })
-          .then(function (data) {
-            state.posts = data.posts || [];
-            state.selectedPostId = null;
-            toast('Publicação apagada do CMS');
-            global.StoffusCmsRerender();
-          })
-          .catch(function (err) { toast(err.error || 'Erro ao apagar.'); });
+        var post = state.posts.find(function (p) { return p.id === state.selectedPostId; });
+        var onMeta = post && (post.status === 'published' || postHasMetaIds(post));
+        if (onMeta) {
+          if (!confirm('Apagar no CMS e também no Facebook/Instagram?')) return;
+          deletePostById(state.selectedPostId, true).catch(function (err) {
+            toast(err.error || 'Erro ao apagar.');
+          });
+        } else {
+          if (!confirm('Apagar esta publicação do CMS?')) return;
+          deletePostById(state.selectedPostId, false).catch(function (err) {
+            toast(err.error || 'Erro ao apagar.');
+          });
+        }
+      };
+    }
+
+    var delCmsOnly = document.getElementById('cms-social-delete-cms-only');
+    if (delCmsOnly) {
+      delCmsOnly.onclick = function () {
+        if (!confirm('Apagar só no CMS? A publicação continua no Facebook/Instagram.')) return;
+        deletePostById(state.selectedPostId, false).catch(function (err) {
+          toast(err.error || 'Erro ao apagar.');
+        });
       };
     }
   }

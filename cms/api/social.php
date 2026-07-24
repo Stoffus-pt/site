@@ -223,33 +223,63 @@ try {
 
     if ($action === 'delete') {
         $id = trim((string) ($input['id'] ?? ''));
-        $data['posts'] = array_values(array_filter($data['posts'], static function ($p) use ($id) {
-            return ($p['id'] ?? '') !== $id;
-        }));
+        $deleteMeta = !empty($input['delete_meta']);
+        if ($id === '') {
+            cms_json(['ok' => false, 'error' => 'ID em falta.'], 422);
+        }
+        $result = cms_social_remove_post($data['posts'], $id, $deleteMeta, $brand);
+        if (!$result['ok']) {
+            cms_json(['ok' => false, 'error' => $result['error'] ?? 'Erro ao apagar.'], 404);
+        }
         cms_social_save($data, $brand);
-        cms_json(['ok' => true, 'brand' => $brand, 'posts' => $data['posts']]);
+        cms_json([
+            'ok' => true,
+            'brand' => $brand,
+            'posts' => $data['posts'],
+            'meta_delete' => $result['meta'],
+        ]);
     }
 
     if ($action === 'delete_many') {
         $ids = $input['ids'] ?? null;
         $status = trim((string) ($input['status'] ?? ''));
+        $deleteMeta = !empty($input['delete_meta']);
+        $metaReports = [];
 
+        $toRemove = [];
         if (is_array($ids) && $ids) {
             $ids = array_map('strval', $ids);
-            $data['posts'] = array_values(array_filter($data['posts'], static function ($p) use ($ids) {
-                return !in_array((string) ($p['id'] ?? ''), $ids, true);
-            }));
+            foreach ($data['posts'] as $p) {
+                if (in_array((string) ($p['id'] ?? ''), $ids, true)) {
+                    $toRemove[] = (string) $p['id'];
+                }
+            }
         } elseif ($status !== '' && in_array($status, ['draft', 'scheduled', 'failed', 'published'], true)) {
-            // Por segurança, published só se pedir explicitamente confirm no cliente
-            $data['posts'] = array_values(array_filter($data['posts'], static function ($p) use ($status) {
-                return ($p['status'] ?? '') !== $status;
-            }));
+            foreach ($data['posts'] as $p) {
+                if (($p['status'] ?? '') === $status) {
+                    $toRemove[] = (string) ($p['id'] ?? '');
+                }
+            }
+            $toRemove = array_values(array_filter($toRemove));
         } else {
             cms_json(['ok' => false, 'error' => 'Indique ids ou um estado para apagar.'], 422);
         }
 
+        foreach ($toRemove as $rid) {
+            $result = cms_social_remove_post($data['posts'], $rid, $deleteMeta, $brand);
+            if ($result['meta']) {
+                $metaReports[] = ['id' => $rid, 'meta' => $result['meta']];
+            }
+        }
+
         cms_social_save($data, $brand);
-        cms_json(['ok' => true, 'brand' => $brand, 'posts' => $data['posts']]);
+        cms_json([
+            'ok' => true,
+            'brand' => $brand,
+            'posts' => $data['posts'],
+            'removed' => count($toRemove),
+            'meta_delete' => $metaReports,
+        ]);
     }
 
     if ($action === 'publish') {

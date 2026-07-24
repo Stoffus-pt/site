@@ -255,19 +255,23 @@ function cms_social_http_json(string $url, array $params = [], string $method = 
     if ($ch === false) {
         throw new RuntimeException('cURL indisponível neste servidor.');
     }
-    if ($method === 'GET' && $params) {
+    $method = strtoupper($method);
+    if (($method === 'GET' || $method === 'DELETE') && $params) {
         $url .= (strpos($url, '?') === false ? '?' : '&') . http_build_query($params);
     }
-    curl_setopt_array($ch, [
+    $opts = [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT => 60,
         CURLOPT_SSL_VERIFYPEER => true,
-    ]);
+    ];
     if ($method === 'POST') {
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        $opts[CURLOPT_POST] = true;
+        $opts[CURLOPT_POSTFIELDS] = $params;
+    } elseif ($method === 'DELETE') {
+        $opts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
     }
+    curl_setopt_array($ch, $opts);
     $body = curl_exec($ch);
     $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $err = curl_error($ch);
@@ -277,6 +281,9 @@ function cms_social_http_json(string $url, array $params = [], string $method = 
     }
     $data = json_decode($body, true);
     if (!is_array($data)) {
+        if ($body === 'true' || trim((string) $body) === 'true') {
+            return ['success' => true];
+        }
         throw new RuntimeException('Resposta inválida da Meta (HTTP ' . $code . ').');
     }
     if (isset($data['error'])) {
@@ -439,4 +446,89 @@ function cms_social_publish_post(array &$post, ?string $brand = null): void
     $post['status'] = 'published';
     $post['publishedAt'] = date('c');
     $post['error'] = null;
+}
+
+/**
+ * Apaga a publicação no Facebook / Instagram (se houver IDs Meta guardados).
+ * @return array{facebook:?bool,instagram:?bool,errors:string[]}
+ */
+function cms_social_delete_from_meta(array $post, ?string $brand = null): array
+{
+    $brand = cms_social_normalize_brand($brand ?: ($post['brand'] ?? 'stoffus'));
+    $meta = cms_social_meta_config_for($brand);
+    $result = [
+        'facebook' => null,
+        'instagram' => null,
+        'errors' => [],
+    ];
+
+    if ($meta['page_access_token'] === '') {
+        $result['errors'][] = 'Meta sem token para ' . $brand . '.';
+        return $result;
+    }
+
+    $ids = is_array($post['metaPostIds'] ?? null) ? $post['metaPostIds'] : [];
+    $token = $meta['page_access_token'];
+
+    if (!empty($ids['facebook'])) {
+        try {
+            cms_social_http_json(
+                'https://graph.facebook.com/v21.0/' . rawurlencode((string) $ids['facebook']),
+                ['access_token' => $token],
+                'DELETE'
+            );
+            $result['facebook'] = true;
+        } catch (Throwable $e) {
+            $result['facebook'] = false;
+            $result['errors'][] = 'Facebook: ' . $e->getMessage();
+        }
+    }
+
+    if (!empty($ids['instagram'])) {
+        try {
+            cms_social_http_json(
+                'https://graph.facebook.com/v21.0/' . rawurlencode((string) $ids['instagram']),
+                ['access_token' => $token],
+                'DELETE'
+            );
+            $result['instagram'] = true;
+        } catch (Throwable $e) {
+            $result['instagram'] = false;
+            $result['errors'][] = 'Instagram: ' . $e->getMessage();
+        }
+    }
+
+    if (empty($ids['facebook']) && empty($ids['instagram'])) {
+        $result['errors'][] = 'Sem IDs Meta guardados — só é possível apagar no CMS.';
+    }
+
+    return $result;
+}
+
+/**
+ * Remove um post da lista local, opcionalmente apagando também no Meta.
+ * @return array{ok:bool,meta:?array,error:?string}
+ */
+function cms_social_remove_post(array &$posts, string $id, bool $deleteMeta, string $brand): array
+{
+    $idx = null;
+    $target = null;
+    foreach ($posts as $i => $p) {
+        if (($p['id'] ?? '') === $id) {
+            $idx = $i;
+            $target = $p;
+            break;
+        }
+    }
+    if ($idx === null || !is_array($target)) {
+        return ['ok' => false, 'meta' => null, 'error' => 'Publicação não encontrada.'];
+    }
+
+    $metaResult = null;
+    if ($deleteMeta) {
+        $metaResult = cms_social_delete_from_meta($target, $brand);
+    }
+
+    array_splice($posts, $idx, 1);
+    return ['ok' => true, 'meta' => $metaResult, 'error' => null];
 }

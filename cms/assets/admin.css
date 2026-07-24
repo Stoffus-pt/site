@@ -1061,6 +1061,9 @@ button, input, textarea, select {
 
 .cms-posts-list__actions {
   margin: 0 0 0.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .cms-post-row {
