@@ -1,0 +1,4 @@
+# Bloquear acesso directo a credenciais e dados sensíveis
+<FilesMatch "^(meta-accounts\.json|social-posts.*\.json|config\.php)$">
+  Require all denied
+</FilesMatch>

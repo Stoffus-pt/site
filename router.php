@@ -54,6 +54,19 @@ if (str_starts_with($uri, '/cms')) {
 
     $cmsPath = $root . str_replace('/', DIRECTORY_SEPARATOR, $uri);
 
+    // Nunca servir credenciais / dados sensíveis por URL directo
+    $baseName = strtolower(basename($cmsPath));
+    if (
+        $baseName === 'meta-accounts.json'
+        || $baseName === 'config.php'
+        || preg_match('/^social-posts(-.*)?\.json$/', $baseName)
+    ) {
+        http_response_code(403);
+        header('Content-Type: text/plain; charset=utf-8');
+        echo '403 - Acesso negado';
+        return true;
+    }
+
     // Scripts PHP do CMS (inclui api/social-file.php?f=…)
     if (is_file($cmsPath) && str_ends_with(strtolower($cmsPath), '.php')) {
         require $cmsPath;
