@@ -15,6 +15,14 @@
     body.is-embedded .lead { display:none; }
     h1 { margin:0 0 .35rem; font-size:1.35rem; }
     .lead { margin:0 0 1rem; color:var(--muted); line-height:1.5; max-width:52rem; }
+    .tabs { display:flex; gap:.35rem; flex-wrap:wrap; margin-bottom:1rem; }
+    .tab {
+      border:1px solid var(--border); background:#fff; color:var(--ink);
+      padding:.5rem .85rem; cursor:pointer; font-size:.75rem; font-weight:600;
+      letter-spacing:.04em; text-transform:uppercase;
+    }
+    .tab.is-active { background:var(--ink); color:#fff; border-color:var(--ink); }
+    .mode-note { margin:0 0 1rem; color:var(--muted); font-size:.85rem; line-height:1.45; }
     .toolbar { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
     .toolbar--sticky {
       position:sticky; bottom:0; z-index:5; margin:1rem 0 0; padding:.65rem 0;
@@ -50,30 +58,36 @@
     .specs label { margin:0; }
     .checks { display:flex; align-items:center; gap:.4rem; font-weight:500; margin-bottom:.55rem; }
     .checks input { width:auto; }
+    .traits { display:flex; flex-wrap:wrap; gap:.65rem 1rem; margin:.15rem 0 .45rem; }
+    .traits .checks { margin:0; }
     .actions { display:flex; flex-direction:column; gap:.4rem; min-width:7rem; }
     .badge { display:inline-block; font-size:.65rem; letter-spacing:.04em; text-transform:uppercase; padding:.15rem .35rem; background:#eee; }
     .badge--off { background:#f8d7da; color:#842029; }
+    .badge--new { background:#dbeafe; color:#1e40af; }
+    body.is-draft #btn-sync { display:none; }
+    body.is-draft .field-cover { display:none; }
+    body.is-active .field-traits { display:none; }
   </style>
 </head>
-<body>
+<body class="is-active">
   <div class="wrap">
     <h1>Tecidos no site</h1>
     <p class="lead">
-      As colecções e códigos vêm do catálogo Studio3D. Aqui gere o que é específico do site:
-      visibilidade, capa e características técnicas
-      (Composição, Largura, Peso, Abrasão, Borboto). Depois de guardar, o sync regenera <code>fabrics.json</code> quando o Node estiver disponível.
+      Gere os tecidos activos no site e o rascunho da colecção 2026.
+      O rascunho não altera <code>fabrics.json</code> nem o catálogo público.
     </p>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab is-active" data-mode="active" role="tab" aria-selected="true">Activos</button>
+      <button type="button" class="tab" data-mode="draft" role="tab" aria-selected="false">Rascunho 2026</button>
+    </div>
+    <p class="mode-note" id="mode-note"></p>
 
     <div class="toolbar">
       <button type="button" class="btn btn--brand" id="btn-save-all">Guardar todos</button>
       <button type="button" class="btn btn--outline" id="btn-reload">Actualizar lista</button>
       <button type="button" class="btn btn--outline" id="btn-sync">Sincronizar catálogo</button>
       <span class="status" id="status"></span>
-    </div>
-
-    <div class="toolbar toolbar--sticky">
-      <button type="button" class="btn btn--brand" id="btn-save-all-bottom">Guardar todos</button>
-      <span class="status" id="status-hint">Preenche os campos e grava tudo de uma vez.</span>
     </div>
 
     <div class="filters">
@@ -86,9 +100,19 @@
         <option value="1">Visíveis</option>
         <option value="0">Ocultas</option>
       </select>
+      <select id="filter-new" hidden>
+        <option value="">Todas</option>
+        <option value="1">Só novas</option>
+        <option value="0">Já no catálogo activo</option>
+      </select>
     </div>
 
     <div class="grid" id="list"></div>
+
+    <div class="toolbar toolbar--sticky">
+      <button type="button" class="btn btn--brand" id="btn-save-all-bottom">Guardar todos</button>
+      <span class="status" id="status-hint">Preenche os campos e grava tudo de uma vez.</span>
+    </div>
   </div>
   <script src="fabrics-manager.js"></script>
 </body>

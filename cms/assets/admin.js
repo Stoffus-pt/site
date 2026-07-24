@@ -19,7 +19,7 @@
     pages: { title: 'Páginas', sub: 'Edite conteúdos e SEO do site público.' },
     nav: { title: 'Menu', sub: 'Ligações do menu principal em todas as páginas.' },
     catalog: { title: 'Catálogo', sub: 'Modelos, fotos, capas e enquadramentos.' },
-    fabrics: { title: 'Tecidos', sub: 'Visibilidade e marketing das colecções.' },
+    fabrics: { title: 'Tecidos', sub: 'Activos no site e rascunho da colecção 2026.' },
     social: { title: 'Redes', sub: 'Bulk, calendário e publicação Facebook / Instagram.' },
   };
 
@@ -275,7 +275,7 @@
       });
       html += '</div>';
     } else if (tab === 'fabrics') {
-      html += '<p class="cms-hint" style="margin-top:0;margin-bottom:1rem">Visibilidade, capa e textos de marketing das colecções. Códigos e gamas vêm do Studio3D (<code>npm run fabrics:sync</code>).</p>' +
+      html += '<p class="cms-hint" style="margin-top:0;margin-bottom:1rem">Tecidos activos no site e rascunho da colecção 2026. O rascunho grava só em <code>fabrics-2026-draft.json</code> e não altera o catálogo público.</p>' +
         '<iframe class="cms-photos-frame" title="Gestão de tecidos" src="../tools/fabrics-manager.html?cms=1"></iframe>';
     } else if (tab === 'catalog') {
       var photoTool = state.photoTool || 'models';
