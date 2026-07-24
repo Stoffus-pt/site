@@ -44,18 +44,31 @@ function serve_file(string $path): bool
     return true;
 }
 
-// CMS (PHP)
+// CMS (PHP + estáticos)
 if (str_starts_with($uri, '/cms')) {
-    $cmsPath = $root . str_replace('/', DIRECTORY_SEPARATOR, $uri);
-    if (is_file($cmsPath)) {
-        if (str_ends_with(strtolower($cmsPath), '.php')) {
-            require $cmsPath;
-            return true;
-        }
-        if (serve_file($cmsPath)) {
-            return true;
-        }
+    // /cms e /cms/ → painel
+    if ($uri === '/cms' || $uri === '/cms/') {
+        require $root . '/cms/index.php';
+        return true;
     }
+
+    $cmsPath = $root . str_replace('/', DIRECTORY_SEPARATOR, $uri);
+
+    // Scripts PHP do CMS (inclui api/social-file.php?f=…)
+    if (is_file($cmsPath) && str_ends_with(strtolower($cmsPath), '.php')) {
+        require $cmsPath;
+        return true;
+    }
+
+    // CSS, JS, imagens, etc. dentro de /cms/
+    if (serve_file($cmsPath)) {
+        return true;
+    }
+
+    http_response_code(404);
+    header('Content-Type: text/plain; charset=utf-8');
+    echo '404 CMS - ' . $uri;
+    return true;
 }
 
 // Site público

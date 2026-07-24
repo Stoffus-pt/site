@@ -71,7 +71,10 @@
   }
 
   function mediaUrl(path) {
-    return 'data/social-media/' + String(path || '').replace(/^\/+/, '');
+    var rel = String(path || '').replace(/^\/+/, '').replace(/\\/g, '/');
+    if (!rel) return '';
+    // Endpoint PHP fiável (funciona com o router local e no alojamento)
+    return 'api/social-file.php?f=' + encodeURIComponent(rel);
   }
 
   function api(path, options) {
@@ -112,8 +115,9 @@
       return '<p class="cms-hint">Ainda sem imagens. Arraste um lote (ex.: as 40 fotos da quarta).</p>';
     }
     return '<div class="cms-media-pool">' + state.pool.map(function (f, i) {
+      var src = f.url || mediaUrl(f.path);
       return '<div class="cms-media-thumb' + (f.selected === false ? '' : ' is-selected') + '" data-pool-i="' + i + '" title="' + esc(f.name) + '">' +
-        '<img src="' + esc(mediaUrl(f.path)) + '" alt="" />' +
+        '<img src="' + esc(src) + '" alt="" loading="lazy" />' +
         '<button type="button" data-pool-remove="' + i + '" aria-label="Remover">×</button>' +
         '</div>';
     }).join('') + '</div>';
@@ -315,28 +319,37 @@
   function uploadFiles(fileList) {
     if (!fileList || !fileList.length) return;
     var fd = new FormData();
-    Array.prototype.forEach.call(fileList, function (f) { fd.append('files[]', f); });
+    Array.prototype.forEach.call(fileList, function (f) {
+      fd.append('files[]', f);
+    });
     state.uploading = true;
     toast('A carregar ' + fileList.length + ' foto(s)…');
     fetch('api/social-upload.php', { method: 'POST', body: fd, credentials: 'same-origin' })
       .then(function (res) {
         return res.text().then(function (text) {
           var data = {};
-          try { data = JSON.parse(text); } catch (e) { throw { error: 'Resposta inválida do servidor.' }; }
+          try { data = JSON.parse(text); } catch (e) {
+            throw { error: 'Resposta inválida do servidor.', detail: text.slice(0, 200) };
+          }
           if (!res.ok) throw data;
           return data;
         });
       })
       .then(function (data) {
         (data.files || []).forEach(function (f) {
-          state.pool.push({ path: f.path, name: f.name, selected: true });
+          state.pool.push({ path: f.path, name: f.name, selected: true, url: f.url || mediaUrl(f.path) });
         });
-        if (data.errors && data.errors.length) toast(data.errors[0]);
-        else toast((data.files || []).length + ' foto(s) na fila');
+        if (data.errors && data.errors.length) {
+          toast(data.errors[0]);
+        } else if (!(data.files || []).length) {
+          toast(data.error || 'Nenhuma imagem gravada.');
+        } else {
+          toast((data.files || []).length + ' foto(s) na fila');
+        }
         global.StoffusCmsRerender();
       })
       .catch(function (err) {
-        toast(err.error || 'Falha no upload.');
+        toast(err.error || err.detail || 'Falha no upload.');
       })
       .finally(function () { state.uploading = false; });
   }

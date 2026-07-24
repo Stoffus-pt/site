@@ -99,9 +99,9 @@ function cms_social_public_url(string $relativePath): string
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host = (string) ($_SERVER['HTTP_HOST'] ?? 'localhost');
     $script = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
-    // /site/cms/api/social.php → /site/cms/
-    $base = preg_replace('#/api/[^/]+$#', '/', $script) ?: '/cms/';
-    return $scheme . '://' . $host . rtrim($base, '/') . '/data/social-media/' . $relativePath;
+    // /site/cms/api/social.php → /site/cms/api/
+    $apiBase = preg_replace('#/[^/]+$#', '/', $script) ?: '/cms/api/';
+    return $scheme . '://' . $host . $apiBase . 'social-file.php?f=' . rawurlencode($relativePath);
 }
 
 function cms_social_http_json(string $url, array $params = [], string $method = 'GET'): array
