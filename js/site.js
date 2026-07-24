@@ -143,4 +143,41 @@
         loadStatic();
       });
   })();
+
+  (function initBackToTop() {
+    if (document.getElementById('btn-back-to-top')) return;
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'btn-back-to-top';
+    btn.className = 'back-to-top';
+    btn.setAttribute('aria-label', 'Voltar ao topo');
+    btn.title = 'Voltar ao topo';
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+      '<path fill="currentColor" d="M12 5.5 5.5 12h4v6.5h5V12h4L12 5.5z"/>' +
+      '</svg>';
+    document.body.appendChild(btn);
+
+    var threshold = 320;
+    var ticking = false;
+
+    function update() {
+      ticking = false;
+      var y = window.scrollY || document.documentElement.scrollTop || 0;
+      btn.classList.toggle('is-visible', y > threshold);
+    }
+
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }, { passive: true });
+
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    update();
+  })();
 })();

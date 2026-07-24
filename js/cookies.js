@@ -34,10 +34,12 @@
       '</div>';
 
     document.body.appendChild(banner);
+    document.body.classList.add('has-cookie-banner');
 
     document.getElementById('cookie-accept').addEventListener('click', function () {
       setConsent();
       banner.remove();
+      document.body.classList.remove('has-cookie-banner');
     });
   }
 
