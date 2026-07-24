@@ -23,6 +23,13 @@
     selectedPostId: null,
     previewSlide: 0,
     listFilter: 'all',
+    listSort: 'newest',
+    listQuery: '',
+    listPage: 1,
+    panelView: 'calendar',
+    metaHistory: [],
+    metaHistoryLoading: false,
+    metaHistoryError: '',
     uploading: false,
     metaFormOpen: false,
   };
@@ -319,6 +326,10 @@
     state.selectedPostId = null;
     state.previewSlide = 0;
     state.listFilter = 'all';
+    state.listQuery = '';
+    state.listPage = 1;
+    state.metaHistory = [];
+    state.metaHistoryError = '';
     load().then(function () {
       toast('A gerir: ' + (currentBrandInfo().label || brandId));
       global.StoffusCmsRerender();
@@ -336,11 +347,43 @@
   }
 
   function filteredPosts() {
-    var list = state.posts.slice().sort(function (a, b) {
-      return new Date(a.scheduledAt || 0) - new Date(b.scheduledAt || 0);
+    var q = String(state.listQuery || '').trim().toLowerCase();
+    var list = state.posts.slice().filter(function (p) {
+      if (state.listFilter !== 'all' && p.status !== state.listFilter) return false;
+      if (!q) return true;
+      var cap = String(p.caption || '').toLowerCase();
+      var id = String(p.id || '').toLowerCase();
+      return cap.indexOf(q) >= 0 || id.indexOf(q) >= 0;
     });
-    if (state.listFilter === 'all') return list;
-    return list.filter(function (p) { return p.status === state.listFilter; });
+    list.sort(function (a, b) {
+      var da = new Date(a.publishedAt || a.scheduledAt || a.createdAt || 0).getTime();
+      var db = new Date(b.publishedAt || b.scheduledAt || b.createdAt || 0).getTime();
+      return state.listSort === 'oldest' ? da - db : db - da;
+    });
+    return list;
+  }
+
+  function facebookPostUrl(post) {
+    var ids = post && post.metaPostIds;
+    if (!ids || !ids.facebook) return '';
+    var fbId = String(ids.facebook);
+    // Formato pageId_postId ou só postId
+    if (fbId.indexOf('_') >= 0) {
+      return 'https://www.facebook.com/' + fbId.replace('_', '/posts/');
+    }
+    return 'https://www.facebook.com/' + encodeURIComponent(fbId);
+  }
+
+  function fmtDateTime(iso) {
+    if (!iso) return '—';
+    try {
+      return new Date(iso).toLocaleString('pt-PT', {
+        day: 'numeric', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+    } catch (e) {
+      return '—';
+    }
   }
 
   function renderStats() {
@@ -440,59 +483,106 @@
       { id: 'draft', label: 'Rascunhos' },
     ];
     var posts = filteredPosts();
+    var perPage = 15;
+    var totalPages = Math.max(1, Math.ceil(posts.length / perPage));
+    if (state.listPage > totalPages) state.listPage = totalPages;
+    if (state.listPage < 1) state.listPage = 1;
+    var pagePosts = posts.slice((state.listPage - 1) * perPage, state.listPage * perPage);
     var draftCount = state.posts.filter(function (p) { return p.status === 'draft'; }).length;
     var publishedCount = state.posts.filter(function (p) { return p.status === 'published'; }).length;
-    var html = '<div class="cms-posts-list">' +
+    var expanded = state.panelView === 'history';
+
+    var html = '<div class="cms-posts-list' + (expanded ? ' is-expanded' : '') + '">' +
       '<div class="cms-posts-list__head">' +
-      '<h2>Publicações</h2>' +
+      '<div><h2>Histórico e lista</h2>' +
+      '<p class="cms-hint" style="margin:0">' + state.posts.length + ' no CMS · ' + posts.length + ' neste filtro</p></div>' +
       '<div class="cms-tabs cms-tabs--sub">' +
       filters.map(function (f) {
+        var n = f.id === 'all' ? state.posts.length : state.posts.filter(function (p) { return p.status === f.id; }).length;
         return '<button type="button" class="cms-tab' + (state.listFilter === f.id ? ' is-active' : '') +
-          '" data-list-filter="' + f.id + '">' + f.label + '</button>';
+          '" data-list-filter="' + f.id + '">' + f.label + ' (' + n + ')</button>';
       }).join('') +
       '</div></div>';
+
+    html += '<div class="cms-posts-list__tools">' +
+      '<input class="cms-input" type="search" id="cms-list-query" value="' + esc(state.listQuery) +
+      '" placeholder="Pesquisar legenda ou ID…" />' +
+      '<select class="cms-input" id="cms-list-sort">' +
+      '<option value="newest"' + (state.listSort === 'newest' ? ' selected' : '') + '>Mais recentes</option>' +
+      '<option value="oldest"' + (state.listSort === 'oldest' ? ' selected' : '') + '>Mais antigas</option>' +
+      '</select></div>';
 
     html += '<div class="cms-posts-list__actions">';
     if (draftCount > 0) {
       html += '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-drafts">' +
-        'Apagar todos os rascunhos (' + draftCount + ')</button>';
+        'Apagar rascunhos (' + draftCount + ')</button>';
     }
     if (publishedCount > 0) {
       html += '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-published">' +
-        'Apagar publicadas no CMS + Meta (' + publishedCount + ')</button>';
+        'Apagar publicadas CMS + Meta (' + publishedCount + ')</button>';
     }
+    html += '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-history-load">Ver no Facebook</button>';
     html += '</div>';
 
-    if (!posts.length) {
-      html += '<p class="cms-hint">Nenhuma publicação neste filtro.</p></div>';
+    if (state.metaHistoryError) {
+      html += '<p class="cms-status is-error">' + esc(state.metaHistoryError) + '</p>';
+    }
+    if (state.metaHistoryLoading) {
+      html += '<p class="cms-hint">A carregar histórico do Facebook…</p>';
+    }
+    if (state.metaHistory && state.metaHistory.length) {
+      html += '<div class="cms-meta-history"><h3>Últimas no Facebook</h3><div class="cms-meta-history__rows">';
+      state.metaHistory.forEach(function (item) {
+        html += '<a class="cms-meta-history__row" href="' + esc(item.permalink_url || ('https://www.facebook.com/' + item.id)) +
+          '" target="_blank" rel="noopener">' +
+          '<strong>' + esc(fmtDateTime(item.created_time)) + '</strong>' +
+          '<span>' + esc((item.message || 'Sem texto').slice(0, 120)) + '</span></a>';
+      });
+      html += '</div></div>';
+    }
+
+    if (!pagePosts.length) {
+      html += '<p class="cms-hint">Nenhuma publicação neste filtro' +
+        (state.listQuery ? ' / pesquisa' : '') + '.</p></div>';
       return html;
     }
 
     html += '<div class="cms-posts-list__rows">';
-    posts.forEach(function (p) {
-      var when = '';
-      try {
-        when = new Date(p.scheduledAt).toLocaleString('pt-PT', {
-          day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
-        });
-      } catch (e) { when = '—'; }
+    pagePosts.forEach(function (p) {
+      var whenLabel = p.status === 'published' ? 'Publicada' : 'Agendada';
+      var when = fmtDateTime(p.publishedAt || p.scheduledAt);
+      var created = fmtDateTime(p.createdAt);
       var thumb = (p.media && p.media[0]) ? mediaUrl(p.media[0]) : '';
       var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
+      var fbUrl = facebookPostUrl(p);
       html += '<div class="cms-post-row' +
         (state.selectedPostId === p.id ? ' is-selected' : '') +
         '" data-post-id="' + esc(p.id) + '">' +
         (thumb ? '<img src="' + esc(thumb) + '" alt="" />' : '<span class="cms-post-row__ph"></span>') +
         '<span class="cms-post-row__body">' +
-        '<strong>' + esc(when) + '</strong>' +
-        '<span>' + (p.media || []).length + ' fotos · ' + esc(plats || 'sem rede') + ' · ' + esc(statusLabel(p.status)) +
-        (postHasMetaIds(p) ? ' · Meta' : '') + '</span>' +
-        '<span class="cms-post-row__cap">' + esc((p.caption || '').slice(0, 80) || 'Sem legenda') + '</span>' +
+        '<strong>' + esc(whenLabel) + ': ' + esc(when) + '</strong>' +
+        '<span>' + (p.media || []).length + ' fotos · ' + esc(plats || 'sem rede') + ' · ' +
+        esc(statusLabel(p.status)) + (postHasMetaIds(p) ? ' · no Meta' : '') +
+        ' · criada ' + esc(created) + '</span>' +
+        '<span class="cms-post-row__cap">' + esc((p.caption || '').slice(0, 140) || 'Sem legenda') + '</span>' +
+        (fbUrl ? '<a class="cms-post-row__link" href="' + esc(fbUrl) + '" target="_blank" rel="noopener" data-stop>Ver no Facebook</a>' : '') +
         '</span>' +
         '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-post-row__del" data-delete-post="' +
         esc(p.id) + '" title="Apagar">×</button>' +
         '</div>';
     });
-    html += '</div></div>';
+    html += '</div>';
+
+    if (totalPages > 1) {
+      html += '<div class="cms-posts-pager">' +
+        '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-list-prev"' +
+        (state.listPage <= 1 ? ' disabled' : '') + '>← Anterior</button>' +
+        '<span>Página ' + state.listPage + ' / ' + totalPages + '</span>' +
+        '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-list-next"' +
+        (state.listPage >= totalPages ? ' disabled' : '') + '>Seguinte →</button></div>';
+    }
+
+    html += '</div>';
     return html;
   }
 
@@ -703,17 +793,29 @@
 
       '<section class="cms-surface">' +
       '<div class="cms-cal-head">' +
-      '<div><h2>2. Calendário · ' + esc(info.short) + '</h2><h3>' + esc(calendarTitle()) + '</h3>' +
-      '<p class="cms-hint" style="margin:.35rem 0 0">Alterne Semana / Mês / Ano. Clique num dia para o escolher.</p></div>' +
+      '<div><h2>2. Agenda · ' + esc(info.short) + '</h2>' +
+      (state.panelView === 'calendar'
+        ? '<h3>' + esc(calendarTitle()) + '</h3><p class="cms-hint" style="margin:.35rem 0 0">Alterne Semana / Mês / Ano. Clique num dia para o escolher.</p>'
+        : '<p class="cms-hint" style="margin:.35rem 0 0">Lista completa das publicações desta marca no CMS, com filtros e ligação ao Facebook.</p>') +
+      '</div>' +
       '<div class="cms-cal-toolbar">' +
-      renderCalViewSwitch() +
-      '<div style="display:flex;gap:.4rem;flex-wrap:wrap">' +
-      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-prev">' + esc(navLabel(-1)) + '</button>' +
-      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-today">Hoje</button>' +
-      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-next">' + esc(navLabel(1)) + '</button>' +
-      '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-publish-due">Publicar vencidas</button>' +
-      '</div></div></div>' +
-      '<div id="cms-social-cal">' + renderCalendar() + '</div>' +
+      '<div class="cms-panel-views">' +
+      '<button type="button" class="cms-cal-view-btn' + (state.panelView === 'calendar' ? ' is-active' : '') +
+      '" data-panel-view="calendar">Calendário</button>' +
+      '<button type="button" class="cms-cal-view-btn' + (state.panelView === 'history' ? ' is-active' : '') +
+      '" data-panel-view="history">Histórico</button>' +
+      '</div>' +
+      (state.panelView === 'calendar'
+        ? (renderCalViewSwitch() +
+          '<div style="display:flex;gap:.4rem;flex-wrap:wrap">' +
+          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-prev">' + esc(navLabel(-1)) + '</button>' +
+          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-today">Hoje</button>' +
+          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-next">' + esc(navLabel(1)) + '</button>' +
+          '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-publish-due">Publicar vencidas</button>' +
+          '</div>')
+        : '') +
+      '</div></div>' +
+      (state.panelView === 'calendar' ? '<div id="cms-social-cal">' + renderCalendar() + '</div>' : '') +
       renderPostsList() +
       '</section>' +
 
@@ -1047,9 +1149,92 @@
     document.querySelectorAll('[data-list-filter]').forEach(function (btn) {
       btn.onclick = function () {
         state.listFilter = btn.getAttribute('data-list-filter');
+        state.listPage = 1;
         global.StoffusCmsRerender();
       };
     });
+
+    document.querySelectorAll('[data-panel-view]').forEach(function (btn) {
+      btn.onclick = function () {
+        var view = btn.getAttribute('data-panel-view');
+        if (!view || view === state.panelView) return;
+        state.panelView = view;
+        if (view === 'history') state.listPage = 1;
+        global.StoffusCmsRerender();
+      };
+    });
+
+    var listQuery = document.getElementById('cms-list-query');
+    if (listQuery) {
+      listQuery.addEventListener('input', function () {
+        state.listQuery = listQuery.value || '';
+        state.listPage = 1;
+        clearTimeout(listQuery._t);
+        listQuery._t = setTimeout(function () {
+          var pos = listQuery.selectionStart;
+          global.StoffusCmsRerender();
+          var el = document.getElementById('cms-list-query');
+          if (el) {
+            el.focus();
+            try { el.setSelectionRange(pos, pos); } catch (e2) { /* ignore */ }
+          }
+        }, 280);
+      });
+    }
+
+    var listSort = document.getElementById('cms-list-sort');
+    if (listSort) {
+      listSort.onchange = function () {
+        state.listSort = listSort.value === 'oldest' ? 'oldest' : 'newest';
+        state.listPage = 1;
+        global.StoffusCmsRerender();
+      };
+    }
+
+    var listPrev = document.getElementById('cms-list-prev');
+    var listNext = document.getElementById('cms-list-next');
+    if (listPrev) {
+      listPrev.onclick = function () {
+        if (state.listPage <= 1) return;
+        state.listPage -= 1;
+        global.StoffusCmsRerender();
+      };
+    }
+    if (listNext) {
+      listNext.onclick = function () {
+        state.listPage += 1;
+        global.StoffusCmsRerender();
+      };
+    }
+
+    var metaHistoryBtn = document.getElementById('cms-meta-history-load');
+    if (metaHistoryBtn) {
+      metaHistoryBtn.onclick = function () {
+        if (!state.meta.configured) {
+          toast('Configure a Meta desta marca primeiro.');
+          return;
+        }
+        state.metaHistoryLoading = true;
+        state.metaHistoryError = '';
+        global.StoffusCmsRerender();
+        api('social.php?action=meta_history&brand=' + encodeURIComponent(state.brand) + '&limit=25')
+          .then(function (data) {
+            state.metaHistory = data.posts || [];
+            state.metaHistoryError = '';
+            if (!state.metaHistory.length) toast('Sem publicações recentes na página Facebook.');
+            else toast(state.metaHistory.length + ' publicação(ões) do Facebook');
+          })
+          .catch(function (err) {
+            state.metaHistory = [];
+            state.metaHistoryError = err.error || 'Não foi possível carregar o histórico do Facebook.';
+            toast(state.metaHistoryError);
+          })
+          .finally(function () {
+            state.metaHistoryLoading = false;
+            global.StoffusCmsRerender();
+          });
+      };
+    }
 
     // Clique no dia = escolher dia de agendamento do próximo lote
     document.querySelectorAll('[data-cal-day]').forEach(function (dayEl) {
@@ -1083,6 +1268,7 @@
     document.querySelectorAll('[data-post-id]').forEach(function (el) {
       el.addEventListener('click', function (e) {
         if (e.target.closest('[data-delete-post]')) return;
+        if (e.target.closest('[data-stop]')) return;
         e.stopPropagation();
         selectPost(el.getAttribute('data-post-id'), true);
       });

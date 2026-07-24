@@ -35,6 +35,16 @@ try {
         ]);
     }
 
+    if ($method === 'GET' && $action === 'meta_history') {
+        $limit = (int) ($_GET['limit'] ?? 25);
+        $posts = cms_social_meta_page_history($brand, $limit);
+        cms_json([
+            'ok' => true,
+            'brand' => $brand,
+            'posts' => $posts,
+        ]);
+    }
+
     if ($method !== 'POST') {
         cms_json(['ok' => false, 'error' => 'Método inválido.'], 405);
     }

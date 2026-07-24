@@ -239,6 +239,43 @@ function cms_social_accounts_status(): array
     return $list;
 }
 
+/**
+ * Últimas publicações da página Facebook (Graph API).
+ *
+ * @return list<array{id:string,message:string,created_time:string,permalink_url:string}>
+ */
+function cms_social_meta_page_history(string $brand, int $limit = 25): array
+{
+    $meta = cms_social_meta_config_for($brand);
+    $pageId = $meta['page_id'];
+    $token = $meta['page_access_token'];
+    if ($pageId === '' || $token === '') {
+        throw new RuntimeException('Meta desta marca ainda não está configurada.');
+    }
+    $limit = max(1, min(50, $limit));
+    $data = cms_social_http_json(
+        'https://graph.facebook.com/v21.0/' . rawurlencode($pageId) . '/posts',
+        [
+            'fields' => 'id,message,created_time,permalink_url',
+            'limit' => $limit,
+            'access_token' => $token,
+        ]
+    );
+    $out = [];
+    foreach (($data['data'] ?? []) as $row) {
+        if (!is_array($row)) {
+            continue;
+        }
+        $out[] = [
+            'id' => (string) ($row['id'] ?? ''),
+            'message' => (string) ($row['message'] ?? ''),
+            'created_time' => (string) ($row['created_time'] ?? ''),
+            'permalink_url' => (string) ($row['permalink_url'] ?? ''),
+        ];
+    }
+    return $out;
+}
+
 function cms_social_public_url(string $relativePath): string
 {
     $relativePath = ltrim(str_replace('\\', '/', $relativePath), '/');
