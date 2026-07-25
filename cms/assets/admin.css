@@ -1587,6 +1587,19 @@ button, input, textarea, select {
   background: rgba(255, 255, 255, 0.45);
 }
 
+.cms-meta-history--instagram {
+  border-color: rgba(193, 53, 132, 0.28);
+  background: linear-gradient(180deg, rgba(193, 53, 132, 0.07), rgba(255, 255, 255, 0.55) 2.2rem);
+}
+
+.cms-meta-history--instagram h3 {
+  color: #c13584;
+}
+
+.cms-meta-history--facebook h3 {
+  color: #1877f2;
+}
+
 .cms-meta-history__head {
   display: flex;
   align-items: flex-start;
@@ -2194,6 +2207,7 @@ button, input, textarea, select {
 
 .cms-leg.is-scheduled::before { background: var(--brand); }
 .cms-leg.is-published::before { background: #067647; }
+.cms-leg.is-ig::before { background: #c13584; }
 .cms-leg.is-draft::before { background: #8a8a8a; }
 .cms-leg.is-failed::before { background: #b42318; }
 
@@ -2411,6 +2425,13 @@ button, input, textarea, select {
 .cms-board-post.is-published.is-meta {
   background: linear-gradient(90deg, rgba(6, 118, 71, 0.08), #fff 40%);
   cursor: pointer;
+}
+
+.cms-board-post.is-meta-instagram,
+.cms-agenda-card.is-meta-instagram {
+  border-color: rgba(193, 53, 132, 0.3);
+  box-shadow: inset 3px 0 0 #c13584;
+  background: linear-gradient(90deg, rgba(193, 53, 132, 0.1), #fff 42%);
 }
 
 .cms-board-post.is-draft {

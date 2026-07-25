@@ -37,11 +37,41 @@ try {
 
     if ($method === 'GET' && $action === 'meta_history') {
         $limit = (int) ($_GET['limit'] ?? 25);
-        $posts = cms_social_meta_page_history($brand, $limit);
+        $facebook = [];
+        $instagram = [];
+        $fbError = null;
+        $igError = null;
+
+        try {
+            $facebook = cms_social_meta_page_history($brand, $limit);
+        } catch (Throwable $e) {
+            $fbError = $e->getMessage();
+        }
+
+        $ready = cms_social_meta_ready($brand);
+        if (!empty($ready['instagram_ready'])) {
+            try {
+                $instagram = cms_social_instagram_history($brand, $limit);
+            } catch (Throwable $e) {
+                $igError = $e->getMessage();
+            }
+        } else {
+            $igError = 'Instagram Business não está ligado a esta marca.';
+        }
+
+        if ($fbError && !$facebook && $igError && !$instagram) {
+            cms_json(['ok' => false, 'error' => $fbError ?: $igError], 400);
+        }
+
         cms_json([
             'ok' => true,
             'brand' => $brand,
-            'posts' => $posts,
+            'posts' => $facebook,
+            'facebook' => $facebook,
+            'instagram' => $instagram,
+            'facebook_error' => $fbError,
+            'instagram_error' => $igError,
+            'instagram_ready' => !empty($ready['instagram_ready']),
         ]);
     }
 
@@ -177,12 +207,18 @@ try {
 
     if ($action === 'delete_meta_post') {
         $metaId = trim((string) ($input['meta_post_id'] ?? ''));
+        $platform = trim((string) ($input['platform'] ?? ''));
         cms_social_meta_delete_post_id($brand, $metaId);
-        // Se existir no CMS com este ID, limpar referência
         foreach ($data['posts'] as &$post) {
             $ids = is_array($post['metaPostIds'] ?? null) ? $post['metaPostIds'] : [];
             if (($ids['facebook'] ?? '') === $metaId) {
                 unset($post['metaPostIds']['facebook']);
+            }
+            if (($ids['instagram'] ?? '') === $metaId) {
+                unset($post['metaPostIds']['instagram']);
+            }
+            if ($platform === 'instagram' && ($ids['instagram'] ?? '') === $metaId) {
+                unset($post['metaPostIds']['instagram']);
             }
         }
         unset($post);

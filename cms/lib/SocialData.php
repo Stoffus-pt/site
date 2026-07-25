@@ -493,7 +493,7 @@ function cms_social_meta_import_assignments(array $assignments): array
 /**
  * Últimas publicações da página Facebook (Graph API).
  *
- * @return list<array{id:string,message:string,created_time:string,permalink_url:string}>
+ * @return list<array<string,mixed>>
  */
 function cms_social_meta_page_history(string $brand, int $limit = 25): array
 {
@@ -520,14 +520,109 @@ function cms_social_meta_page_history(string $brand, int $limit = 25): array
         $images = cms_social_meta_extract_images($row);
         $out[] = [
             'id' => (string) ($row['id'] ?? ''),
+            'platform' => 'facebook',
             'message' => (string) ($row['message'] ?? ''),
             'created_time' => (string) ($row['created_time'] ?? ''),
             'permalink_url' => (string) ($row['permalink_url'] ?? ''),
             'full_picture' => (string) ($row['full_picture'] ?? ($images[0] ?? '')),
             'images' => $images,
+            'media_type' => 'POST',
         ];
     }
     return $out;
+}
+
+/**
+ * Últimas publicações do Instagram Business ligado à marca.
+ *
+ * @return list<array<string,mixed>>
+ */
+function cms_social_instagram_history(string $brand, int $limit = 25): array
+{
+    $meta = cms_social_meta_config_for($brand);
+    $igId = $meta['instagram_business_id'];
+    $token = $meta['page_access_token'];
+    if ($token === '') {
+        throw new RuntimeException('Meta desta marca ainda não está configurada.');
+    }
+    if ($igId === '') {
+        throw new RuntimeException('Instagram Business não está ligado a esta marca.');
+    }
+    $limit = max(1, min(50, $limit));
+    $data = cms_social_http_json(
+        'https://graph.facebook.com/v21.0/' . rawurlencode($igId) . '/media',
+        [
+            'fields' => 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_url,media_type,thumbnail_url}',
+            'limit' => $limit,
+            'access_token' => $token,
+        ]
+    );
+    $out = [];
+    foreach (($data['data'] ?? []) as $row) {
+        if (!is_array($row)) {
+            continue;
+        }
+        $images = cms_social_ig_extract_images($row);
+        $thumb = (string) ($row['thumbnail_url'] ?? '');
+        if ($thumb === '') {
+            $thumb = (string) ($row['media_url'] ?? ($images[0] ?? ''));
+        }
+        $out[] = [
+            'id' => (string) ($row['id'] ?? ''),
+            'platform' => 'instagram',
+            'message' => (string) ($row['caption'] ?? ''),
+            'created_time' => (string) ($row['timestamp'] ?? ''),
+            'permalink_url' => (string) ($row['permalink'] ?? ''),
+            'full_picture' => $thumb !== '' ? $thumb : (string) ($images[0] ?? ''),
+            'images' => $images,
+            'media_type' => (string) ($row['media_type'] ?? 'IMAGE'),
+        ];
+    }
+    return $out;
+}
+
+/**
+ * Extrai URLs de imagem/vídeo de um media Instagram Graph API.
+ *
+ * @param array<string,mixed> $row
+ * @return list<string>
+ */
+function cms_social_ig_extract_images(array $row): array
+{
+    $images = [];
+    $type = strtoupper((string) ($row['media_type'] ?? 'IMAGE'));
+
+    if ($type === 'CAROUSEL_ALBUM') {
+        $children = $row['children']['data'] ?? null;
+        if (is_array($children)) {
+            foreach ($children as $child) {
+                if (!is_array($child)) {
+                    continue;
+                }
+                $childType = strtoupper((string) ($child['media_type'] ?? 'IMAGE'));
+                if ($childType === 'VIDEO') {
+                    $src = trim((string) ($child['thumbnail_url'] ?? $child['media_url'] ?? ''));
+                } else {
+                    $src = trim((string) ($child['media_url'] ?? $child['thumbnail_url'] ?? ''));
+                }
+                if ($src !== '') {
+                    $images[] = $src;
+                }
+            }
+        }
+    } elseif ($type === 'VIDEO') {
+        $src = trim((string) ($row['thumbnail_url'] ?? $row['media_url'] ?? ''));
+        if ($src !== '') {
+            $images[] = $src;
+        }
+    } else {
+        $src = trim((string) ($row['media_url'] ?? $row['thumbnail_url'] ?? ''));
+        if ($src !== '') {
+            $images[] = $src;
+        }
+    }
+
+    return array_values(array_unique($images));
 }
 
 /**

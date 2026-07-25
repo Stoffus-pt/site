@@ -34,8 +34,10 @@
     listPage: 1,
     panelView: 'calendar',
     metaHistory: [],
+    igHistory: [],
     metaHistoryLoading: false,
     metaHistoryError: '',
+    igHistoryError: '',
     uploading: false,
     metaFormOpen: false,
     discoveredPages: [],
@@ -132,40 +134,71 @@
     return !!(p && (p._source === 'meta' || String(p.id || '').indexOf('meta:') === 0));
   }
 
-  /** IDs Facebook já ligados a posts do CMS (evitar duplicar no calendário). */
-  function cmsFacebookIds() {
-    var map = {};
-    (state.posts || []).forEach(function (p) {
-      var fb = p.metaPostIds && p.metaPostIds.facebook;
-      if (fb) map[String(fb)] = true;
-    });
-    return map;
+  function metaPlatformOf(p) {
+    if (!p) return 'facebook';
+    if (p._platform) return p._platform;
+    if (Array.isArray(p.platforms) && p.platforms[0]) return p.platforms[0];
+    var id = String(p.id || '');
+    if (id.indexOf('meta:ig:') === 0) return 'instagram';
+    return 'facebook';
   }
 
-  /** Publicações da Página Facebook como entradas do calendário (só leitura). */
-  function metaCalendarPosts() {
-    var skip = cmsFacebookIds();
-    return (state.metaHistory || []).filter(function (item) {
-      return item && item.id && !skip[String(item.id)];
-    }).map(function (item) {
-      var imgs = Array.isArray(item.images) && item.images.length
-        ? item.images.slice()
-        : (item.full_picture ? [item.full_picture] : []);
-      return {
-        id: 'meta:' + item.id,
-        status: 'published',
-        publishedAt: item.created_time || null,
-        scheduledAt: null,
-        createdAt: item.created_time || null,
-        caption: item.message || '',
-        media: imgs,
-        images: imgs,
-        permalink_url: item.permalink_url || '',
-        platforms: ['facebook'],
-        metaPostIds: { facebook: item.id },
-        _source: 'meta',
-      };
+  function metaRawId(p) {
+    var id = String((p && p.id) || '');
+    return id.replace(/^meta:(fb|ig):/, '').replace(/^meta:/, '');
+  }
+
+  /** IDs Meta já ligados a posts do CMS (evitar duplicar no calendário). */
+  function cmsMetaSkipIds() {
+    var fb = {};
+    var ig = {};
+    (state.posts || []).forEach(function (p) {
+      var ids = p.metaPostIds || {};
+      if (ids.facebook) fb[String(ids.facebook)] = true;
+      if (ids.instagram) ig[String(ids.instagram)] = true;
     });
+    return { facebook: fb, instagram: ig };
+  }
+
+  function historyItemToCalPost(item, platform) {
+    var imgs = Array.isArray(item.images) && item.images.length
+      ? item.images.slice()
+      : (item.full_picture ? [item.full_picture] : []);
+    var prefix = platform === 'instagram' ? 'meta:ig:' : 'meta:fb:';
+    var metaIds = platform === 'instagram'
+      ? { instagram: item.id }
+      : { facebook: item.id };
+    return {
+      id: prefix + item.id,
+      status: 'published',
+      publishedAt: item.created_time || null,
+      scheduledAt: null,
+      createdAt: item.created_time || null,
+      caption: item.message || '',
+      media: imgs,
+      images: imgs,
+      permalink_url: item.permalink_url || '',
+      platforms: [platform],
+      metaPostIds: metaIds,
+      media_type: item.media_type || '',
+      _source: 'meta',
+      _platform: platform,
+    };
+  }
+
+  /** Publicações Facebook + Instagram como entradas do calendário. */
+  function metaCalendarPosts() {
+    var skip = cmsMetaSkipIds();
+    var out = [];
+    (state.metaHistory || []).forEach(function (item) {
+      if (!item || !item.id || skip.facebook[String(item.id)]) return;
+      out.push(historyItemToCalPost(item, 'facebook'));
+    });
+    (state.igHistory || []).forEach(function (item) {
+      if (!item || !item.id || skip.instagram[String(item.id)]) return;
+      out.push(historyItemToCalPost(item, 'instagram'));
+    });
+    return out;
   }
 
   function allCalendarPosts() {
@@ -198,18 +231,21 @@
     var drag = canDragPost(p);
     var n = (p.media || []).length;
     var fromMeta = isMetaCalPost(p);
-    var label = fromMeta ? 'No Facebook' : statusLabel(p.status);
+    var plat = metaPlatformOf(p);
+    var label = fromMeta
+      ? (plat === 'instagram' ? 'No Instagram' : 'No Facebook')
+      : statusLabel(p.status);
     var delAttr = fromMeta
-      ? ' data-delete-meta-id="' + esc(String(p.id).replace(/^meta:/, '')) + '"'
+      ? ' data-delete-meta-id="' + esc(metaRawId(p)) + '" data-delete-meta-platform="' + esc(plat) + '"'
       : ' data-delete-post="' + esc(p.id) + '"';
     return '<div class="cms-board-post is-' + esc(p.status || 'draft') +
-      (fromMeta ? ' is-meta' : '') +
+      (fromMeta ? ' is-meta is-meta-' + esc(plat) : '') +
       (state.selectedPostId === p.id ? ' is-selected' : '') +
       (drag ? ' is-draggable' : '') +
       (compact ? ' is-compact' : '') +
       '" data-post-id="' + esc(p.id) + '"' +
       (drag ? ' draggable="true"' : '') +
-      ' title="' + esc(label + ' · ' + time + (drag ? ' · arraste para outro dia' : fromMeta ? ' · abrir no Facebook' : '')) + '">' +
+      ' title="' + esc(label + ' · ' + time + (drag ? ' · arraste para outro dia' : fromMeta ? ' · abrir' : '')) + '">' +
       (thumb ? '<img src="' + esc(thumb) + '" alt="" loading="lazy" />' : '<span class="cms-board-post__ph"></span>') +
       '<span class="cms-board-post__txt">' +
       '<strong>' + esc(time) + '</strong>' +
@@ -310,18 +346,21 @@
           time = when.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
         } catch (e) { /* ignore */ }
         var fromMeta = isMetaCalPost(p);
+        var plat = metaPlatformOf(p);
         var plats = fromMeta
-          ? 'Facebook'
+          ? (plat === 'instagram' ? 'Instagram' : 'Facebook')
           : platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
         var drag = canDragPost(p);
-        var stLabel = fromMeta ? 'No Facebook' : statusLabel(p.status);
+        var stLabel = fromMeta
+          ? (plat === 'instagram' ? 'No Instagram' : 'No Facebook')
+          : statusLabel(p.status);
         var delBtn = fromMeta
           ? '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-agenda-card__del" data-delete-meta-id="' +
-            esc(String(p.id).replace(/^meta:/, '')) + '" title="Apagar no Facebook">Apagar</button>'
+            esc(metaRawId(p)) + '" data-delete-meta-platform="' + esc(plat) + '" title="Apagar">Apagar</button>'
           : '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-agenda-card__del" data-delete-post="' +
             esc(p.id) + '" title="Apagar">Apagar</button>';
         return '<div class="cms-agenda-card is-' + esc(p.status || 'draft') +
-          (fromMeta ? ' is-meta' : '') +
+          (fromMeta ? ' is-meta is-meta-' + esc(plat) : '') +
           (state.selectedPostId === p.id ? ' is-selected' : '') +
           '"' + (drag ? ' draggable="true" data-post-id="' + esc(p.id) + '"' : '') + '>' +
           '<button type="button" class="cms-agenda-card__main" data-post-id="' + esc(p.id) + '">' +
@@ -345,7 +384,8 @@
       '<div class="cms-board-toolbar">' +
       '<div class="cms-board-legend" aria-label="Legenda">' +
       '<span class="cms-leg is-scheduled">Agendada</span>' +
-      '<span class="cms-leg is-published">Publicada (CMS / FB)</span>' +
+      '<span class="cms-leg is-published">Publicada FB</span>' +
+      '<span class="cms-leg is-ig">Publicada IG</span>' +
       '<span class="cms-leg is-draft">Rascunho</span>' +
       '<span class="cms-leg is-failed">Falhou</span>' +
       '</div>' +
@@ -363,7 +403,7 @@
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-next">' +
       (state.calView === 'week' ? 'Semana →' : 'Mês →') + '</button>' +
       '</div>' +
-      '<p class="cms-board-tip">Verde = já publicadas. Use <strong>×</strong> ou <strong>Apagar</strong> no dia seleccionado. Arraste só agendadas / rascunhos.</p>' +
+      '<p class="cms-board-tip">Verde = Facebook · Rosa = Instagram. Use × / Apagar no dia. Arraste só agendadas / rascunhos.</p>' +
       (state.calView === 'week' ? renderWeekBoard() : renderMonthBoard()) +
       renderSelectedDayPanel() +
       '</div>';
@@ -506,7 +546,9 @@
     state.listQuery = '';
     state.listPage = 1;
     state.metaHistory = [];
+    state.igHistory = [];
     state.metaHistoryError = '';
+    state.igHistoryError = '';
     load().then(function () {
       global.StoffusCmsRerender();
     }).catch(function (err) {
@@ -648,19 +690,29 @@
     }
     state.metaHistoryLoading = true;
     state.metaHistoryError = '';
+    state.igHistoryError = '';
     if (!silent) global.StoffusCmsRerender();
     return api('social.php?action=meta_history&brand=' + encodeURIComponent(state.brand) + '&limit=50')
       .then(function (data) {
-        state.metaHistory = data.posts || [];
-        state.metaHistoryError = '';
+        state.metaHistory = data.facebook || data.posts || [];
+        state.igHistory = data.instagram || [];
+        state.metaHistoryError = data.facebook_error || '';
+        state.igHistoryError = data.instagram_error || '';
         if (!silent) {
-          if (!state.metaHistory.length) toast('Sem publicações recentes na página Facebook.');
-          else toast(state.metaHistory.length + ' publicação(ões) do Facebook');
+          var nFb = state.metaHistory.length;
+          var nIg = state.igHistory.length;
+          if (!nFb && !nIg) {
+            toast(state.metaHistoryError || state.igHistoryError || 'Sem publicações recentes nas redes.');
+          } else {
+            toast(nFb + ' no Facebook · ' + nIg + ' no Instagram');
+          }
         }
       })
       .catch(function (err) {
         state.metaHistory = [];
-        state.metaHistoryError = err.error || 'Não foi possível carregar o histórico do Facebook.';
+        state.igHistory = [];
+        state.metaHistoryError = err.error || 'Não foi possível carregar o histórico.';
+        state.igHistoryError = state.metaHistoryError;
         if (!silent) toast(state.metaHistoryError);
       })
       .finally(function () {
@@ -677,6 +729,60 @@
     }
     var imgs = (post.images && post.images.length) ? post.images : (post.media || []);
     if (imgs.length) openImageLightbox(imgs);
+  }
+
+  function renderMetaHistoryBlock(opts) {
+    var platform = opts.platform;
+    var items = opts.items || [];
+    var error = opts.error || '';
+    var ready = opts.ready;
+    var html = '<div class="cms-meta-history cms-meta-history--' + esc(platform) + '">' +
+      '<div class="cms-meta-history__head">' +
+      '<div><h3>' + esc(opts.title) + '</h3>' +
+      '<p class="cms-hint" style="margin:.2rem 0 0">' + esc(opts.hint) + '</p></div>' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm cms-meta-history-refresh">' +
+      (state.metaHistoryLoading ? 'A carregar…' : 'Actualizar') + '</button></div>';
+
+    if (!state.meta.configured) {
+      html += '<p class="cms-hint">Configure a Meta desta marca para ver e apagar posts.</p>';
+    } else if (!ready) {
+      html += '<p class="cms-hint">' + esc(opts.notReadyMsg || '') + '</p>';
+    } else if (error && !items.length) {
+      html += '<p class="cms-status is-error">' + esc(error) + '</p>';
+    } else if (state.metaHistoryLoading && !items.length) {
+      html += '<p class="cms-hint">A carregar…</p>';
+    } else if (items.length) {
+      html += '<div class="cms-meta-history__rows">';
+      items.forEach(function (item) {
+        var href = item.permalink_url || '#';
+        var imgs = Array.isArray(item.images) && item.images.length
+          ? item.images
+          : (item.full_picture ? [item.full_picture] : []);
+        var thumb = imgs[0] || '';
+        var more = imgs.length > 1 ? '<em>+' + (imgs.length - 1) + '</em>' : '';
+        var typeTag = item.media_type && item.media_type !== 'POST' && item.media_type !== 'IMAGE'
+          ? ' · ' + String(item.media_type).replace(/_/g, ' ')
+          : '';
+        html += '<div class="cms-meta-history__row">' +
+          (thumb
+            ? '<button type="button" class="cms-meta-history__thumb" data-meta-lightbox="' +
+              esc(imgs.join('|')) + '" title="Ver imagens">' +
+              '<img src="' + esc(thumb) + '" alt="" loading="lazy" />' + more + '</button>'
+            : '<span class="cms-meta-history__ph"></span>') +
+          '<a href="' + esc(href) + '" target="_blank" rel="noopener" data-stop>' +
+          '<strong>' + esc(fmtDateTime(item.created_time)) + esc(typeTag) + '</strong>' +
+          '<span>' + esc((item.message || 'Sem texto').slice(0, 140)) + '</span></a>' +
+          '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" data-delete-meta-id="' +
+          esc(item.id) + '" data-delete-meta-platform="' + esc(platform) + '" title="' +
+          esc(opts.deleteLabel || 'Apagar') + '">Apagar</button>' +
+          '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<p class="cms-hint">Ainda sem dados. Clique em <em>Actualizar</em>.</p>';
+    }
+    html += '</div>';
+    return html;
   }
 
   function renderPostsList() {
@@ -696,11 +802,12 @@
     var draftCount = state.posts.filter(function (p) { return p.status === 'draft'; }).length;
     var publishedCount = state.posts.filter(function (p) { return p.status === 'published'; }).length;
     var expanded = state.panelView === 'history';
+    var igReady = !!(state.meta && state.meta.instagram_ready);
 
-    var html = '<div class="cms-posts-list' + (expanded ? ' is-expanded' : '') + '">' +
+    var html = '<div class="cms-posts-list' + (expanded ? ' is-expanded' : '') + '>' +
       '<div class="cms-posts-list__head">' +
       '<div><h2>Publicações</h2>' +
-      '<p class="cms-hint" style="margin:0">No Facebook (página) e no CMS (criadas aqui).</p></div>' +
+      '<p class="cms-hint" style="margin:0">Facebook, Instagram e CMS desta marca.</p></div>' +
       '<div class="cms-tabs cms-tabs--sub">' +
       filters.map(function (f) {
         var n = f.id === 'all' ? state.posts.length : state.posts.filter(function (p) { return p.status === f.id; }).length;
@@ -709,47 +816,26 @@
       }).join('') +
       '</div></div>';
 
-    // --- Facebook (já publicados na Página) ---
-    html += '<div class="cms-meta-history">' +
-      '<div class="cms-meta-history__head">' +
-      '<div><h3>No Facebook · ' + esc(currentBrandInfo().short) + '</h3>' +
-      '<p class="cms-hint" style="margin:.2rem 0 0">Posts já na Página (feitos no CMS ou no Facebook).</p></div>' +
-      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-history-load">' +
-      (state.metaHistoryLoading ? 'A carregar…' : 'Actualizar') + '</button></div>';
+    html += renderMetaHistoryBlock({
+      platform: 'facebook',
+      title: 'No Facebook · ' + currentBrandInfo().short,
+      hint: 'Posts já na Página (feitos no CMS ou no Facebook).',
+      items: state.metaHistory,
+      error: state.metaHistoryError,
+      ready: true,
+      deleteLabel: 'Apagar no Facebook',
+    });
 
-    if (!state.meta.configured) {
-      html += '<p class="cms-hint">Configure a Meta desta marca para ver e apagar posts da Página.</p>';
-    } else if (state.metaHistoryError) {
-      html += '<p class="cms-status is-error">' + esc(state.metaHistoryError) + '</p>';
-    } else if (state.metaHistoryLoading && !(state.metaHistory && state.metaHistory.length)) {
-      html += '<p class="cms-hint">A carregar publicações do Facebook…</p>';
-    } else if (state.metaHistory && state.metaHistory.length) {
-      html += '<div class="cms-meta-history__rows">';
-      state.metaHistory.forEach(function (item) {
-        var href = item.permalink_url || ('https://www.facebook.com/' + item.id);
-        var imgs = Array.isArray(item.images) && item.images.length
-          ? item.images
-          : (item.full_picture ? [item.full_picture] : []);
-        var thumb = imgs[0] || '';
-        var more = imgs.length > 1 ? '<em>+' + (imgs.length - 1) + '</em>' : '';
-        html += '<div class="cms-meta-history__row">' +
-          (thumb
-            ? '<button type="button" class="cms-meta-history__thumb" data-meta-lightbox="' +
-              esc(imgs.join('|')) + '" title="Ver imagens">' +
-              '<img src="' + esc(thumb) + '" alt="" loading="lazy" />' + more + '</button>'
-            : '<span class="cms-meta-history__ph"></span>') +
-          '<a href="' + esc(href) + '" target="_blank" rel="noopener" data-stop>' +
-          '<strong>' + esc(fmtDateTime(item.created_time)) + '</strong>' +
-          '<span>' + esc((item.message || 'Sem texto').slice(0, 140)) + '</span></a>' +
-          '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" data-delete-meta-id="' +
-          esc(item.id) + '" title="Apagar no Facebook">Apagar</button>' +
-          '</div>';
-      });
-      html += '</div>';
-    } else {
-      html += '<p class="cms-hint">Ainda sem dados. Clique em <em>Actualizar</em> para carregar da Página.</p>';
-    }
-    html += '</div>';
+    html += renderMetaHistoryBlock({
+      platform: 'instagram',
+      title: 'No Instagram · ' + currentBrandInfo().short,
+      hint: 'Posts já no perfil Instagram Business ligado a esta marca.',
+      items: state.igHistory,
+      error: state.igHistoryError,
+      ready: igReady,
+      notReadyMsg: 'Ligue o Instagram Business em «Configurar Meta» (ID do Instagram) para ver o histórico.',
+      deleteLabel: 'Apagar no Instagram',
+    });
 
     // --- CMS ---
     html += '<div class="cms-posts-list__tools">' +
@@ -775,7 +861,7 @@
     if (!pagePosts.length) {
       html += '<p class="cms-hint">Nenhuma publicação criada neste CMS' +
         (state.listQuery ? ' / pesquisa' : '') +
-        '. Os posts antigos do Facebook estão na secção acima.</p></div>';
+        '. Os posts das redes estão nas secções acima.</p></div>';
       return html;
     }
 
@@ -1704,28 +1790,33 @@
       };
     }
 
-    var metaHistoryBtn = document.getElementById('cms-meta-history-load');
-    if (metaHistoryBtn) {
-      metaHistoryBtn.onclick = function () { loadMetaHistory(false); };
-    }
+    document.querySelectorAll('.cms-meta-history-refresh').forEach(function (btn) {
+      btn.onclick = function () { loadMetaHistory(false); };
+    });
 
     document.querySelectorAll('[data-delete-meta-id]').forEach(function (btn) {
       btn.onclick = function (e) {
         e.preventDefault();
         e.stopPropagation();
         var id = btn.getAttribute('data-delete-meta-id');
+        var platform = btn.getAttribute('data-delete-meta-platform') || 'facebook';
         if (!id) return;
-        if (!confirm('Apagar esta publicação no Facebook?\n\nEsta acção não se pode desfazer.')) return;
+        var net = platform === 'instagram' ? 'Instagram' : 'Facebook';
+        if (!confirm('Apagar esta publicação no ' + net + '?\n\nEsta acção não se pode desfazer.')) return;
         api('social.php', {
           method: 'POST',
-          body: apiBrandBody({ action: 'delete_meta_post', meta_post_id: id }),
+          body: apiBrandBody({ action: 'delete_meta_post', meta_post_id: id, platform: platform }),
         }).then(function (data) {
           if (data.posts) state.posts = data.posts;
-          state.metaHistory = (state.metaHistory || []).filter(function (p) { return p.id !== id; });
-          toast('Publicação apagada no Facebook');
+          if (platform === 'instagram') {
+            state.igHistory = (state.igHistory || []).filter(function (p) { return p.id !== id; });
+          } else {
+            state.metaHistory = (state.metaHistory || []).filter(function (p) { return p.id !== id; });
+          }
+          toast('Publicação apagada no ' + net);
           global.StoffusCmsRerender();
         }).catch(function (err) {
-          toast(err.error || 'Erro ao apagar no Facebook.');
+          toast(err.error || ('Erro ao apagar no ' + net + '.'));
         });
       };
     });
