@@ -299,7 +299,6 @@
     state.metaHistory = [];
     state.metaHistoryError = '';
     load().then(function () {
-      toast('A gerir: ' + (currentBrandInfo().label || brandId));
       global.StoffusCmsRerender();
     }).catch(function (err) {
       toast(err.error || 'Erro ao mudar de marca.');

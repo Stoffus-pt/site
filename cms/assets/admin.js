@@ -52,11 +52,18 @@
   window.StoffusCmsApi = api;
 
   function toast(msg) {
+    document.querySelectorAll('.cms-toast').forEach(function (old) { old.remove(); });
     var el = document.createElement('div');
     el.className = 'cms-toast';
+    el.setAttribute('role', 'status');
     el.textContent = msg;
     document.body.appendChild(el);
-    setTimeout(function () { el.remove(); }, 2800);
+    requestAnimationFrame(function () { el.classList.add('is-visible'); });
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () {
+      el.classList.remove('is-visible');
+      setTimeout(function () { el.remove(); }, 220);
+    }, 2600);
   }
 
   window.StoffusCmsToast = toast;
