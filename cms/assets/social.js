@@ -199,6 +199,9 @@
     var n = (p.media || []).length;
     var fromMeta = isMetaCalPost(p);
     var label = fromMeta ? 'No Facebook' : statusLabel(p.status);
+    var delAttr = fromMeta
+      ? ' data-delete-meta-id="' + esc(String(p.id).replace(/^meta:/, '')) + '"'
+      : ' data-delete-post="' + esc(p.id) + '"';
     return '<div class="cms-board-post is-' + esc(p.status || 'draft') +
       (fromMeta ? ' is-meta' : '') +
       (state.selectedPostId === p.id ? ' is-selected' : '') +
@@ -211,7 +214,9 @@
       '<span class="cms-board-post__txt">' +
       '<strong>' + esc(time) + '</strong>' +
       (!compact ? '<em>' + esc(label) + (n ? ' · ' + n + 'º' : '') + '</em>' : '') +
-      '</span></div>';
+      '</span>' +
+      '<button type="button" class="cms-board-post__del" title="Apagar"' + delAttr + '>×</button>' +
+      '</div>';
   }
 
   function renderBoardDay(day, opts) {
@@ -310,17 +315,25 @@
           : platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
         var drag = canDragPost(p);
         var stLabel = fromMeta ? 'No Facebook' : statusLabel(p.status);
-        return '<button type="button" class="cms-agenda-card is-' + esc(p.status || 'draft') +
+        var delBtn = fromMeta
+          ? '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-agenda-card__del" data-delete-meta-id="' +
+            esc(String(p.id).replace(/^meta:/, '')) + '" title="Apagar no Facebook">Apagar</button>'
+          : '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm cms-agenda-card__del" data-delete-post="' +
+            esc(p.id) + '" title="Apagar">Apagar</button>';
+        return '<div class="cms-agenda-card is-' + esc(p.status || 'draft') +
           (fromMeta ? ' is-meta' : '') +
           (state.selectedPostId === p.id ? ' is-selected' : '') +
-          '" ' + (drag ? 'draggable="true" ' : '') + 'data-post-id="' + esc(p.id) + '">' +
+          '"' + (drag ? ' draggable="true" data-post-id="' + esc(p.id) + '"' : '') + '>' +
+          '<button type="button" class="cms-agenda-card__main" data-post-id="' + esc(p.id) + '">' +
           '<div class="cms-agenda-card__thumbs">' + (thumbs || '<span class="cms-agenda-card__ph"></span>') + '</div>' +
           '<div class="cms-agenda-card__body">' +
           '<strong>' + esc(time) + ' · ' + esc(stLabel) + '</strong>' +
           '<span>' + (p.media || []).length + ' foto(s) · ' + esc(plats || 'sem rede') +
-          (drag ? ' · arrastável' : fromMeta ? ' · só leitura' : '') + '</span>' +
+          (drag ? ' · arrastável' : fromMeta ? ' · clique para abrir' : ' · clique para editar') + '</span>' +
           '<em>' + esc((p.caption || 'Sem legenda').slice(0, 90)) + '</em>' +
-          '</div></button>';
+          '</div></button>' +
+          delBtn +
+          '</div>';
       }).join('') +
       '</div></div>';
     return html;
@@ -350,7 +363,7 @@
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-next">' +
       (state.calView === 'week' ? 'Semana →' : 'Mês →') + '</button>' +
       '</div>' +
-      '<p class="cms-board-tip">Verde = já publicadas (CMS ou Página Facebook). Arraste só agendadas / rascunhos. Clique numa do Facebook para abrir.</p>' +
+      '<p class="cms-board-tip">Verde = já publicadas. Use <strong>×</strong> ou <strong>Apagar</strong> no dia seleccionado. Arraste só agendadas / rascunhos.</p>' +
       (state.calView === 'week' ? renderWeekBoard() : renderMonthBoard()) +
       renderSelectedDayPanel() +
       '</div>';
@@ -1194,6 +1207,10 @@
       state.weekStart = state.calView === 'week' ? startOfWeek(when) : startOfMonth(when);
     }
     global.StoffusCmsRerender();
+    setTimeout(function () {
+      var edit = document.querySelector('.cms-post-edit');
+      if (edit) edit.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 40);
   }
 
   function movePostToDay(id, dayKeyStr) {
@@ -1756,6 +1773,7 @@
     document.querySelectorAll('[data-post-id]').forEach(function (el) {
       el.addEventListener('click', function (e) {
         if (e.target.closest('[data-delete-post]')) return;
+        if (e.target.closest('[data-delete-meta-id]')) return;
         if (e.target.closest('[data-stop]')) return;
         e.stopPropagation();
         selectPost(el.getAttribute('data-post-id'), true);
@@ -1763,6 +1781,10 @@
       if (el.classList.contains('cms-board-post') || el.classList.contains('cms-agenda-card')) {
         if (el.getAttribute('draggable') === 'true') {
           el.addEventListener('dragstart', function (e) {
+            if (e.target.closest('[data-delete-post]') || e.target.closest('[data-delete-meta-id]')) {
+              e.preventDefault();
+              return;
+            }
             e.dataTransfer.setData('text/post-id', el.getAttribute('data-post-id'));
             e.dataTransfer.effectAllowed = 'move';
             el.classList.add('is-dragging');
@@ -1777,6 +1799,7 @@
     document.querySelectorAll('[data-delete-post]').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.stopPropagation();
+        e.preventDefault();
         var id = btn.getAttribute('data-delete-post');
         var post = state.posts.find(function (p) { return p.id === id; });
         var conf = confirmDeletePost(post);

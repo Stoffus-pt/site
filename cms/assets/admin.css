@@ -1196,8 +1196,8 @@ button, input, textarea, select {
 
 .cms-agenda-card {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.75rem;
+  grid-template-columns: 1fr auto;
+  gap: 0.55rem;
   align-items: center;
   width: 100%;
   text-align: left;
@@ -1205,8 +1205,29 @@ button, input, textarea, select {
   border-radius: var(--radius);
   border: 1px solid transparent;
   background: #fff;
-  cursor: grab;
   color: inherit;
+}
+
+.cms-agenda-card[draggable="true"] { cursor: grab; }
+
+.cms-agenda-card__main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.cms-agenda-card__del {
+  flex-shrink: 0;
 }
 
 .cms-agenda-card:hover,
@@ -1214,7 +1235,7 @@ button, input, textarea, select {
   border-color: rgba(224, 78, 38, 0.35);
 }
 
-.cms-agenda-card.is-published { opacity: 0.78; }
+.cms-agenda-card.is-published { opacity: 0.92; }
 .cms-agenda-card.is-failed { border-color: #f0c4c4; }
 .cms-agenda-card.is-draft { border-style: dashed; }
 
