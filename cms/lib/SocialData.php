@@ -249,6 +249,112 @@ function cms_social_accounts_status(): array
 }
 
 /**
+ * Lista Páginas Facebook acessíveis com um User Token (ou token com pages_show_list).
+ * Cada entrada inclui o Page Access Token próprio da página.
+ *
+ * @return list<array{id:string,name:string,access_token:string,instagram_business_id:string}>
+ */
+function cms_social_meta_discover_pages(string $accessToken): array
+{
+    $accessToken = trim($accessToken);
+    if ($accessToken === '') {
+        throw new RuntimeException('Indique o token da Meta.');
+    }
+
+    $data = cms_social_http_json(
+        'https://graph.facebook.com/v21.0/me/accounts',
+        [
+            'fields' => 'id,name,access_token',
+            'limit' => 50,
+            'access_token' => $accessToken,
+        ]
+    );
+
+    $out = [];
+    foreach (($data['data'] ?? []) as $row) {
+        if (!is_array($row)) {
+            continue;
+        }
+        $pageId = trim((string) ($row['id'] ?? ''));
+        $pageToken = trim((string) ($row['access_token'] ?? ''));
+        if ($pageId === '') {
+            continue;
+        }
+        $igId = '';
+        $tokenForPage = $pageToken !== '' ? $pageToken : $accessToken;
+        try {
+            $detail = cms_social_http_json(
+                'https://graph.facebook.com/v21.0/' . rawurlencode($pageId),
+                [
+                    'fields' => 'instagram_business_account',
+                    'access_token' => $tokenForPage,
+                ]
+            );
+            $ig = $detail['instagram_business_account'] ?? null;
+            if (is_array($ig)) {
+                $igId = trim((string) ($ig['id'] ?? ''));
+            }
+        } catch (Throwable $e) {
+            // Instagram opcional — continua só com a Página
+        }
+        $out[] = [
+            'id' => $pageId,
+            'name' => (string) ($row['name'] ?? $pageId),
+            'access_token' => $pageToken !== '' ? $pageToken : $accessToken,
+            'instagram_business_id' => $igId,
+        ];
+    }
+
+    if (!$out) {
+        throw new RuntimeException(
+            'Nenhuma Página encontrada. Confirme permissões pages_show_list / pages_manage_posts e que o token é de utilizador (não só de uma Página).'
+        );
+    }
+
+    return $out;
+}
+
+/**
+ * Guarda mapeamento marca → página a partir da descoberta.
+ *
+ * @param array<string, array{page_id?:string, page_access_token?:string, instagram_business_id?:string}> $assignments
+ */
+function cms_social_meta_import_assignments(array $assignments): array
+{
+    $all = cms_social_meta_accounts_stored();
+    foreach (array_keys(cms_social_brands()) as $id) {
+        if (!isset($all[$id]) || !is_array($all[$id])) {
+            $all[$id] = [
+                'page_id' => '',
+                'page_access_token' => '',
+                'instagram_business_id' => '',
+            ];
+        }
+    }
+
+    foreach ($assignments as $brand => $row) {
+        $brand = cms_social_normalize_brand((string) $brand);
+        if (!is_array($row)) {
+            continue;
+        }
+        $pageId = trim((string) ($row['page_id'] ?? ''));
+        $token = trim((string) ($row['page_access_token'] ?? ''));
+        $ig = trim((string) ($row['instagram_business_id'] ?? ''));
+        if ($pageId === '' || $token === '') {
+            continue;
+        }
+        $all[$brand] = [
+            'page_id' => $pageId,
+            'page_access_token' => $token,
+            'instagram_business_id' => $ig,
+        ];
+    }
+
+    cms_social_meta_accounts_save($all);
+    return cms_social_accounts_status();
+}
+
+/**
  * Últimas publicações da página Facebook (Graph API).
  *
  * @return list<array{id:string,message:string,created_time:string,permalink_url:string}>

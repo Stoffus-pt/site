@@ -113,6 +113,37 @@ try {
         ]);
     }
 
+    if ($action === 'discover_pages') {
+        $token = trim((string) ($input['access_token'] ?? ''));
+        $pages = cms_social_meta_discover_pages($token);
+        // Não devolver tokens completos na lista — só preview; o import envia de novo pelo índice
+        // Na prática o import precisa dos tokens: devolvemos e o UI guarda em memória só até importar.
+        cms_json([
+            'ok' => true,
+            'pages' => array_map(static function (array $p): array {
+                return [
+                    'id' => $p['id'],
+                    'name' => $p['name'],
+                    'access_token' => $p['access_token'],
+                    'instagram_business_id' => $p['instagram_business_id'],
+                    'token_preview' => $p['access_token'] !== ''
+                        ? substr($p['access_token'], 0, 6) . '…' . substr($p['access_token'], -4)
+                        : '',
+                ];
+            }, $pages),
+        ]);
+    }
+
+    if ($action === 'import_pages') {
+        $assignments = is_array($input['assignments'] ?? null) ? $input['assignments'] : [];
+        $brands = cms_social_meta_import_assignments($assignments);
+        cms_json([
+            'ok' => true,
+            'brands' => $brands,
+            'meta' => cms_social_meta_ready($brand),
+        ]);
+    }
+
     if ($action === 'save_settings') {
         $settings = is_array($input['settings'] ?? null) ? $input['settings'] : [];
         $split = (int) ($settings['autoSplitSize'] ?? $data['settings']['autoSplitSize']);

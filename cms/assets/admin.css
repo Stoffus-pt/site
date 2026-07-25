@@ -696,6 +696,33 @@ button, input, textarea, select {
   margin: 0 0 0.25rem;
 }
 
+.cms-meta-import-box {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  margin-bottom: 0.35rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(224, 78, 38, 0.18);
+  background: linear-gradient(180deg, rgba(224, 78, 38, 0.06), rgba(255, 255, 255, 0.5));
+}
+
+.cms-social[data-brand="divinus"] .cms-meta-import-box {
+  border-color: rgba(0, 168, 214, 0.22);
+  background: linear-gradient(180deg, rgba(0, 168, 214, 0.08), rgba(255, 255, 255, 0.5));
+}
+
+.cms-meta-discover {
+  display: grid;
+  gap: 0.55rem;
+  padding-top: 0.35rem;
+}
+
+.cms-meta-hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 1rem 0 0.85rem;
+}
+
 .cms-meta-config__form {
   margin-top: 1rem;
   padding-top: 0.85rem;

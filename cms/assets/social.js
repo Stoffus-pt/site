@@ -38,6 +38,8 @@
     metaHistoryError: '',
     uploading: false,
     metaFormOpen: false,
+    discoveredPages: [],
+    discoverMap: { stoffus: '', divinus: '' },
   };
 
   function esc(s) {
@@ -719,18 +721,66 @@
       '</div>';
   }
 
+  function guessPageForBrand(brandId, pages) {
+    var needles = brandId === 'divinus'
+      ? ['divinus', 'confort']
+      : ['stoffus'];
+    for (var i = 0; i < pages.length; i++) {
+      var name = String(pages[i].name || '').toLowerCase();
+      for (var n = 0; n < needles.length; n++) {
+        if (name.indexOf(needles[n]) >= 0) return pages[i].id;
+      }
+    }
+    return pages[0] ? pages[0].id : '';
+  }
+
   function renderMetaConfig() {
     var info = currentBrandInfo();
     var meta = state.meta || {};
     var open = !!state.metaFormOpen;
+    var pages = state.discoveredPages || [];
+    var map = state.discoverMap || { stoffus: '', divinus: '' };
+
+    var discoverHtml = '';
+    if (pages.length) {
+      discoverHtml = '<div class="cms-meta-discover">' +
+        '<p class="cms-hint" style="margin:0 0 .5rem"><strong>' + pages.length +
+        ' página(s)</strong> encontradas no token. Associe cada marca:</p>' +
+        state.brands.map(function (b) {
+          return '<label class="cms-field"><span>' + esc(b.label) + '</span>' +
+            '<select class="cms-input" data-discover-brand="' + esc(b.id) + '">' +
+            '<option value="">— Não associar —</option>' +
+            pages.map(function (p) {
+              var sel = map[b.id] === p.id ? ' selected' : '';
+              return '<option value="' + esc(p.id) + '"' + sel + '>' +
+                esc(p.name) + ' (' + esc(p.id) + ')' +
+                (p.instagram_business_id ? ' · IG' : '') +
+                '</option>';
+            }).join('') +
+            '</select></label>';
+        }).join('') +
+        '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-meta-import" style="margin-top:.5rem">' +
+        'Guardar Stoffus + Divinus</button></div>';
+    }
+
     return '<section class="cms-surface cms-meta-config">' +
       '<div class="cms-meta-config__head">' +
-      '<div><h2>Configuração Meta · ' + esc(info.label) + '</h2>' +
-      '<p class="cms-hint">Page ID e token da Página. O token completo nunca é mostrado depois de guardado.</p></div>' +
+      '<div><h2>Configuração Meta · Stoffus Socials</h2>' +
+      '<p class="cms-hint">Um token de utilizador com as duas Páginas basta — carregamos Stoffus e Divinus de uma vez.</p></div>' +
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-toggle">' +
       (open ? 'Fechar' : 'Configurar Meta') + '</button></div>' +
       (open
         ? '<div class="cms-meta-config__form">' +
+          '<div class="cms-meta-import-box">' +
+          '<label class="cms-field"><span>Token (User Access Token com as Páginas)</span>' +
+          '<input class="cms-input" type="password" id="cms-meta-user-token" value="" ' +
+          'placeholder="Cole o token gerado na Meta (Graph API Explorer ou app Stoffus Socials)" autocomplete="new-password" /></label>' +
+          '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-meta-discover">Carregar páginas do token</button>' +
+          '<p class="cms-hint">O sistema obtém o Page Token de cada Página (Stoffus e Divinus Confort).</p>' +
+          discoverHtml +
+          '</div>' +
+          '<hr class="cms-meta-hr" />' +
+          '<p class="cms-hint"><strong>Ajuste manual · ' + esc(info.label) + '</strong> (só se precisar)</p>' +
           '<label class="cms-field"><span>Page ID</span>' +
           '<input class="cms-input" type="text" id="cms-meta-page-id" value="' + esc(meta.page_id || '') +
           '" placeholder="Ex.: 232459563473506" autocomplete="off" /></label>' +
@@ -743,9 +793,10 @@
           '<label class="cms-field"><span>Instagram Business ID (opcional)</span>' +
           '<input class="cms-input" type="text" id="cms-meta-ig" value="' + esc(meta.instagram_business_id || '') +
           '" placeholder="Deixe vazio por agora" autocomplete="off" /></label>' +
-          '<label class="cms-pill"><input type="checkbox" id="cms-meta-clear-token" /> Apagar token guardado</label>' +
+          '<label class="cms-pill"><input type="checkbox" id="cms-meta-clear-token" /> Apagar token guardado desta marca</label>' +
           '<div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.75rem">' +
-          '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-meta-save">Guardar Meta</button>' +
+          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-save">Guardar só ' +
+          esc(info.short) + '</button>' +
           '</div>' +
           '<p class="cms-hint">Para publicar, o CMS tem de estar online (a Meta precisa de ler as imagens por URL público).</p>' +
           '</div>'
@@ -973,6 +1024,87 @@
           global.StoffusCmsRerender();
         }).catch(function (err) {
           toast(err.error || 'Erro ao guardar Meta.');
+        });
+      };
+    }
+
+    var metaDiscover = document.getElementById('cms-meta-discover');
+    if (metaDiscover) {
+      metaDiscover.onclick = function () {
+        var token = ((document.getElementById('cms-meta-user-token') || {}).value || '').trim();
+        if (!token) {
+          toast('Cole o token da Meta (User Access Token).');
+          return;
+        }
+        toast('A carregar páginas…');
+        api('social.php', {
+          method: 'POST',
+          body: { action: 'discover_pages', brand: state.brand, access_token: token },
+        }).then(function (data) {
+          state.discoveredPages = data.pages || [];
+          state.discoverMap = {
+            stoffus: guessPageForBrand('stoffus', state.discoveredPages),
+            divinus: guessPageForBrand('divinus', state.discoveredPages),
+          };
+          if (state.discoverMap.stoffus && state.discoverMap.stoffus === state.discoverMap.divinus) {
+            // Evitar a mesma página nas duas marcas se houver mais opções
+            var other = state.discoveredPages.find(function (p) {
+              return p.id !== state.discoverMap.stoffus;
+            });
+            if (other) state.discoverMap.divinus = other.id;
+          }
+          toast(state.discoveredPages.length + ' página(s) encontradas');
+          global.StoffusCmsRerender();
+        }).catch(function (err) {
+          toast(err.error || 'Não foi possível listar as páginas.');
+        });
+      };
+    }
+
+    document.querySelectorAll('[data-discover-brand]').forEach(function (sel) {
+      sel.onchange = function () {
+        var brand = sel.getAttribute('data-discover-brand');
+        state.discoverMap[brand] = sel.value || '';
+      };
+    });
+
+    var metaImport = document.getElementById('cms-meta-import');
+    if (metaImport) {
+      metaImport.onclick = function () {
+        var pages = state.discoveredPages || [];
+        if (!pages.length) {
+          toast('Carregue primeiro as páginas do token.');
+          return;
+        }
+        var assignments = {};
+        ['stoffus', 'divinus'].forEach(function (brandId) {
+          var pageId = (state.discoverMap || {})[brandId] || '';
+          var page = pages.find(function (p) { return p.id === pageId; });
+          if (page) {
+            assignments[brandId] = {
+              page_id: page.id,
+              page_access_token: page.access_token,
+              instagram_business_id: page.instagram_business_id || '',
+            };
+          }
+        });
+        if (!Object.keys(assignments).length) {
+          toast('Escolha pelo menos uma Página para uma marca.');
+          return;
+        }
+        api('social.php', {
+          method: 'POST',
+          body: { action: 'import_pages', brand: state.brand, assignments: assignments },
+        }).then(function (data) {
+          if (data.brands) state.brands = data.brands;
+          state.meta = data.meta || state.meta;
+          state.discoveredPages = [];
+          state.metaFormOpen = false;
+          var ok = (data.brands || []).filter(function (b) { return b.configured; }).length;
+          toast(ok + ' marca(s) com Meta OK');
+          global.StoffusCmsRerender();
+        }).catch(function (err) {
+          toast(err.error || 'Erro ao importar páginas.');
         });
       };
     }
