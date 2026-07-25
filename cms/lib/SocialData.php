@@ -736,6 +736,24 @@ function cms_social_publish_post(array &$post, ?string $brand = null): void
     $post['error'] = null;
 }
 
+function cms_social_meta_delete_post_id(string $brand, string $metaPostId): void
+{
+    $brand = cms_social_normalize_brand($brand);
+    $meta = cms_social_meta_config_for($brand);
+    $metaPostId = trim($metaPostId);
+    if ($metaPostId === '') {
+        throw new RuntimeException('ID da publicação Meta em falta.');
+    }
+    if ($meta['page_access_token'] === '') {
+        throw new RuntimeException('Meta desta marca ainda não está configurada.');
+    }
+    cms_social_http_json(
+        'https://graph.facebook.com/v21.0/' . rawurlencode($metaPostId),
+        ['access_token' => $meta['page_access_token']],
+        'DELETE'
+    );
+}
+
 /**
  * Apaga a publicação no Facebook / Instagram (se houver IDs Meta guardados).
  * @return array{facebook:?bool,instagram:?bool,errors:string[]}

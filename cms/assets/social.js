@@ -441,6 +441,34 @@
     });
   }
 
+  function loadMetaHistory(silent) {
+    if (!state.meta.configured) {
+      if (!silent) toast('Configure a Meta desta marca primeiro.');
+      return Promise.resolve();
+    }
+    state.metaHistoryLoading = true;
+    state.metaHistoryError = '';
+    if (!silent) global.StoffusCmsRerender();
+    return api('social.php?action=meta_history&brand=' + encodeURIComponent(state.brand) + '&limit=40')
+      .then(function (data) {
+        state.metaHistory = data.posts || [];
+        state.metaHistoryError = '';
+        if (!silent) {
+          if (!state.metaHistory.length) toast('Sem publicações recentes na página Facebook.');
+          else toast(state.metaHistory.length + ' publicação(ões) do Facebook');
+        }
+      })
+      .catch(function (err) {
+        state.metaHistory = [];
+        state.metaHistoryError = err.error || 'Não foi possível carregar o histórico do Facebook.';
+        if (!silent) toast(state.metaHistoryError);
+      })
+      .finally(function () {
+        state.metaHistoryLoading = false;
+        global.StoffusCmsRerender();
+      });
+  }
+
   function renderPostsList() {
     var filters = [
       { id: 'all', label: 'Todas' },
@@ -461,8 +489,8 @@
 
     var html = '<div class="cms-posts-list' + (expanded ? ' is-expanded' : '') + '">' +
       '<div class="cms-posts-list__head">' +
-      '<div><h2>Histórico e lista</h2>' +
-      '<p class="cms-hint" style="margin:0">' + state.posts.length + ' no CMS · ' + posts.length + ' neste filtro</p></div>' +
+      '<div><h2>Publicações</h2>' +
+      '<p class="cms-hint" style="margin:0">No Facebook (página) e no CMS (criadas aqui).</p></div>' +
       '<div class="cms-tabs cms-tabs--sub">' +
       filters.map(function (f) {
         var n = f.id === 'all' ? state.posts.length : state.posts.filter(function (p) { return p.status === f.id; }).length;
@@ -471,15 +499,49 @@
       }).join('') +
       '</div></div>';
 
+    // --- Facebook (já publicados na Página) ---
+    html += '<div class="cms-meta-history">' +
+      '<div class="cms-meta-history__head">' +
+      '<div><h3>No Facebook · ' + esc(currentBrandInfo().short) + '</h3>' +
+      '<p class="cms-hint" style="margin:.2rem 0 0">Posts já na Página (feitos no CMS ou no Facebook).</p></div>' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-history-load">' +
+      (state.metaHistoryLoading ? 'A carregar…' : 'Actualizar') + '</button></div>';
+
+    if (!state.meta.configured) {
+      html += '<p class="cms-hint">Configure a Meta desta marca para ver e apagar posts da Página.</p>';
+    } else if (state.metaHistoryError) {
+      html += '<p class="cms-status is-error">' + esc(state.metaHistoryError) + '</p>';
+    } else if (state.metaHistoryLoading && !(state.metaHistory && state.metaHistory.length)) {
+      html += '<p class="cms-hint">A carregar publicações do Facebook…</p>';
+    } else if (state.metaHistory && state.metaHistory.length) {
+      html += '<div class="cms-meta-history__rows">';
+      state.metaHistory.forEach(function (item) {
+        var href = item.permalink_url || ('https://www.facebook.com/' + item.id);
+        html += '<div class="cms-meta-history__row">' +
+          '<a href="' + esc(href) + '" target="_blank" rel="noopener" data-stop>' +
+          '<strong>' + esc(fmtDateTime(item.created_time)) + '</strong>' +
+          '<span>' + esc((item.message || 'Sem texto').slice(0, 140)) + '</span></a>' +
+          '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" data-delete-meta-id="' +
+          esc(item.id) + '" title="Apagar no Facebook">Apagar</button>' +
+          '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<p class="cms-hint">Ainda sem dados. Clique em <em>Actualizar</em> para carregar da Página.</p>';
+    }
+    html += '</div>';
+
+    // --- CMS ---
     html += '<div class="cms-posts-list__tools">' +
       '<input class="cms-input" type="search" id="cms-list-query" value="' + esc(state.listQuery) +
-      '" placeholder="Pesquisar legenda ou ID…" />' +
+      '" placeholder="Pesquisar no CMS…" />' +
       '<select class="cms-input" id="cms-list-sort">' +
       '<option value="newest"' + (state.listSort === 'newest' ? ' selected' : '') + '>Mais recentes</option>' +
       '<option value="oldest"' + (state.listSort === 'oldest' ? ' selected' : '') + '>Mais antigas</option>' +
       '</select></div>';
 
-    html += '<div class="cms-posts-list__actions">';
+    html += '<div class="cms-posts-list__actions">' +
+      '<strong class="cms-posts-list__sub">No CMS (' + state.posts.length + ')</strong>';
     if (draftCount > 0) {
       html += '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-drafts">' +
         'Apagar rascunhos (' + draftCount + ')</button>';
@@ -488,29 +550,12 @@
       html += '<button type="button" class="cms-btn cms-btn--danger cms-btn--sm" id="cms-social-delete-published">' +
         'Apagar publicadas CMS + Meta (' + publishedCount + ')</button>';
     }
-    html += '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-history-load">Ver no Facebook</button>';
     html += '</div>';
 
-    if (state.metaHistoryError) {
-      html += '<p class="cms-status is-error">' + esc(state.metaHistoryError) + '</p>';
-    }
-    if (state.metaHistoryLoading) {
-      html += '<p class="cms-hint">A carregar histórico do Facebook…</p>';
-    }
-    if (state.metaHistory && state.metaHistory.length) {
-      html += '<div class="cms-meta-history"><h3>Últimas no Facebook</h3><div class="cms-meta-history__rows">';
-      state.metaHistory.forEach(function (item) {
-        html += '<a class="cms-meta-history__row" href="' + esc(item.permalink_url || ('https://www.facebook.com/' + item.id)) +
-          '" target="_blank" rel="noopener">' +
-          '<strong>' + esc(fmtDateTime(item.created_time)) + '</strong>' +
-          '<span>' + esc((item.message || 'Sem texto').slice(0, 120)) + '</span></a>';
-      });
-      html += '</div></div>';
-    }
-
     if (!pagePosts.length) {
-      html += '<p class="cms-hint">Nenhuma publicação neste filtro' +
-        (state.listQuery ? ' / pesquisa' : '') + '.</p></div>';
+      html += '<p class="cms-hint">Nenhuma publicação criada neste CMS' +
+        (state.listQuery ? ' / pesquisa' : '') +
+        '. Os posts antigos do Facebook estão na secção acima.</p></div>';
       return html;
     }
 
@@ -1361,7 +1406,12 @@
         var view = btn.getAttribute('data-panel-view');
         if (!view || view === state.panelView) return;
         state.panelView = view;
-        if (view === 'history') state.listPage = 1;
+        if (view === 'history') {
+          state.listPage = 1;
+          global.StoffusCmsRerender();
+          loadMetaHistory(true);
+          return;
+        }
         global.StoffusCmsRerender();
       };
     });
@@ -1411,32 +1461,29 @@
 
     var metaHistoryBtn = document.getElementById('cms-meta-history-load');
     if (metaHistoryBtn) {
-      metaHistoryBtn.onclick = function () {
-        if (!state.meta.configured) {
-          toast('Configure a Meta desta marca primeiro.');
-          return;
-        }
-        state.metaHistoryLoading = true;
-        state.metaHistoryError = '';
-        global.StoffusCmsRerender();
-        api('social.php?action=meta_history&brand=' + encodeURIComponent(state.brand) + '&limit=25')
-          .then(function (data) {
-            state.metaHistory = data.posts || [];
-            state.metaHistoryError = '';
-            if (!state.metaHistory.length) toast('Sem publicações recentes na página Facebook.');
-            else toast(state.metaHistory.length + ' publicação(ões) do Facebook');
-          })
-          .catch(function (err) {
-            state.metaHistory = [];
-            state.metaHistoryError = err.error || 'Não foi possível carregar o histórico do Facebook.';
-            toast(state.metaHistoryError);
-          })
-          .finally(function () {
-            state.metaHistoryLoading = false;
-            global.StoffusCmsRerender();
-          });
-      };
+      metaHistoryBtn.onclick = function () { loadMetaHistory(false); };
     }
+
+    document.querySelectorAll('[data-delete-meta-id]').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var id = btn.getAttribute('data-delete-meta-id');
+        if (!id) return;
+        if (!confirm('Apagar esta publicação no Facebook?\n\nEsta acção não se pode desfazer.')) return;
+        api('social.php', {
+          method: 'POST',
+          body: apiBrandBody({ action: 'delete_meta_post', meta_post_id: id }),
+        }).then(function (data) {
+          if (data.posts) state.posts = data.posts;
+          state.metaHistory = (state.metaHistory || []).filter(function (p) { return p.id !== id; });
+          toast('Publicação apagada no Facebook');
+          global.StoffusCmsRerender();
+        }).catch(function (err) {
+          toast(err.error || 'Erro ao apagar no Facebook.');
+        });
+      };
+    });
 
     // Clique no dia = escolher dia de agendamento do próximo lote
     document.querySelectorAll('[data-cal-day]').forEach(function (dayEl) {

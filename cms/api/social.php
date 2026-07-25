@@ -175,6 +175,25 @@ try {
         ]);
     }
 
+    if ($action === 'delete_meta_post') {
+        $metaId = trim((string) ($input['meta_post_id'] ?? ''));
+        cms_social_meta_delete_post_id($brand, $metaId);
+        // Se existir no CMS com este ID, limpar referência
+        foreach ($data['posts'] as &$post) {
+            $ids = is_array($post['metaPostIds'] ?? null) ? $post['metaPostIds'] : [];
+            if (($ids['facebook'] ?? '') === $metaId) {
+                unset($post['metaPostIds']['facebook']);
+            }
+        }
+        unset($post);
+        cms_social_save($data, $brand);
+        cms_json([
+            'ok' => true,
+            'brand' => $brand,
+            'posts' => $data['posts'],
+        ]);
+    }
+
     if ($action === 'save_settings') {
         $settings = is_array($input['settings'] ?? null) ? $input['settings'] : [];
         $split = (int) ($settings['autoSplitSize'] ?? $data['settings']['autoSplitSize']);
