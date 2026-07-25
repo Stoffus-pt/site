@@ -717,10 +717,38 @@ button, input, textarea, select {
   padding-top: 0.35rem;
 }
 
-.cms-meta-hr {
-  border: 0;
-  border-top: 1px solid var(--line);
-  margin: 1rem 0 0.85rem;
+.cms-meta-missing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.65rem 0 0;
+}
+
+.cms-meta-missing span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(180, 83, 9, 0.12);
+  color: #b45309;
+}
+
+.cms-meta-missing span.is-ok {
+  background: rgba(6, 118, 71, 0.12);
+  color: #067647;
+}
+
+.cms-meta-page-list {
+  margin: 0 0 0.55rem;
+  padding-left: 1.1rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.cms-meta-page-list li {
+  margin: 0.2rem 0;
 }
 
 .cms-meta-config__form {

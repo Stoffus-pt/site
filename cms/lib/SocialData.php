@@ -261,57 +261,193 @@ function cms_social_meta_discover_pages(string $accessToken): array
         throw new RuntimeException('Indique o token da Meta.');
     }
 
-    $data = cms_social_http_json(
-        'https://graph.facebook.com/v21.0/me/accounts',
-        [
-            'fields' => 'id,name,access_token',
-            'limit' => 50,
-            'access_token' => $accessToken,
-        ]
-    );
+    $tokenKind = 'desconhecido';
+    $meName = '';
+    $meId = '';
+    try {
+        $me = cms_social_http_json(
+            'https://graph.facebook.com/v21.0/me',
+            [
+                'fields' => 'id,name',
+                'access_token' => $accessToken,
+            ]
+        );
+        $meId = trim((string) ($me['id'] ?? ''));
+        $meName = trim((string) ($me['name'] ?? ''));
+    } catch (Throwable $e) {
+        throw new RuntimeException('Token inválido ou expirado: ' . $e->getMessage());
+    }
 
     $out = [];
-    foreach (($data['data'] ?? []) as $row) {
-        if (!is_array($row)) {
-            continue;
+    $url = 'https://graph.facebook.com/v21.0/me/accounts';
+    $params = [
+        'fields' => 'id,name,access_token',
+        'limit' => 50,
+        'access_token' => $accessToken,
+    ];
+
+    try {
+        for ($page = 0; $page < 5; $page++) {
+            $data = cms_social_http_json($url, $params);
+            foreach (($data['data'] ?? []) as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $entry = cms_social_meta_page_entry_from_graph($row, $accessToken);
+                if ($entry !== null) {
+                    $out[$entry['id']] = $entry;
+                }
+            }
+            $next = (string) ($data['paging']['next'] ?? '');
+            if ($next === '') {
+                break;
+            }
+            // Seguir cursor
+            $url = $next;
+            $params = [];
         }
-        $pageId = trim((string) ($row['id'] ?? ''));
-        $pageToken = trim((string) ($row['access_token'] ?? ''));
-        if ($pageId === '') {
-            continue;
+        if ($out) {
+            $tokenKind = 'utilizador';
         }
-        $igId = '';
-        $tokenForPage = $pageToken !== '' ? $pageToken : $accessToken;
+    } catch (Throwable $e) {
+        // Pode ser token de Página — tentar tratar /me como Página
+        $accountsError = $e->getMessage();
+    }
+
+    // Token de uma só Página: /me é a própria Página e /me/accounts vem vazio
+    if (!$out && $meId !== '') {
+        try {
+            $pageProbe = cms_social_http_json(
+                'https://graph.facebook.com/v21.0/' . rawurlencode($meId),
+                [
+                    'fields' => 'id,name,access_token,instagram_business_account',
+                    'access_token' => $accessToken,
+                ]
+            );
+            $entry = cms_social_meta_page_entry_from_graph(
+                [
+                    'id' => $pageProbe['id'] ?? $meId,
+                    'name' => $pageProbe['name'] ?? $meName,
+                    'access_token' => $pageProbe['access_token'] ?? $accessToken,
+                    'instagram_business_account' => $pageProbe['instagram_business_account'] ?? null,
+                ],
+                $accessToken
+            );
+            if ($entry !== null) {
+                $out[$entry['id']] = $entry;
+                $tokenKind = 'pagina';
+            }
+        } catch (Throwable $e) {
+            // ignore
+        }
+    }
+
+    $out = array_values($out);
+
+    if (!$out) {
+        $hint = isset($accountsError) ? (' (' . $accountsError . ')') : '';
+        throw new RuntimeException(
+            'Nenhuma Página encontrada' . $hint . '. ' .
+            'Precisa de um User Access Token (Graph API Explorer → Generate Access Token), ' .
+            'com pages_show_list e pages_manage_posts, e ao autorizar seleccione Stoffus e Divinus Confort.'
+        );
+    }
+
+    if ($tokenKind === 'pagina' && count($out) === 1) {
+        // Devolve a página, mas o UI deve avisar que falta User Token para a outra marca
+        $out[0]['_token_kind'] = 'pagina';
+        $out[0]['_warning'] =
+            'Este token é de uma única Página (' . $out[0]['name'] . '). ' .
+            'Para a Divinus, gere um User Access Token e autorize também a Página Divinus Confort.';
+    }
+
+    return $out;
+}
+
+/**
+ * @param array<string,mixed> $row
+ * @return array{id:string,name:string,access_token:string,instagram_business_id:string}|null
+ */
+function cms_social_meta_page_entry_from_graph(array $row, string $fallbackToken): ?array
+{
+    $pageId = trim((string) ($row['id'] ?? ''));
+    if ($pageId === '') {
+        return null;
+    }
+    $pageToken = trim((string) ($row['access_token'] ?? ''));
+    if ($pageToken === '') {
+        $pageToken = $fallbackToken;
+    }
+    $igId = '';
+    $ig = $row['instagram_business_account'] ?? null;
+    if (is_array($ig)) {
+        $igId = trim((string) ($ig['id'] ?? ''));
+    } elseif ($igId === '') {
         try {
             $detail = cms_social_http_json(
                 'https://graph.facebook.com/v21.0/' . rawurlencode($pageId),
                 [
                     'fields' => 'instagram_business_account',
-                    'access_token' => $tokenForPage,
+                    'access_token' => $pageToken,
                 ]
             );
-            $ig = $detail['instagram_business_account'] ?? null;
-            if (is_array($ig)) {
-                $igId = trim((string) ($ig['id'] ?? ''));
+            $ig2 = $detail['instagram_business_account'] ?? null;
+            if (is_array($ig2)) {
+                $igId = trim((string) ($ig2['id'] ?? ''));
             }
         } catch (Throwable $e) {
-            // Instagram opcional — continua só com a Página
+            // Instagram opcional
         }
-        $out[] = [
-            'id' => $pageId,
-            'name' => (string) ($row['name'] ?? $pageId),
-            'access_token' => $pageToken !== '' ? $pageToken : $accessToken,
-            'instagram_business_id' => $igId,
-        ];
     }
 
-    if (!$out) {
+    return [
+        'id' => $pageId,
+        'name' => (string) ($row['name'] ?? $pageId),
+        'access_token' => $pageToken,
+        'instagram_business_id' => $igId,
+    ];
+}
+
+/**
+ * Resolve uma Página pelo ID a partir do token (lista /me/accounts).
+ *
+ * @return array{id:string,name:string,access_token:string,instagram_business_id:string}
+ */
+function cms_social_meta_resolve_page(string $accessToken, string $pageId): array
+{
+    $pageId = trim($pageId);
+    if ($pageId === '') {
+        throw new RuntimeException('Indique o Page ID da Divinus (ou da Página a associar).');
+    }
+    $pages = cms_social_meta_discover_pages($accessToken);
+    foreach ($pages as $p) {
+        if (($p['id'] ?? '') === $pageId) {
+            return $p;
+        }
+    }
+    // Tentativa directa (utilizador admin da Página)
+    try {
+        $detail = cms_social_http_json(
+            'https://graph.facebook.com/v21.0/' . rawurlencode($pageId),
+            [
+                'fields' => 'id,name,access_token,instagram_business_account',
+                'access_token' => $accessToken,
+            ]
+        );
+        $entry = cms_social_meta_page_entry_from_graph($detail, $accessToken);
+        if ($entry !== null && $entry['access_token'] !== '') {
+            return $entry;
+        }
+    } catch (Throwable $e) {
         throw new RuntimeException(
-            'Nenhuma Página encontrada. Confirme permissões pages_show_list / pages_manage_posts e que o token é de utilizador (não só de uma Página).'
+            'A Página ' . $pageId . ' não está neste token. ' .
+            'No Graph API Explorer regenere o User Token e, no ecrã de permissões, marque também «Divinus Confort». ' .
+            'Detalhe: ' . $e->getMessage()
         );
     }
-
-    return $out;
+    throw new RuntimeException(
+        'A Página ' . $pageId . ' não veio na lista do token. Autorize de novo incluindo Divinus Confort.'
+    );
 }
 
 /**

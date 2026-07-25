@@ -40,6 +40,7 @@
     metaFormOpen: false,
     discoveredPages: [],
     discoverMap: { stoffus: '', divinus: '' },
+    discoverWarning: '',
   };
 
   function esc(s) {
@@ -740,22 +741,31 @@
     var open = !!state.metaFormOpen;
     var pages = state.discoveredPages || [];
     var map = state.discoverMap || { stoffus: '', divinus: '' };
+    var divinusOk = !!(state.brands.find(function (b) { return b.id === 'divinus' && b.configured; }));
+    var stoffusOk = !!(state.brands.find(function (b) { return b.id === 'stoffus' && b.configured; }));
 
     var discoverHtml = '';
     if (pages.length) {
       discoverHtml = '<div class="cms-meta-discover">' +
+        (state.discoverWarning
+          ? '<p class="cms-status is-error">' + esc(state.discoverWarning) + '</p>'
+          : '') +
         '<p class="cms-hint" style="margin:0 0 .5rem"><strong>' + pages.length +
-        ' página(s)</strong> encontradas no token. Associe cada marca:</p>' +
+        ' página(s)</strong> no token:</p>' +
+        '<ul class="cms-meta-page-list">' +
+        pages.map(function (p) {
+          return '<li><strong>' + esc(p.name) + '</strong> · ID ' + esc(p.id) +
+            (p.instagram_business_id ? ' · IG ligado' : '') + '</li>';
+        }).join('') +
+        '</ul>' +
         state.brands.map(function (b) {
-          return '<label class="cms-field"><span>' + esc(b.label) + '</span>' +
+          return '<label class="cms-field"><span>Marca «' + esc(b.label) + '» → Página</span>' +
             '<select class="cms-input" data-discover-brand="' + esc(b.id) + '">' +
             '<option value="">— Não associar —</option>' +
             pages.map(function (p) {
               var sel = map[b.id] === p.id ? ' selected' : '';
               return '<option value="' + esc(p.id) + '"' + sel + '>' +
-                esc(p.name) + ' (' + esc(p.id) + ')' +
-                (p.instagram_business_id ? ' · IG' : '') +
-                '</option>';
+                esc(p.name) + ' (' + esc(p.id) + ')</option>';
             }).join('') +
             '</select></label>';
         }).join('') +
@@ -763,24 +773,42 @@
         'Guardar Stoffus + Divinus</button></div>';
     }
 
+    var missingBanner = '';
+    if (!divinusOk || !stoffusOk) {
+      missingBanner = '<div class="cms-meta-missing">' +
+        (!stoffusOk ? '<span>Stoffus sem Meta</span>' : '<span class="is-ok">Stoffus OK</span>') +
+        (!divinusOk ? '<span>Divinus sem Meta — associe a Página abaixo</span>' : '<span class="is-ok">Divinus OK</span>') +
+        '</div>';
+    }
+
     return '<section class="cms-surface cms-meta-config">' +
       '<div class="cms-meta-config__head">' +
       '<div><h2>Configuração Meta · Stoffus Socials</h2>' +
-      '<p class="cms-hint">Um token de utilizador com as duas Páginas basta — carregamos Stoffus e Divinus de uma vez.</p></div>' +
+      '<p class="cms-hint">Use um <strong>User Access Token</strong> (não o token de uma Página só) e autorize Stoffus e Divinus Confort.</p></div>' +
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-toggle">' +
       (open ? 'Fechar' : 'Configurar Meta') + '</button></div>' +
+      missingBanner +
       (open
         ? '<div class="cms-meta-config__form">' +
           '<div class="cms-meta-import-box">' +
-          '<label class="cms-field"><span>Token (User Access Token com as Páginas)</span>' +
+          '<label class="cms-field"><span>User Access Token (Stoffus Socials)</span>' +
           '<input class="cms-input" type="password" id="cms-meta-user-token" value="" ' +
-          'placeholder="Cole o token gerado na Meta (Graph API Explorer ou app Stoffus Socials)" autocomplete="new-password" /></label>' +
+          'placeholder="Graph API Explorer → Generate Access Token (User)" autocomplete="new-password" /></label>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:.4rem">' +
           '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-meta-discover">Carregar páginas do token</button>' +
-          '<p class="cms-hint">O sistema obtém o Page Token de cada Página (Stoffus e Divinus Confort).</p>' +
+          '</div>' +
+          '<p class="cms-hint">Se só aparecer a Stoffus: no Explorer volte a autorizar e <strong>marque também Divinus Confort</strong> na lista de Páginas.</p>' +
           discoverHtml +
+          '<hr class="cms-meta-hr" />' +
+          '<p class="cms-hint"><strong>Divinus pelo Page ID</strong> (se já souber o ID da Página)</p>' +
+          '<label class="cms-field"><span>Page ID Divinus Confort</span>' +
+          '<input class="cms-input" type="text" id="cms-meta-divinus-page-id" value="" ' +
+          'placeholder="ID numérico da Página Divinus no Facebook" autocomplete="off" /></label>' +
+          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-resolve-divinus">' +
+          'Associar este ID à Divinus com o token acima</button>' +
           '</div>' +
           '<hr class="cms-meta-hr" />' +
-          '<p class="cms-hint"><strong>Ajuste manual · ' + esc(info.label) + '</strong> (só se precisar)</p>' +
+          '<p class="cms-hint"><strong>Ajuste manual · ' + esc(info.label) + '</strong></p>' +
           '<label class="cms-field"><span>Page ID</span>' +
           '<input class="cms-input" type="text" id="cms-meta-page-id" value="' + esc(meta.page_id || '') +
           '" placeholder="Ex.: 232459563473506" autocomplete="off" /></label>' +
@@ -798,7 +826,7 @@
           '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-meta-save">Guardar só ' +
           esc(info.short) + '</button>' +
           '</div>' +
-          '<p class="cms-hint">Para publicar, o CMS tem de estar online (a Meta precisa de ler as imagens por URL público).</p>' +
+          '<p class="cms-hint">Para publicar, o CMS tem de estar online (URL público das imagens).</p>' +
           '</div>'
         : '') +
       '</section>';
@@ -1042,21 +1070,64 @@
           body: { action: 'discover_pages', brand: state.brand, access_token: token },
         }).then(function (data) {
           state.discoveredPages = data.pages || [];
+          state.discoverWarning = data.warning || '';
           state.discoverMap = {
             stoffus: guessPageForBrand('stoffus', state.discoveredPages),
             divinus: guessPageForBrand('divinus', state.discoveredPages),
           };
           if (state.discoverMap.stoffus && state.discoverMap.stoffus === state.discoverMap.divinus) {
-            // Evitar a mesma página nas duas marcas se houver mais opções
             var other = state.discoveredPages.find(function (p) {
               return p.id !== state.discoverMap.stoffus;
             });
             if (other) state.discoverMap.divinus = other.id;
+            else state.discoverMap.divinus = '';
+          }
+          if (state.discoveredPages.length < 2) {
+            state.discoverWarning = (state.discoverWarning ? state.discoverWarning + ' ' : '') +
+              'Só veio ' + state.discoveredPages.length +
+              ' página. Para a Divinus, regenere o User Token e marque também «Divinus Confort».';
           }
           toast(state.discoveredPages.length + ' página(s) encontradas');
           global.StoffusCmsRerender();
         }).catch(function (err) {
           toast(err.error || 'Não foi possível listar as páginas.');
+        });
+      };
+    }
+
+    var metaResolveDivinus = document.getElementById('cms-meta-resolve-divinus');
+    if (metaResolveDivinus) {
+      metaResolveDivinus.onclick = function () {
+        var token = ((document.getElementById('cms-meta-user-token') || {}).value || '').trim();
+        var pageId = ((document.getElementById('cms-meta-divinus-page-id') || {}).value || '').trim();
+        if (!token) {
+          toast('Cole o User Access Token acima.');
+          return;
+        }
+        if (!pageId) {
+          toast('Indique o Page ID da Divinus.');
+          return;
+        }
+        api('social.php', {
+          method: 'POST',
+          body: {
+            action: 'resolve_page',
+            brand: 'divinus',
+            target_brand: 'divinus',
+            access_token: token,
+            page_id: pageId,
+          },
+        }).then(function (data) {
+          if (data.brands) state.brands = data.brands;
+          if (state.brand === 'divinus') state.meta = data.meta || state.meta;
+          else {
+            // Actualizar badge da lista de marcas; meta da marca actual via reload
+            load().then(function () { global.StoffusCmsRerender(); });
+          }
+          toast('Divinus associada: ' + ((data.page && data.page.name) || pageId));
+          global.StoffusCmsRerender();
+        }).catch(function (err) {
+          toast(err.error || 'Não foi possível associar a Divinus.');
         });
       };
     }

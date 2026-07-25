@@ -116,10 +116,17 @@ try {
     if ($action === 'discover_pages') {
         $token = trim((string) ($input['access_token'] ?? ''));
         $pages = cms_social_meta_discover_pages($token);
-        // Não devolver tokens completos na lista — só preview; o import envia de novo pelo índice
-        // Na prática o import precisa dos tokens: devolvemos e o UI guarda em memória só até importar.
+        $warning = '';
+        foreach ($pages as &$p) {
+            if (!empty($p['_warning'])) {
+                $warning = (string) $p['_warning'];
+            }
+            unset($p['_warning'], $p['_token_kind']);
+        }
+        unset($p);
         cms_json([
             'ok' => true,
+            'warning' => $warning,
             'pages' => array_map(static function (array $p): array {
                 return [
                     'id' => $p['id'],
@@ -131,6 +138,30 @@ try {
                         : '',
                 ];
             }, $pages),
+        ]);
+    }
+
+    if ($action === 'resolve_page') {
+        $token = trim((string) ($input['access_token'] ?? ''));
+        $pageId = trim((string) ($input['page_id'] ?? ''));
+        $targetBrand = cms_social_normalize_brand((string) ($input['target_brand'] ?? $brand));
+        $page = cms_social_meta_resolve_page($token, $pageId);
+        $brands = cms_social_meta_import_assignments([
+            $targetBrand => [
+                'page_id' => $page['id'],
+                'page_access_token' => $page['access_token'],
+                'instagram_business_id' => $page['instagram_business_id'] ?? '',
+            ],
+        ]);
+        cms_json([
+            'ok' => true,
+            'page' => [
+                'id' => $page['id'],
+                'name' => $page['name'],
+                'instagram_business_id' => $page['instagram_business_id'] ?? '',
+            ],
+            'brands' => $brands,
+            'meta' => cms_social_meta_ready($brand),
         ]);
     }
 
