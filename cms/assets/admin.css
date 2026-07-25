@@ -2133,3 +2133,286 @@ button, input, textarea, select {
     display: none;
   }
 }
+
+/* ===== Calendário board (mês/semana) ===== */
+.cms-board-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.cms-board-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.cms-leg {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0.28rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--line);
+}
+
+.cms-leg::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+}
+
+.cms-leg.is-scheduled::before { background: var(--brand); }
+.cms-leg.is-published::before { background: #067647; }
+.cms-leg.is-draft::before { background: #8a8a8a; }
+.cms-leg.is-failed::before { background: #b42318; }
+
+.cms-board-tip {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.cms-board-tip em {
+  font-style: normal;
+  color: var(--brand-dark);
+  font-weight: 600;
+}
+
+.cms-board-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.cms-board-weekdays span {
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.2rem 0;
+}
+
+.cms-board {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.cms-board--month,
+.cms-board--week {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.cms-board--week {
+  min-height: 18rem;
+}
+
+.cms-board-day {
+  min-height: 6.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.4rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(47, 47, 47, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 252, 250, 0.72));
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+
+.cms-board--week .cms-board-day {
+  min-height: 16rem;
+}
+
+.cms-board-day:hover {
+  border-color: rgba(224, 78, 38, 0.28);
+  transform: translateY(-1px);
+}
+
+.cms-board-day.is-outside {
+  opacity: 0.42;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.cms-board-day.is-today {
+  box-shadow: inset 0 0 0 1px rgba(224, 78, 38, 0.28);
+}
+
+.cms-board-day.is-target {
+  border-color: transparent;
+  background: linear-gradient(160deg, rgba(224, 78, 38, 0.14), rgba(255, 255, 255, 0.9));
+  box-shadow: 0 14px 28px -22px rgba(224, 78, 38, 0.75);
+}
+
+.cms-social[data-social-brand="divinus"] .cms-board-day.is-target {
+  background: linear-gradient(160deg, rgba(0, 168, 214, 0.16), rgba(255, 255, 255, 0.9));
+  box-shadow: 0 14px 28px -22px rgba(0, 130, 168, 0.7);
+}
+
+.cms-board-day.is-over {
+  outline: 2px dashed var(--brand);
+  outline-offset: 1px;
+}
+
+.cms-board-day__head {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.cms-board-day__num {
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.cms-board-day__badge {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.3rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+}
+
+.cms-board-day__count {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.cms-board-day__posts {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1;
+  align-content: start;
+}
+
+.cms-board-day__more {
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.cms-board-post {
+  display: grid;
+  grid-template-columns: 1.55rem 1fr;
+  gap: 0.3rem;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 0.4rem;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.88);
+  color: inherit;
+  min-width: 0;
+}
+
+.cms-board-post.is-draggable { cursor: grab; }
+.cms-board-post.is-dragging { opacity: 0.45; }
+
+.cms-board-post img,
+.cms-board-post__ph {
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 0.28rem;
+  object-fit: cover;
+  background: var(--surface-2);
+  display: block;
+}
+
+.cms-board-post__txt {
+  display: grid;
+  min-width: 0;
+  gap: 0.02rem;
+}
+
+.cms-board-post__txt strong {
+  font-size: 0.68rem;
+  line-height: 1.15;
+}
+
+.cms-board-post__txt em {
+  font-style: normal;
+  font-size: 0.58rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cms-board-post.is-scheduled {
+  border-color: rgba(224, 78, 38, 0.35);
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+.cms-board-post.is-published {
+  border-color: rgba(6, 118, 71, 0.25);
+  box-shadow: inset 3px 0 0 #067647;
+  opacity: 0.88;
+}
+
+.cms-board-post.is-draft {
+  border-style: dashed;
+  border-color: rgba(90, 90, 90, 0.35);
+  box-shadow: inset 3px 0 0 #8a8a8a;
+}
+
+.cms-board-post.is-failed {
+  border-color: rgba(180, 35, 24, 0.35);
+  box-shadow: inset 3px 0 0 #b42318;
+}
+
+.cms-board-post.is-selected {
+  background: #fff;
+  outline: 2px solid rgba(224, 78, 38, 0.35);
+}
+
+.cms-board-side {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.9rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.cms-board-side__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cms-board-side__head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  text-transform: capitalize;
+}
+
+.cms-agenda-card.is-scheduled { box-shadow: inset 3px 0 0 var(--brand); }
+.cms-agenda-card.is-published { box-shadow: inset 3px 0 0 #067647; }
+.cms-agenda-card.is-draft { box-shadow: inset 3px 0 0 #8a8a8a; }
+.cms-agenda-card.is-failed { box-shadow: inset 3px 0 0 #b42318; }
+
+@media (max-width: 900px) {
+  .cms-board--month,
+  .cms-board--week {
+    grid-template-columns: repeat(7, minmax(4.5rem, 1fr));
+    overflow-x: auto;
+  }
+}
