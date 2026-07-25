@@ -2331,8 +2331,8 @@ button, input, textarea, select {
 
 .cms-board-post {
   display: grid;
-  grid-template-columns: 1.55rem 1fr;
-  gap: 0.3rem;
+  grid-template-columns: 1.55rem 1fr auto;
+  gap: 0.25rem;
   align-items: center;
   padding: 0.2rem;
   border-radius: 0.4rem;
@@ -2340,6 +2340,7 @@ button, input, textarea, select {
   background: rgba(255, 255, 255, 0.88);
   color: inherit;
   min-width: 0;
+  position: relative;
 }
 
 .cms-board-post.is-draggable { cursor: grab; }
@@ -2373,6 +2374,27 @@ button, input, textarea, select {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.cms-board-post__del {
+  width: 1.15rem;
+  height: 1.15rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.25rem;
+  background: rgba(180, 35, 24, 0.12);
+  color: #b42318;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+.cms-board-post:hover .cms-board-post__del,
+.cms-board-post__del:focus-visible {
+  opacity: 1;
+  background: rgba(180, 35, 24, 0.22);
 }
 
 .cms-board-post.is-scheduled {
