@@ -844,7 +844,7 @@
       weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
     });
 
-    return '<div class="cms-social' + (selected ? ' has-edit' : '') + '" data-brand="' + esc(state.brand) + '">' +
+    return '<div class="cms-social' + (selected ? ' has-edit' : '') + '" data-social-brand="' + esc(state.brand) + '">' +
       renderBrandSwitcher() +
       renderMetaConfig() +
       renderStats() +
@@ -1001,8 +1001,10 @@
   }
 
   function bind() {
-    document.querySelectorAll('[data-brand]').forEach(function (btn) {
-      btn.onclick = function () {
+    document.querySelectorAll('.cms-brand-btn[data-brand]').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         switchBrand(btn.getAttribute('data-brand'));
       };
     });

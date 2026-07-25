@@ -660,7 +660,7 @@ button, input, textarea, select {
 }
 
 /* Tema Divinus no módulo Redes */
-.cms-social[data-brand="divinus"] {
+.cms-social[data-social-brand="divinus"] {
   --brand: #00a8d6;
   --brand-mid: #4cc9f0;
   --brand-dark: #0082a8;
@@ -670,17 +670,17 @@ button, input, textarea, select {
   --card: #fbfdfe;
 }
 
-.cms-social[data-brand="divinus"] .cms-surface {
+.cms-social[data-social-brand="divinus"] .cms-surface {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 250, 252, 0.95));
   border-color: rgba(0, 168, 214, 0.14);
 }
 
-.cms-social[data-brand="divinus"] .cms-meta-badge.is-ok {
+.cms-social[data-social-brand="divinus"] .cms-meta-badge.is-ok {
   background: rgba(0, 168, 214, 0.12);
   color: #0082a8;
 }
 
-.cms-social[data-brand="divinus"] .cms-target-banner {
+.cms-social[data-social-brand="divinus"] .cms-target-banner {
   border-color: rgba(0, 168, 214, 0.22);
   background: linear-gradient(135deg, rgba(0, 168, 214, 0.1), rgba(76, 201, 240, 0.08));
 }
@@ -717,7 +717,7 @@ button, input, textarea, select {
   background: linear-gradient(180deg, rgba(224, 78, 38, 0.06), rgba(255, 255, 255, 0.5));
 }
 
-.cms-social[data-brand="divinus"] .cms-meta-import-box {
+.cms-social[data-social-brand="divinus"] .cms-meta-import-box {
   border-color: rgba(0, 168, 214, 0.22);
   background: linear-gradient(180deg, rgba(0, 168, 214, 0.08), rgba(255, 255, 255, 0.5));
 }
@@ -1096,7 +1096,7 @@ button, input, textarea, select {
   transform: translateY(-1px);
 }
 
-.cms-social[data-brand="divinus"] .cms-day-chip:hover {
+.cms-social[data-social-brand="divinus"] .cms-day-chip:hover {
   border-color: rgba(0, 168, 214, 0.45);
 }
 
