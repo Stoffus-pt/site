@@ -87,158 +87,117 @@
   }
 
   function calendarTitle() {
-    var anchor = ensureAnchor();
-    if (state.calView === 'year') {
-      return String(anchor.getFullYear());
-    }
-    if (state.calView === 'month') {
-      return anchor.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
-    }
-    return fmtWeekRange(startOfWeek(anchor));
+    return fmtWeekRange(startOfWeek(ensureAnchor()));
   }
 
   function navLabel(dir) {
-    var map = {
-      week: dir < 0 ? '← Semana' : 'Semana →',
-      month: dir < 0 ? '← Mês' : 'Mês →',
-      year: dir < 0 ? '← Ano' : 'Ano →',
-    };
-    return map[state.calView] || map.week;
+    return dir < 0 ? '← Semana' : 'Semana →';
   }
 
   function shiftCalendar(dir) {
-    var a = ensureAnchor();
-    if (state.calView === 'year') {
-      state.weekStart = new Date(a.getFullYear() + dir, a.getMonth(), 1);
-    } else if (state.calView === 'month') {
-      state.weekStart = new Date(a.getFullYear(), a.getMonth() + dir, 1);
-    } else {
-      state.weekStart = addDays(startOfWeek(a), dir * 7);
-    }
+    state.weekStart = addDays(startOfWeek(ensureAnchor()), dir * 7);
   }
 
-  function postsInMonth(year, month) {
-    return state.posts.filter(function (p) {
-      if (!p.scheduledAt) return false;
-      var d = new Date(p.scheduledAt);
-      return d.getFullYear() === year && d.getMonth() === month;
-    });
-  }
-
-  function renderDayCell(day, opts) {
-    opts = opts || {};
-    var today = new Date();
-    var target = ensureTargetDay();
-    var posts = postsForDay(day);
-    var isTarget = sameDay(day, target);
-    var outside = !!opts.outside;
-    var compact = !!opts.compact;
-    var maxPosts = compact ? 2 : 8;
-
-    var html = '<div class="cms-cal-day' +
-      (sameDay(day, today) ? ' is-today' : '') +
-      (isTarget ? ' is-target' : '') +
-      (outside ? ' is-outside' : '') +
-      (compact ? ' is-compact' : '') +
-      '" data-cal-day="' + dayKey(day) + '" title="Clique para escolher este dia">' +
-      '<div class="cms-cal-day__label">' +
-      '<span>' + (compact ? day.getDate() : esc(fmtDayLabel(day))) + '</span>' +
-      '<span>' + (isTarget ? '●' : posts.length) + '</span></div>';
-
-    if (!compact) {
-      html += isTarget
-        ? '<div class="cms-cal-day__pick">Dia escolhido</div>'
-        : '<div class="cms-cal-day__pick">Clique para agendar aqui</div>';
-    }
-
-    posts.slice(0, maxPosts).forEach(function (p) {
-      var thumbs = (p.media || []).slice(0, compact ? 1 : 3).map(function (m) {
-        return '<img src="' + esc(mediaUrl(m)) + '" alt="" />';
-      }).join('');
-      var time = new Date(p.scheduledAt).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-      var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join('+');
-      html += '<div class="cms-cal-post is-' + esc(p.status || 'draft') +
-        (state.selectedPostId === p.id ? ' is-selected' : '') +
-        '" draggable="true" data-post-id="' + esc(p.id) + '">' +
-        '<div class="cms-cal-post__thumbs">' + thumbs + '</div>' +
-        (compact
-          ? '<div class="cms-cal-post__meta">' + esc(time) + '</div>'
-          : '<div class="cms-cal-post__meta">' + esc(time) + ' · ' + (p.media || []).length + ' · ' + esc(plats || '—') +
-            ' · ' + esc(statusLabel(p.status)) + '</div>') +
-        '</div>';
-    });
-    if (posts.length > maxPosts) {
-      html += '<div class="cms-cal-day__more">+' + (posts.length - maxPosts) + '</div>';
-    }
-    html += '</div>';
-    return html;
-  }
-
-  function renderWeekView() {
+  function weekDays() {
     var start = startOfWeek(ensureAnchor());
     var days = [];
-    for (var i = 0; i < 7; i++) {
-      days.push(renderDayCell(addDays(start, i)));
-    }
-    return '<div class="cms-cal cms-cal--week">' + days.join('') + '</div>';
+    for (var i = 0; i < 7; i++) days.push(addDays(start, i));
+    return days;
   }
 
-  function renderMonthView() {
-    var anchor = ensureAnchor();
-    var first = startOfMonth(anchor);
-    var gridStart = startOfWeek(first);
-    var headers = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-    var html = '<div class="cms-cal-weekdays">' +
-      headers.map(function (h) { return '<span>' + h + '</span>'; }).join('') +
-      '</div><div class="cms-cal cms-cal--month">';
-
-    for (var i = 0; i < 42; i++) {
-      var day = addDays(gridStart, i);
-      var outside = day.getMonth() !== anchor.getMonth();
-      html += renderDayCell(day, { outside: outside, compact: true });
-    }
-    html += '</div>';
-    return html;
+  function renderAgendaPostCard(p) {
+    var thumbs = (p.media || []).slice(0, 3).map(function (m) {
+      return '<img src="' + esc(mediaUrl(m)) + '" alt="" />';
+    }).join('');
+    var time = '';
+    try {
+      time = new Date(p.scheduledAt).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    } catch (e) { time = '—'; }
+    var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
+    return '<button type="button" class="cms-agenda-card is-' + esc(p.status || 'draft') +
+      (state.selectedPostId === p.id ? ' is-selected' : '') +
+      '" draggable="true" data-post-id="' + esc(p.id) + '">' +
+      '<div class="cms-agenda-card__thumbs">' + (thumbs || '<span class="cms-agenda-card__ph"></span>') + '</div>' +
+      '<div class="cms-agenda-card__body">' +
+      '<strong>' + esc(time) + ' · ' + esc(statusLabel(p.status)) + '</strong>' +
+      '<span>' + (p.media || []).length + ' foto(s) · ' + esc(plats || 'sem rede') + '</span>' +
+      '<em>' + esc((p.caption || 'Sem legenda').slice(0, 90)) + '</em>' +
+      '</div></button>';
   }
 
-  function renderYearView() {
-    var year = ensureAnchor().getFullYear();
-    var html = '<div class="cms-cal cms-cal--year">';
-    for (var m = 0; m < 12; m++) {
-      var count = postsInMonth(year, m).length;
-      var label = new Date(year, m, 1).toLocaleDateString('pt-PT', { month: 'long' });
-      var isCurrent = (new Date().getFullYear() === year && new Date().getMonth() === m);
-      var isAnchor = ensureAnchor().getMonth() === m && ensureAnchor().getFullYear() === year;
-      html += '<button type="button" class="cms-cal-month-card' +
-        (isCurrent ? ' is-today' : '') +
-        (isAnchor ? ' is-target' : '') +
-        '" data-cal-month="' + year + '-' + m + '">' +
-        '<strong>' + esc(label) + '</strong>' +
-        '<span>' + count + ' publicação' + (count === 1 ? '' : 'ões') + '</span>' +
-        '</button>';
+  function renderDayStrip() {
+    var today = new Date();
+    var target = ensureTargetDay();
+    return '<div class="cms-day-strip" role="tablist" aria-label="Dias da semana">' +
+      weekDays().map(function (day) {
+        var n = postsForDay(day).length;
+        var isTarget = sameDay(day, target);
+        var isToday = sameDay(day, today);
+        var name = day.toLocaleDateString('pt-PT', { weekday: 'short' }).replace('.', '');
+        return '<button type="button" class="cms-day-chip' +
+          (isTarget ? ' is-active' : '') +
+          (isToday ? ' is-today' : '') +
+          '" data-cal-day="' + dayKey(day) + '" role="tab" aria-selected="' + (isTarget ? 'true' : 'false') + '">' +
+          '<span class="cms-day-chip__name">' + esc(name) + '</span>' +
+          '<span class="cms-day-chip__num">' + day.getDate() + '</span>' +
+          '<span class="cms-day-chip__count">' + (n ? n + ' post' + (n === 1 ? '' : 's') : 'livre') + '</span>' +
+          (isTarget ? '<span class="cms-day-chip__tag">Início</span>' : '') +
+          '</button>';
+      }).join('') +
+      '</div>';
+  }
+
+  function renderDayDetail() {
+    var target = ensureTargetDay();
+    var posts = postsForDay(target);
+    var dayTitle = target.toLocaleDateString('pt-PT', {
+      weekday: 'long', day: 'numeric', month: 'long',
+    });
+    var timeLabel = target.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+
+    var html = '<div class="cms-day-detail">' +
+      '<div class="cms-day-detail__head">' +
+      '<div><h3>' + esc(dayTitle) + '</h3>' +
+      '<p class="cms-hint" style="margin:.25rem 0 0">Os novos lotes começam neste dia às <strong>' +
+      esc(timeLabel) + '</strong>. Clique noutro dia acima para mudar.</p></div>' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-publish-due">Publicar vencidas</button>' +
+      '</div>';
+
+    if (!posts.length) {
+      html += '<div class="cms-day-empty">' +
+        '<p><strong>Nada agendado neste dia</strong></p>' +
+        '<p>Carregue fotos em «Criar post» e clique em <em>Agendar lote</em> — ficam aqui.</p>' +
+        '</div></div>';
+      return html;
     }
-    html += '</div>';
+
+    html += '<p class="cms-day-detail__tip">Clique num post para editar. Arraste para outro dia na barra acima para remarcar.</p>' +
+      '<div class="cms-agenda-cards">' +
+      posts.map(renderAgendaPostCard).join('') +
+      '</div></div>';
     return html;
   }
 
   function renderCalendar() {
-    if (state.calView === 'year') return renderYearView();
-    if (state.calView === 'month') return renderMonthView();
-    return renderWeekView();
-  }
+    var start = startOfWeek(ensureAnchor());
+    var end = addDays(start, 6);
+    var range = start.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' }) +
+      ' — ' + end.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  function renderCalViewSwitch() {
-    var views = [
-      { id: 'week', label: 'Semana' },
-      { id: 'month', label: 'Mês' },
-      { id: 'year', label: 'Ano' },
-    ];
-    return '<div class="cms-cal-views">' +
-      views.map(function (v) {
-        return '<button type="button" class="cms-cal-view-btn' +
-          (state.calView === v.id ? ' is-active' : '') +
-          '" data-cal-view="' + v.id + '">' + v.label + '</button>';
-      }).join('') +
+    return '<div class="cms-agenda">' +
+      '<div class="cms-agenda__guide">' +
+      '<div class="cms-agenda__step"><span>1</span> Escolha o dia na barra</div>' +
+      '<div class="cms-agenda__step"><span>2</span> Veja o que já está agendado</div>' +
+      '<div class="cms-agenda__step"><span>3</span> Clique num post para editar</div>' +
+      '</div>' +
+      '<div class="cms-agenda__nav">' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-prev">← Semana</button>' +
+      '<div class="cms-agenda__range"><strong>' + esc(range) + '</strong>' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-today">Hoje</button></div>' +
+      '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-next">Semana →</button>' +
+      '</div>' +
+      renderDayStrip() +
+      renderDayDetail() +
       '</div>';
   }
 
@@ -817,8 +776,8 @@
       '<div class="cms-compose">' +
       '<div class="cms-compose__form">' +
       '<div style="display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap">' +
-      '<div><h2>1. Criar post · ' + esc(info.label) + '</h2>' +
-      '<p class="cms-hint">Arraste fotos, escolha redes e legenda — a pré-visualização actualiza ao lado.</p></div>' +
+      '<div><h2>Criar post · ' + esc(info.label) + '</h2>' +
+      '<p class="cms-hint">1) Fotos · 2) Redes e legenda · 3) Escolha o dia na Agenda · 4) Agendar</p></div>' +
       metaBadge + '</div>' +
       '<div class="cms-drop" id="cms-social-drop">' +
       '<input type="file" id="cms-social-file" accept="image/jpeg,image/png,image/webp,image/gif" multiple />' +
@@ -827,27 +786,27 @@
       '<div class="cms-field" style="margin-top:1rem"><span>Publicar em</span>' +
       renderPlatformToggles('batch', state.settings.defaultPlatforms || []) +
       '</div>' +
+      '<label class="cms-field" style="margin-top:1rem"><span>Legenda</span>' +
+      '<textarea id="cms-social-default-caption" rows="3" placeholder="Escreva a legenda — vê-se na pré-visualização">' +
+      esc(state.settings.defaultCaption) +
+      '</textarea></label>' +
       '<div class="cms-social-toolbar">' +
-      '<label class="cms-field"><span>Fotos / post</span>' +
+      '<label class="cms-field"><span>Fotos por post</span>' +
       '<input class="cms-input" type="number" id="cms-social-split" min="1" max="10" value="' +
       esc(state.settings.autoSplitSize) + '" /></label>' +
-      '<label class="cms-field"><span>Intervalo (h)</span>' +
+      '<label class="cms-field"><span>Intervalo entre posts (h)</span>' +
       '<input class="cms-input" type="number" id="cms-social-interval" min="1" max="72" value="24" /></label>' +
-      '<label class="cms-field"><span>Hora no dia escolhido</span>' +
+      '<label class="cms-field"><span>Hora de início</span>' +
       '<input class="cms-input" type="datetime-local" id="cms-social-start" value="' +
       esc(toLocalInputValue(target)) + '" /></label>' +
       '</div>' +
       '<div class="cms-target-banner">' +
-      '<div><strong>Dia de início · ' + esc(info.short) + '</strong><span>' + esc(targetLabel) + '</span>' +
-      '<em>Clique num dia no calendário para mudar.</em></div>' +
+      '<div><strong>Começa em</strong><span>' + esc(targetLabel) + '</span>' +
+      '<em>Mude o dia na Agenda (barra Seg–Dom) ou a hora acima.</em></div>' +
       '<div style="display:flex;flex-wrap:wrap;gap:.4rem">' +
-      '<button type="button" class="cms-btn cms-btn--ghost" id="cms-social-draft-btn">Guardar rascunhos</button>' +
-      '<button type="button" class="cms-btn cms-btn--brand" id="cms-social-split-btn">Partir e agendar</button>' +
+      '<button type="button" class="cms-btn cms-btn--ghost" id="cms-social-draft-btn">Só rascunho</button>' +
+      '<button type="button" class="cms-btn cms-btn--brand" id="cms-social-split-btn">Agendar lote</button>' +
       '</div></div>' +
-      '<label class="cms-field" style="margin-top:1rem"><span>Legenda do post</span>' +
-      '<textarea id="cms-social-default-caption" rows="3" placeholder="Escreva a legenda — vê-se já na pré-visualização">' +
-      esc(state.settings.defaultCaption) +
-      '</textarea></label>' +
       (!state.meta.configured
         ? '<p class="cms-hint">Configure a Meta acima (botão «Configurar Meta») para esta marca.</p>'
         : '') +
@@ -861,30 +820,21 @@
 
       '<section class="cms-surface">' +
       '<div class="cms-cal-head">' +
-      '<div><h2>2. Agenda · ' + esc(info.short) + '</h2>' +
+      '<div><h2>Agenda · ' + esc(info.short) + '</h2>' +
+      '<p class="cms-hint" style="margin:.35rem 0 0">' +
       (state.panelView === 'calendar'
-        ? '<h3>' + esc(calendarTitle()) + '</h3><p class="cms-hint" style="margin:.35rem 0 0">Alterne Semana / Mês / Ano. Clique num dia para o escolher.</p>'
-        : '<p class="cms-hint" style="margin:.35rem 0 0">Lista completa das publicações desta marca no CMS, com filtros e ligação ao Facebook.</p>') +
-      '</div>' +
-      '<div class="cms-cal-toolbar">' +
+        ? 'Escolha o dia na barra. Em baixo vê só os posts desse dia.'
+        : 'Todas as publicações desta marca, com pesquisa e filtros.') +
+      '</p></div>' +
       '<div class="cms-panel-views">' +
       '<button type="button" class="cms-cal-view-btn' + (state.panelView === 'calendar' ? ' is-active' : '') +
-      '" data-panel-view="calendar">Calendário</button>' +
+      '" data-panel-view="calendar">Por dia</button>' +
       '<button type="button" class="cms-cal-view-btn' + (state.panelView === 'history' ? ' is-active' : '') +
-      '" data-panel-view="history">Histórico</button>' +
-      '</div>' +
-      (state.panelView === 'calendar'
-        ? (renderCalViewSwitch() +
-          '<div style="display:flex;gap:.4rem;flex-wrap:wrap">' +
-          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-prev">' + esc(navLabel(-1)) + '</button>' +
-          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-today">Hoje</button>' +
-          '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-next">' + esc(navLabel(1)) + '</button>' +
-          '<button type="button" class="cms-btn cms-btn--brand cms-btn--sm" id="cms-social-publish-due">Publicar vencidas</button>' +
-          '</div>')
-        : '') +
+      '" data-panel-view="history">Todas</button>' +
       '</div></div>' +
-      (state.panelView === 'calendar' ? '<div id="cms-social-cal">' + renderCalendar() + '</div>' : '') +
-      renderPostsList() +
+      (state.panelView === 'calendar'
+        ? '<div id="cms-social-cal">' + renderCalendar() + '</div>'
+        : renderPostsList()) +
       '</section>' +
 
       (selected
@@ -1174,34 +1124,11 @@
     };
     if (todayBtn) todayBtn.onclick = function () {
       var now = new Date();
-      state.weekStart = state.calView === 'week' ? startOfWeek(now) : startOfMonth(now);
-      if (state.calView === 'year') state.weekStart = new Date(now.getFullYear(), 0, 1);
+      state.weekStart = startOfWeek(now);
+      state.targetDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+        (state.targetDay || now).getHours(), (state.targetDay || now).getMinutes(), 0, 0);
       global.StoffusCmsRerender();
     };
-
-    document.querySelectorAll('[data-cal-view]').forEach(function (btn) {
-      btn.onclick = function () {
-        var view = btn.getAttribute('data-cal-view');
-        if (!view || view === state.calView) return;
-        state.calView = view;
-        if (view === 'week') state.weekStart = startOfWeek(ensureAnchor());
-        else if (view === 'month') state.weekStart = startOfMonth(ensureAnchor());
-        else state.weekStart = new Date(ensureAnchor().getFullYear(), 0, 1);
-        global.StoffusCmsRerender();
-      };
-    });
-
-    document.querySelectorAll('[data-cal-month]').forEach(function (btn) {
-      btn.onclick = function () {
-        var parts = String(btn.getAttribute('data-cal-month') || '').split('-');
-        var y = Number(parts[0]);
-        var m = Number(parts[1]);
-        if (isNaN(y) || isNaN(m)) return;
-        state.calView = 'month';
-        state.weekStart = new Date(y, m, 1);
-        global.StoffusCmsRerender();
-      };
-    });
 
     var publishDue = document.getElementById('cms-social-publish-due');
     if (publishDue) {
@@ -1316,6 +1243,7 @@
         var prev = state.targetDay || new Date();
         day.setHours(prev.getHours(), prev.getMinutes(), 0, 0);
         state.targetDay = day;
+        state.weekStart = startOfWeek(day);
         toast('Dia escolhido: ' + day.toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long' }));
         global.StoffusCmsRerender();
       });
@@ -1343,7 +1271,7 @@
         e.stopPropagation();
         selectPost(el.getAttribute('data-post-id'), true);
       });
-      if (el.classList.contains('cms-cal-post')) {
+      if (el.classList.contains('cms-cal-post') || el.classList.contains('cms-agenda-card')) {
         el.addEventListener('dragstart', function (e) {
           e.dataTransfer.setData('text/post-id', el.getAttribute('data-post-id'));
           e.dataTransfer.effectAllowed = 'move';

@@ -20,7 +20,7 @@
     nav: { title: 'Menu', sub: 'Ligações do menu principal em todas as páginas.' },
     catalog: { title: 'Catálogo', sub: 'Modelos, fotos, capas e enquadramentos.' },
     fabrics: { title: 'Tecidos', sub: 'Activos no site e rascunho da colecção 2026.' },
-    social: { title: 'Redes', sub: 'Bulk, calendário e publicação Facebook / Instagram.' },
+    social: { title: 'Stoffus Socials', sub: 'Criar posts, escolher o dia e publicar no Facebook.' },
   };
 
   function api(path, options) {
@@ -265,7 +265,7 @@
       { id: 'nav', icon: 'fa-bars', label: 'Menu' },
       { id: 'catalog', icon: 'fa-couch', label: 'Catálogo' },
       { id: 'fabrics', icon: 'fa-swatchbook', label: 'Tecidos' },
-      { id: 'social', icon: 'fa-share-nodes', label: 'Redes' },
+      { id: 'social', icon: 'fa-share-nodes', label: 'Socials' },
     ];
     return '<aside class="cms-sidebar-nav">' +
       '<div class="cms-sidebar-nav__brand"><strong>Stoffus</strong><span>Painel CMS</span></div>' +
