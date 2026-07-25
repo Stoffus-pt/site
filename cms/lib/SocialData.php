@@ -507,7 +507,7 @@ function cms_social_meta_page_history(string $brand, int $limit = 25): array
     $data = cms_social_http_json(
         'https://graph.facebook.com/v21.0/' . rawurlencode($pageId) . '/posts',
         [
-            'fields' => 'id,message,created_time,permalink_url',
+            'fields' => 'id,message,created_time,permalink_url,full_picture,attachments{media,subattachments,type,url,title}',
             'limit' => $limit,
             'access_token' => $token,
         ]
@@ -517,14 +517,62 @@ function cms_social_meta_page_history(string $brand, int $limit = 25): array
         if (!is_array($row)) {
             continue;
         }
+        $images = cms_social_meta_extract_images($row);
         $out[] = [
             'id' => (string) ($row['id'] ?? ''),
             'message' => (string) ($row['message'] ?? ''),
             'created_time' => (string) ($row['created_time'] ?? ''),
             'permalink_url' => (string) ($row['permalink_url'] ?? ''),
+            'full_picture' => (string) ($row['full_picture'] ?? ($images[0] ?? '')),
+            'images' => $images,
         ];
     }
     return $out;
+}
+
+/**
+ * Extrai URLs de imagem de um post Graph API.
+ *
+ * @param array<string,mixed> $row
+ * @return list<string>
+ */
+function cms_social_meta_extract_images(array $row): array
+{
+    $images = [];
+    $full = trim((string) ($row['full_picture'] ?? ''));
+    if ($full !== '') {
+        $images[] = $full;
+    }
+
+    $attachments = $row['attachments']['data'] ?? null;
+    if (!is_array($attachments)) {
+        return array_values(array_unique($images));
+    }
+
+    foreach ($attachments as $att) {
+        if (!is_array($att)) {
+            continue;
+        }
+        $src = trim((string) ($att['media']['image']['src'] ?? ''));
+        if ($src !== '') {
+            $images[] = $src;
+        }
+        $subs = $att['subattachments']['data'] ?? null;
+        if (!is_array($subs)) {
+            continue;
+        }
+        foreach ($subs as $sub) {
+            if (!is_array($sub)) {
+                continue;
+            }
+            $subSrc = trim((string) ($sub['media']['image']['src'] ?? ''));
+            if ($subSrc !== '') {
+                $images[] = $subSrc;
+            }
+        }
+    }
+
+    return array_values(array_unique($images));
 }
 
 function cms_social_public_url(string $relativePath): string

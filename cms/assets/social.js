@@ -230,6 +230,45 @@
     return global.StoffusCmsApi(path, options);
   }
 
+  function openImageLightbox(urls) {
+    var list = (urls || []).filter(Boolean);
+    if (!list.length) return;
+    var idx = 0;
+    var old = document.getElementById('cms-lightbox');
+    if (old) old.remove();
+
+    var overlay = document.createElement('div');
+    overlay.id = 'cms-lightbox';
+    overlay.className = 'cms-lightbox';
+    overlay.innerHTML =
+      '<button type="button" class="cms-lightbox__close" aria-label="Fechar">×</button>' +
+      (list.length > 1
+        ? '<button type="button" class="cms-lightbox__nav cms-lightbox__nav--prev" aria-label="Anterior">‹</button>' +
+          '<button type="button" class="cms-lightbox__nav cms-lightbox__nav--next" aria-label="Seguinte">›</button>'
+        : '') +
+      '<img class="cms-lightbox__img" alt="" />' +
+      '<div class="cms-lightbox__count"></div>';
+    document.body.appendChild(overlay);
+
+    var img = overlay.querySelector('.cms-lightbox__img');
+    var count = overlay.querySelector('.cms-lightbox__count');
+    function show(i) {
+      idx = (i + list.length) % list.length;
+      img.src = list[idx];
+      if (count) count.textContent = (idx + 1) + ' / ' + list.length;
+    }
+    function close() { overlay.remove(); }
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay || e.target.classList.contains('cms-lightbox__close')) close();
+    });
+    var prev = overlay.querySelector('.cms-lightbox__nav--prev');
+    var next = overlay.querySelector('.cms-lightbox__nav--next');
+    if (prev) prev.onclick = function (e) { e.stopPropagation(); show(idx - 1); };
+    if (next) next.onclick = function (e) { e.stopPropagation(); show(idx + 1); };
+    show(0);
+  }
+
   function toast(msg) {
     global.StoffusCmsToast(msg);
   }
@@ -517,7 +556,17 @@
       html += '<div class="cms-meta-history__rows">';
       state.metaHistory.forEach(function (item) {
         var href = item.permalink_url || ('https://www.facebook.com/' + item.id);
+        var imgs = Array.isArray(item.images) && item.images.length
+          ? item.images
+          : (item.full_picture ? [item.full_picture] : []);
+        var thumb = imgs[0] || '';
+        var more = imgs.length > 1 ? '<em>+' + (imgs.length - 1) + '</em>' : '';
         html += '<div class="cms-meta-history__row">' +
+          (thumb
+            ? '<button type="button" class="cms-meta-history__thumb" data-meta-lightbox="' +
+              esc(imgs.join('|')) + '" title="Ver imagens">' +
+              '<img src="' + esc(thumb) + '" alt="" loading="lazy" />' + more + '</button>'
+            : '<span class="cms-meta-history__ph"></span>') +
           '<a href="' + esc(href) + '" target="_blank" rel="noopener" data-stop>' +
           '<strong>' + esc(fmtDateTime(item.created_time)) + '</strong>' +
           '<span>' + esc((item.message || 'Sem texto').slice(0, 140)) + '</span></a>' +
@@ -1482,6 +1531,16 @@
         }).catch(function (err) {
           toast(err.error || 'Erro ao apagar no Facebook.');
         });
+      };
+    });
+
+    document.querySelectorAll('[data-meta-lightbox]').forEach(function (btn) {
+      btn.onclick = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var list = String(btn.getAttribute('data-meta-lightbox') || '').split('|').filter(Boolean);
+        if (!list.length) return;
+        openImageLightbox(list);
       };
     });
 
