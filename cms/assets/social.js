@@ -106,29 +106,85 @@
 
   function postWhen(p) {
     if (!p) return null;
-    if (p.status === 'published' && p.publishedAt) {
-      try { return new Date(p.publishedAt); } catch (e) { /* fallthrough */ }
+    var candidates = [];
+    if (p.status === 'published') {
+      if (p.publishedAt) candidates.push(p.publishedAt);
+      if (p.scheduledAt) candidates.push(p.scheduledAt);
+    } else {
+      if (p.scheduledAt) candidates.push(p.scheduledAt);
+      if (p.publishedAt) candidates.push(p.publishedAt);
     }
-    if (p.scheduledAt) {
-      try { return new Date(p.scheduledAt); } catch (e2) { /* fallthrough */ }
-    }
-    if (p.createdAt) {
-      try { return new Date(p.createdAt); } catch (e3) { return null; }
+    if (p.createdAt) candidates.push(p.createdAt);
+    for (var i = 0; i < candidates.length; i++) {
+      var d = new Date(candidates[i]);
+      if (!isNaN(d.getTime())) return d;
     }
     return null;
   }
 
   function canDragPost(p) {
+    if (p && p._source === 'meta') return false;
     var st = (p && p.status) || '';
     return st === 'scheduled' || st === 'draft' || st === 'failed';
   }
 
+  function isMetaCalPost(p) {
+    return !!(p && (p._source === 'meta' || String(p.id || '').indexOf('meta:') === 0));
+  }
+
+  /** IDs Facebook já ligados a posts do CMS (evitar duplicar no calendário). */
+  function cmsFacebookIds() {
+    var map = {};
+    (state.posts || []).forEach(function (p) {
+      var fb = p.metaPostIds && p.metaPostIds.facebook;
+      if (fb) map[String(fb)] = true;
+    });
+    return map;
+  }
+
+  /** Publicações da Página Facebook como entradas do calendário (só leitura). */
+  function metaCalendarPosts() {
+    var skip = cmsFacebookIds();
+    return (state.metaHistory || []).filter(function (item) {
+      return item && item.id && !skip[String(item.id)];
+    }).map(function (item) {
+      var imgs = Array.isArray(item.images) && item.images.length
+        ? item.images.slice()
+        : (item.full_picture ? [item.full_picture] : []);
+      return {
+        id: 'meta:' + item.id,
+        status: 'published',
+        publishedAt: item.created_time || null,
+        scheduledAt: null,
+        createdAt: item.created_time || null,
+        caption: item.message || '',
+        media: imgs,
+        images: imgs,
+        permalink_url: item.permalink_url || '',
+        platforms: ['facebook'],
+        metaPostIds: { facebook: item.id },
+        _source: 'meta',
+      };
+    });
+  }
+
+  function allCalendarPosts() {
+    return (state.posts || []).concat(metaCalendarPosts());
+  }
+
+  function findCalendarPost(id) {
+    id = String(id || '');
+    return allCalendarPosts().find(function (p) { return p.id === id; }) || null;
+  }
+
   function postsForDay(day) {
-    return state.posts.filter(function (p) {
+    return allCalendarPosts().filter(function (p) {
       var when = postWhen(p);
       return when && sameDay(when, day);
     }).sort(function (a, b) {
-      return (postWhen(a) || 0) - (postWhen(b) || 0);
+      var ta = postWhen(a);
+      var tb = postWhen(b);
+      return (ta ? ta.getTime() : 0) - (tb ? tb.getTime() : 0);
     });
   }
 
@@ -141,17 +197,20 @@
     var thumb = (p.media && p.media[0]) ? mediaUrl(p.media[0]) : '';
     var drag = canDragPost(p);
     var n = (p.media || []).length;
+    var fromMeta = isMetaCalPost(p);
+    var label = fromMeta ? 'No Facebook' : statusLabel(p.status);
     return '<div class="cms-board-post is-' + esc(p.status || 'draft') +
+      (fromMeta ? ' is-meta' : '') +
       (state.selectedPostId === p.id ? ' is-selected' : '') +
       (drag ? ' is-draggable' : '') +
       (compact ? ' is-compact' : '') +
       '" data-post-id="' + esc(p.id) + '"' +
       (drag ? ' draggable="true"' : '') +
-      ' title="' + esc(statusLabel(p.status) + ' · ' + time + (drag ? ' · arraste para outro dia' : '')) + '">' +
+      ' title="' + esc(label + ' · ' + time + (drag ? ' · arraste para outro dia' : fromMeta ? ' · abrir no Facebook' : '')) + '">' +
       (thumb ? '<img src="' + esc(thumb) + '" alt="" loading="lazy" />' : '<span class="cms-board-post__ph"></span>') +
       '<span class="cms-board-post__txt">' +
       '<strong>' + esc(time) + '</strong>' +
-      (!compact ? '<em>' + esc(statusLabel(p.status)) + (n ? ' · ' + n + 'º' : '') + '</em>' : '') +
+      (!compact ? '<em>' + esc(label) + (n ? ' · ' + n + 'º' : '') + '</em>' : '') +
       '</span></div>';
   }
 
@@ -245,16 +304,21 @@
         try {
           time = when.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
         } catch (e) { /* ignore */ }
-        var plats = platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
+        var fromMeta = isMetaCalPost(p);
+        var plats = fromMeta
+          ? 'Facebook'
+          : platformsOf(p).map(function (x) { return x === 'instagram' ? 'IG' : 'FB'; }).join(' · ');
         var drag = canDragPost(p);
+        var stLabel = fromMeta ? 'No Facebook' : statusLabel(p.status);
         return '<button type="button" class="cms-agenda-card is-' + esc(p.status || 'draft') +
+          (fromMeta ? ' is-meta' : '') +
           (state.selectedPostId === p.id ? ' is-selected' : '') +
           '" ' + (drag ? 'draggable="true" ' : '') + 'data-post-id="' + esc(p.id) + '">' +
           '<div class="cms-agenda-card__thumbs">' + (thumbs || '<span class="cms-agenda-card__ph"></span>') + '</div>' +
           '<div class="cms-agenda-card__body">' +
-          '<strong>' + esc(time) + ' · ' + esc(statusLabel(p.status)) + '</strong>' +
+          '<strong>' + esc(time) + ' · ' + esc(stLabel) + '</strong>' +
           '<span>' + (p.media || []).length + ' foto(s) · ' + esc(plats || 'sem rede') +
-          (drag ? ' · arrastável' : '') + '</span>' +
+          (drag ? ' · arrastável' : fromMeta ? ' · só leitura' : '') + '</span>' +
           '<em>' + esc((p.caption || 'Sem legenda').slice(0, 90)) + '</em>' +
           '</div></button>';
       }).join('') +
@@ -268,7 +332,7 @@
       '<div class="cms-board-toolbar">' +
       '<div class="cms-board-legend" aria-label="Legenda">' +
       '<span class="cms-leg is-scheduled">Agendada</span>' +
-      '<span class="cms-leg is-published">Publicada</span>' +
+      '<span class="cms-leg is-published">Publicada (CMS / FB)</span>' +
       '<span class="cms-leg is-draft">Rascunho</span>' +
       '<span class="cms-leg is-failed">Falhou</span>' +
       '</div>' +
@@ -286,7 +350,7 @@
       '<button type="button" class="cms-btn cms-btn--ghost cms-btn--sm" id="cms-social-next">' +
       (state.calView === 'week' ? 'Semana →' : 'Mês →') + '</button>' +
       '</div>' +
-      '<p class="cms-board-tip">Clique num dia para o escolher · Arraste <em>agendadas / rascunhos</em> entre dias · Clique num post para editar</p>' +
+      '<p class="cms-board-tip">Verde = já publicadas (CMS ou Página Facebook). Arraste só agendadas / rascunhos. Clique numa do Facebook para abrir.</p>' +
       (state.calView === 'week' ? renderWeekBoard() : renderMonthBoard()) +
       renderSelectedDayPanel() +
       '</div>';
@@ -309,8 +373,10 @@
   }
 
   function mediaUrl(path) {
-    var rel = String(path || '').replace(/^\/+/, '').replace(/\\/g, '/');
+    var rel = String(path || '').replace(/\\/g, '/');
     if (!rel) return '';
+    if (/^https?:\/\//i.test(rel) || rel.indexOf('data:') === 0) return rel;
+    rel = rel.replace(/^\/+/, '');
     return 'api/social-file.php?f=' + encodeURIComponent(rel);
   }
 
@@ -411,6 +477,9 @@
       if (state.meta && !state.meta.configured) {
         state.metaFormOpen = true;
       }
+    }).then(function () {
+      // Carrega publicações da Página para o calendário (silencioso).
+      return loadMetaHistory(true);
     });
   }
 
@@ -567,7 +636,7 @@
     state.metaHistoryLoading = true;
     state.metaHistoryError = '';
     if (!silent) global.StoffusCmsRerender();
-    return api('social.php?action=meta_history&brand=' + encodeURIComponent(state.brand) + '&limit=40')
+    return api('social.php?action=meta_history&brand=' + encodeURIComponent(state.brand) + '&limit=50')
       .then(function (data) {
         state.metaHistory = data.posts || [];
         state.metaHistoryError = '';
@@ -585,6 +654,16 @@
         state.metaHistoryLoading = false;
         global.StoffusCmsRerender();
       });
+  }
+
+  function openMetaCalPost(post) {
+    if (!post) return;
+    if (post.permalink_url) {
+      window.open(post.permalink_url, '_blank', 'noopener');
+      return;
+    }
+    var imgs = (post.images && post.images.length) ? post.images : (post.media || []);
+    if (imgs.length) openImageLightbox(imgs);
   }
 
   function renderPostsList() {
@@ -1100,6 +1179,12 @@
   }
 
   function selectPost(id, jumpWeek) {
+    id = String(id || '');
+    var cal = findCalendarPost(id);
+    if (isMetaCalPost(cal)) {
+      openMetaCalPost(cal);
+      return;
+    }
     if (state.selectedPostId !== id) state.previewSlide = 0;
     state.selectedPostId = id;
     var post = state.posts.find(function (p) { return p.id === id; });
@@ -1112,6 +1197,7 @@
   }
 
   function movePostToDay(id, dayKeyStr) {
+    if (String(id || '').indexOf('meta:') === 0) return;
     var post = state.posts.find(function (p) { return p.id === id; });
     if (!post) return;
     if (!canDragPost(post)) {

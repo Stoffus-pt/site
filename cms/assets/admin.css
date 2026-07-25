@@ -2362,7 +2362,12 @@ button, input, textarea, select {
 .cms-board-post.is-published {
   border-color: rgba(6, 118, 71, 0.25);
   box-shadow: inset 3px 0 0 #067647;
-  opacity: 0.88;
+  opacity: 0.92;
+}
+
+.cms-board-post.is-published.is-meta {
+  background: linear-gradient(90deg, rgba(6, 118, 71, 0.08), #fff 40%);
+  cursor: pointer;
 }
 
 .cms-board-post.is-draft {
