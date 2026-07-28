@@ -3621,7 +3621,7 @@ body.page-minimal:not(.page-rich) .section--warm {
   width: 3.1rem;
   height: 3.1rem;
   border: 1px solid rgba(255, 255, 255, 0.68);
-  border-radius: 999px;
+  border-radius: 0.9rem;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 38%),
     linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
@@ -3664,6 +3664,10 @@ body.page-minimal:not(.page-rich) .section--warm {
     0 10px 22px rgba(47, 47, 47, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.34);
   transform: translateY(-2px) scale(1.02);
+}
+
+.back-to-top:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .back-to-top:focus-visible {
