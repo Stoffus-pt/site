@@ -3618,33 +3618,52 @@ body.page-minimal:not(.page-rich) .section--warm {
   z-index: 60;
   right: max(1rem, env(safe-area-inset-right));
   bottom: max(1rem, env(safe-area-inset-bottom));
-  width: 2.75rem;
-  height: 2.75rem;
-  border: none;
+  width: 3.1rem;
+  height: 3.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.68);
   border-radius: 999px;
-  background: var(--brand);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 38%),
+    linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
   color: #fff;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 14px 28px -12px rgba(224, 78, 38, 0.55);
+  box-shadow:
+    0 18px 36px -18px rgba(224, 78, 38, 0.62),
+    0 6px 16px rgba(47, 47, 47, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease, background-color 0.2s ease;
+  transform: translateY(12px) scale(0.92);
+  transition:
+    opacity 0.24s ease,
+    transform 0.24s ease,
+    visibility 0.24s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
   pointer-events: none;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .back-to-top.is-visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   pointer-events: auto;
 }
 
 .back-to-top:hover {
-  background: var(--brand-dark);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 38%),
+    linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+  box-shadow:
+    0 22px 42px -18px rgba(224, 78, 38, 0.68),
+    0 10px 22px rgba(47, 47, 47, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .back-to-top:focus-visible {
@@ -3653,9 +3672,10 @@ body.page-minimal:not(.page-rich) .section--warm {
 }
 
 .back-to-top svg {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.18rem;
+  height: 1.18rem;
   display: block;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.14));
 }
 
 body.has-cookie-banner .back-to-top {
