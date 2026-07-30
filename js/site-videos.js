@@ -44,9 +44,41 @@
     var switching = false;
     var fadeArmed = false;
     var shouldLoop = root.getAttribute('data-loop') !== 'false';
+    var pingpong = root.getAttribute('data-pingpong') === 'true' && !reduce;
+    var scrubRaf = null;
+    var scrubLast = 0;
 
     function current() {
       return playlist[index] || null;
+    }
+
+    function stopReverseScrub() {
+      if (scrubRaf) {
+        cancelAnimationFrame(scrubRaf);
+        scrubRaf = null;
+      }
+    }
+
+    function startReverseScrub() {
+      stopReverseScrub();
+      try { video.pause(); } catch (e) {}
+      scrubLast = performance.now();
+
+      function frame(now) {
+        var dt = Math.min(0.05, (now - scrubLast) / 1000);
+        scrubLast = now;
+        var next = video.currentTime - dt;
+        if (next <= 0.02) {
+          stopReverseScrub();
+          try { video.currentTime = 0; } catch (e2) {}
+          video.play().catch(function () {});
+          return;
+        }
+        try { video.currentTime = next; } catch (e3) {}
+        scrubRaf = requestAnimationFrame(frame);
+      }
+
+      scrubRaf = requestAnimationFrame(frame);
     }
 
     function updateFsButton() {
@@ -60,9 +92,10 @@
 
     function applyClip(i, autoplay) {
       if (!playlist.length) return;
+      stopReverseScrub();
       index = ((i % playlist.length) + playlist.length) % playlist.length;
       var item = current();
-      video.loop = shouldLoop && playlist.length === 1;
+      video.loop = shouldLoop && !pingpong && playlist.length === 1;
       fadeArmed = false;
       if (item.poster) video.setAttribute('poster', item.poster);
       else video.removeAttribute('poster');
@@ -117,7 +150,7 @@
     }
 
     video.addEventListener('timeupdate', function () {
-      if (switching || reduce || playlist.length < 2 || fadeArmed) return;
+      if (switching || reduce || playlist.length < 2 || fadeArmed || pingpong) return;
       if (!video.duration || !isFinite(video.duration)) return;
       var left = video.duration - video.currentTime;
       if (left <= FADE_MS / 1000 + 0.05) {
@@ -127,6 +160,10 @@
     });
 
     video.addEventListener('ended', function () {
+      if (pingpong) {
+        startReverseScrub();
+        return;
+      }
       if (!shouldLoop && playlist.length === 1) {
         try {
           video.pause();
@@ -138,6 +175,14 @@
       }
       if (switching || playlist.length < 2) return;
       goTo(index + 1, true);
+    });
+
+    video.addEventListener('play', function () {
+      stopReverseScrub();
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stopReverseScrub();
     });
 
     if (btnFs) {
