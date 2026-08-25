@@ -180,4 +180,61 @@
 
     update();
   })();
+
+  (function initScrollReveal() {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var selectors = [
+      '.config-block',
+      '.brand-strip',
+      '.value-card',
+      '.cta-band',
+      '.catalog-hero__inner',
+      '.s3d-hero__grid',
+      '.company-stats',
+      '.section-head',
+    ];
+
+    function prepare(el) {
+      if (!el || el.classList.contains('reveal-on-scroll') || el.classList.contains('is-visible')) return;
+      if (reduce) {
+        el.classList.add('is-visible');
+        return;
+      }
+      el.classList.add('reveal-on-scroll');
+      if (observer) observer.observe(el);
+    }
+
+    var observer = null;
+    if (!reduce && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    }
+
+    document.querySelectorAll(selectors.join(',')).forEach(prepare);
+    document.querySelectorAll('.collection-card').forEach(prepare);
+
+    var grids = document.querySelectorAll('#home-novidades-grid, #home-colecoes-grid, #catalog-grid, #novidades-grid');
+    if (!grids.length || typeof MutationObserver === 'undefined') return;
+
+    var mo = new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        Array.prototype.forEach.call(m.addedNodes || [], function (node) {
+          if (!node || node.nodeType !== 1) return;
+          if (node.matches && node.matches('.collection-card, .catalog-card')) prepare(node);
+          if (node.querySelectorAll) {
+            node.querySelectorAll('.collection-card, .catalog-card').forEach(prepare);
+          }
+        });
+      });
+    });
+
+    Array.prototype.forEach.call(grids, function (grid) {
+      mo.observe(grid, { childList: true });
+    });
+  })();
 })();
