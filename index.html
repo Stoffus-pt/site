@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/site.css">
 </head>
-<body>
+<body class="page-home">
 
   <header class="site-header">
     <div class="container site-header__inner">
@@ -62,9 +62,10 @@
     <section class="hero hero--spotlight" aria-label="Apresentação">
       <div class="container hero__grid">
         <div class="hero__copy" data-cms-region="hero" data-cms-label="Hero">
+          <p class="hero__brand">Stoffus</p>
           <span class="label" id="hero-label">Novidade · Eleganza Collection</span>
           <h1>Qualidade, design e conforto</h1>
-          <p class="hero__lead">Sofás feitos em Portugal — do tecido ao detalhe, para viver todos os dias.</p>
+          <p class="hero__lead">Sofás feitos em Montemor-o-Velho — tecido, estrutura e movimento pensados para o dia a dia.</p>
           <div class="hero__ctas">
             <a class="btn btn--brand btn--lg" href="novidades.html">
               Ver novidades
@@ -105,13 +106,14 @@
     </section>
 
     <div class="brand-strip">
-      <div class="container brand-strip__inner" data-cms-region="destaques" data-cms-label="Destaques"><div class="brand-strip__item">
+      <div class="container brand-strip__inner" data-cms-region="destaques" data-cms-label="Destaques">
+        <div class="brand-strip__item">
           <strong>Fabrico nacional</strong>
-          <span>Produção em Montemor-o-Velho</span>
+          <span>Montemor-o-Velho</span>
         </div>
         <div class="brand-strip__item">
           <strong>World Design</strong>
-          <span>Identidade Stoffus em cada coleção</span>
+          <span>Identidade em cada coleção</span>
         </div>
         <div class="brand-strip__item">
           <strong>Stoffus 3D</strong>
@@ -119,13 +121,14 @@
         </div>
         <div class="brand-strip__item">
           <strong>Onde ver</strong>
-          <span>Pontos de visita em Portugal e exportação</span>
-        </div></div>
+          <span>Portugal e exportação</span>
+        </div>
+      </div>
     </div>
 
-    <section class="section" aria-labelledby="config-title">
+    <section class="section section--tool" aria-labelledby="config-title">
       <div class="container">
-        <div class="config-block">
+        <div class="config-block config-block--featured">
           <div class="config-block__media">
             <div
               class="site-video"
@@ -150,19 +153,19 @@
           </div>
           <div class="config-block__copy" data-cms-region="configurador" data-cms-label="Configurador 3D"><img class="config-block__logo3d" src="assets/brand/logo-stoffus3d.png" alt="Stoffus 3D" width="1040" height="273" loading="lazy">
             <span class="label">Configurador 3D</span>
-            <h2 id="config-title">Crie o sofá à sua medida</h2>
-            <p>Módulos, tecidos, medidas e acabamentos - visualize em tempo real e obtenha orçamento em PDF. No telemóvel, veja o sofá em realidade aumentada na sua sala.</p>
+            <h2 id="config-title">Monte o sofá à sua medida</h2>
+            <p>Escolha módulos, tecidos e acabamentos. Veja o resultado em tempo real e descarregue o orçamento em PDF.</p>
             <ul class="config-block__list">
               <li>Montagem modular completa</li>
-              <li>Centenas de revestimentos Eleganza</li>
-              <li>Partilha por QR e link directo</li>
+              <li>Revestimentos Eleganza</li>
+              <li>Partilha por QR e link</li>
             </ul>
-            <a class="btn btn--brand btn--lg" data-stoffus-configurator href="#">Experimentar Stoffus 3D</a></div>
+            <a class="btn btn--brand btn--lg" data-stoffus-configurator href="#">Abrir Stoffus 3D</a></div>
         </div>
       </div>
     </section>
 
-    <section class="section section--warm" aria-labelledby="ar-title">
+    <section class="section section--experience" aria-labelledby="ar-title">
       <div class="container">
         <div class="config-block config-block--open config-block--reverse">
           <div class="config-block__media">
@@ -190,30 +193,30 @@
           <div class="config-block__copy" data-cms-region="ar" data-cms-label="Realidade aumentada">
             <span class="label">Realidade aumentada</span>
             <h2 id="ar-title">O sofá na sua sala</h2>
-            <p>No telemóvel, abra o QR do Stoffus 3D e veja o modelo em tamanho real no seu espaço — sem instalar aplicação.</p>
+            <p>No telemóvel, abra o QR do Stoffus 3D e veja o modelo à escala real no seu espaço — sem instalar aplicação.</p>
             <ul class="config-block__list">
-              <li>AR nativa no browser</li>
-              <li>Escala real do sofá</li>
-              <li>Partilha fácil com o ponto de venda</li>
+              <li>AR no browser</li>
+              <li>Escala real</li>
+              <li>Partilha com o ponto de venda</li>
             </ul>
-            <a class="btn btn--brand btn--lg" href="tecidos.html">Explorar tecidos</a>
+            <a class="btn btn--brand btn--lg" data-stoffus-configurator href="#">Experimentar em AR</a>
             <a class="btn btn--outline btn--lg" href="onde-comprar.html">Onde ver</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section section--warm" id="novidades" aria-labelledby="novidades-home-title">
+    <section class="section" id="novidades" aria-labelledby="novidades-home-title">
       <div class="container">
-        <div class="section-head section-head--center">
+        <div class="section-head">
           <span class="label">Novidades</span>
           <h2 id="novidades-home-title">Últimos lançamentos</h2>
-          <p>Magnum, Altieri, Oasis, Orsini, Magany, Verona, Syros e Poppy — veja os lançamentos ou peça indicação de onde visitar.</p>
+          <p>Magnum, Altieri, Oasis e mais — veja os modelos ou peça indicação de onde visitar.</p>
         </div>
 
         <div class="collections" id="home-novidades-grid"></div>
 
-        <p class="text-center mt-2">
+        <p class="mt-2">
           <a class="btn btn--outline btn--lg" href="novidades.html">
             Ver todas as novidades
             <svg class="icon" aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
@@ -222,15 +225,15 @@
       </div>
     </section>
 
-    <section class="section" id="colecoes" aria-labelledby="colecoes-title">
+    <section class="section section--warm" id="colecoes" aria-labelledby="colecoes-title">
       <div class="container">
-        <div class="section-head section-head--center" data-cms-region="colecoes-intro" data-cms-label="Introdução coleções"><span class="label">Catálogo</span>
+        <div class="section-head" data-cms-region="colecoes-intro" data-cms-label="Introdução coleções"><span class="label">Catálogo</span>
           <h2 id="colecoes-title">Eleganza Collection</h2>
-          <p>Destaques da gama completa - modelos modulares para cada espaço.</p></div>
+          <p>Destaques da gama — modelos modulares para cada espaço.</p></div>
 
         <div class="collections collections--classic" id="home-colecoes-grid"></div>
 
-        <p class="text-center mt-2">
+        <p class="mt-2">
           <a class="btn btn--outline btn--lg" href="catalogo.html">
             Catálogo completo
             <svg class="icon" aria-hidden="true" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
@@ -248,39 +251,45 @@
           <div class="config-block__copy">
             <span class="label">Área cliente</span>
             <h2 id="downloads-title">Catálogo e preços</h2>
-            <p>Downloads para revendedores e profissionais - catálogo PDF, tabela de preços e modelos 3D.</p>
+            <p>Para revendedores e profissionais — PDF, tabela de preços e modelos 3D.</p>
             <a class="btn btn--brand btn--lg" href="area-cliente.html">Abrir área cliente</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section section--warm" aria-labelledby="valores-title">
-      <div class="container" data-cms-region="valores" data-cms-label="Valores"><div class="section-head section-head--center">
+    <section class="section section--promise" aria-labelledby="valores-title">
+      <div class="container" data-cms-region="valores" data-cms-label="Valores">
+        <div class="section-head">
           <span class="label">A nossa promessa</span>
           <h2 id="valores-title">Mais do que um sofá</h2>
         </div>
-        <div class="values">
+        <div class="values values--lines">
           <article class="value-card">
             <h3>Conforto</h3>
-            <p>Estruturas, espumas e mecanismos pensados para o uso diário - relax, cama e soluções à medida de cada família.</p>
+            <p>Estruturas, espumas e mecanismos para o uso diário — relax, cama e soluções à medida.</p>
           </article>
           <article class="value-card">
             <h3>Acabamento</h3>
-            <p>Tecidos Easy Clean, Pet Friendly e antibacteriano. Pés, lacados Pantone e detalhes que fazem a diferença. <a class="catalog-card__link" href="tecidos.html">Explorar tecidos</a></p>
+            <p>Tecidos Easy Clean, Pet Friendly e antibacteriano. Pés, lacados Pantone e detalhe fino. <a class="catalog-card__link" href="tecidos.html">Explorar tecidos</a></p>
           </article>
           <article class="value-card">
             <h3>Parceria</h3>
-            <p>Ferramentas para lojistas e arquitectos - configurador 3D, orçamentos PDF e apoio comercial dedicado.</p>
+            <p>Ferramentas para lojistas e arquitectos — configurador 3D, orçamentos PDF e apoio comercial.</p>
           </article>
-        </div></div>
+        </div>
+      </div>
     </section>
 
-    <section class="section section--cta">
-      <div class="container">
-        <div class="cta-band" data-cms-region="cta" data-cms-label="CTA visita"><h2>Onde ver os sofás Stoffus</h2>
-          <p>Indique a sua zona e sugerimos o local mais próximo para experimentar tecidos e pedir orçamento.</p>
-          <a class="btn btn--brand btn--lg" href="onde-comprar.html">Indicar a minha zona</a></div>
+    <section class="section section--cta" aria-labelledby="cta-home-title">
+      <div class="cta-band cta-band--bleed">
+        <div class="container">
+          <div data-cms-region="cta" data-cms-label="CTA visita">
+            <h2 id="cta-home-title">Onde ver os sofás Stoffus</h2>
+            <p>Indique a sua zona e sugerimos o local mais próximo para experimentar tecidos e pedir orçamento.</p>
+            <a class="btn btn--brand btn--lg" href="onde-comprar.html">Indicar a minha zona</a>
+          </div>
+        </div>
       </div>
     </section>
   </main>

@@ -3851,6 +3851,163 @@ body.has-cookie-banner .back-to-top {
   bottom: max(5.5rem, calc(env(safe-area-inset-bottom) + 4.5rem));
 }
 
+/* -- Homepage: composição e ritmo -- */
+.hero__brand {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.65rem, 3.2vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--brand);
+}
+
+.page-home .hero__copy .label {
+  margin-bottom: 0.85rem;
+}
+
+.page-home .hero h1 {
+  max-width: 14ch;
+}
+
+.page-home .section--tool {
+  padding-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+.page-home .section--experience {
+  background: var(--surface-2);
+}
+
+.page-home .config-block--featured {
+  border-radius: 0;
+  box-shadow: 0 28px 60px -40px rgba(0, 0, 0, 0.28);
+}
+
+.page-home .section--promise {
+  background: #fff;
+  border-top: 1px solid var(--border);
+}
+
+.page-home .values--lines {
+  display: grid;
+  gap: 0;
+  background: transparent;
+  border: none;
+}
+
+.page-home .values--lines .value-card {
+  padding: 1.5rem 0;
+  background: transparent;
+  border-top: 1px solid var(--border);
+}
+
+.page-home .values--lines .value-card:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.page-home .values--lines .value-card h3 {
+  margin-bottom: 0.45rem;
+}
+
+@media (min-width: 768px) {
+  .page-home .values--lines {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 2rem;
+  }
+
+  .page-home .values--lines .value-card {
+    border-top: none;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    padding: 0 1.5rem 0 0;
+  }
+
+  .page-home .values--lines .value-card:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .page-home .values--lines .value-card:first-child {
+    padding-left: 0;
+  }
+}
+
+.page-home .section--cta {
+  padding: 0;
+}
+
+.cta-band--bleed {
+  border: none;
+  border-radius: 0;
+  text-align: left;
+  padding: clamp(2.75rem, 5vw, 3.75rem) 0;
+}
+
+.cta-band--bleed h2 {
+  max-width: 18ch;
+}
+
+.cta-band--bleed p {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+@media (min-width: 900px) {
+  .page-home .brand-strip__inner {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0;
+    padding: 0;
+  }
+
+  .page-home .brand-strip__item {
+    flex: 1;
+    padding: 1.35rem 1.25rem;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+  }
+
+  .page-home .brand-strip__item:last-child {
+    border-right: none;
+  }
+}
+
+/* Heroes interiores — mesma disciplina tipográfica */
+.catalog-hero__lead,
+.s3d-hero__lead {
+  font-weight: 300;
+}
+
+.page-home .hero__brand {
+  animation: fade-up 0.55s ease both;
+}
+
+.page-home .hero__copy .label {
+  animation: fade-up 0.55s ease 0.04s both;
+}
+
+.page-home .hero__copy h1 {
+  animation: fade-up 0.65s ease 0.08s both;
+}
+
+.page-home .hero__copy .hero__lead {
+  animation: fade-up 0.65s ease 0.12s both;
+}
+
+.page-home .hero__copy .hero__ctas {
+  animation: fade-up 0.65s ease 0.16s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-home .hero__brand,
+  .page-home .hero__copy .label,
+  .page-home .hero__copy h1,
+  .page-home .hero__copy .hero__lead,
+  .page-home .hero__copy .hero__ctas {
+    animation: none !important;
+  }
+}
+
 /* -- Reveal no scroll -- */
 .reveal-on-scroll {
   opacity: 0;
