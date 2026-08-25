@@ -135,7 +135,7 @@ a { color: inherit; }
 }
 
 h1, h2, .section-head h2 {
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 /* -- Header -- */
@@ -417,7 +417,7 @@ h1, h2, .section-head h2 {
 
 .hero--spotlight {
   background:
-    radial-gradient(ellipse 70% 55% at 92% 8%, rgba(224, 78, 38, 0.1) 0%, transparent 58%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(224, 78, 38, 0.07) 0%, transparent 55%),
     linear-gradient(180deg, #ffffff 0%, var(--surface) 100%);
 }
 
@@ -425,28 +425,28 @@ h1, h2, .section-head h2 {
 
 .hero__grid {
   display: grid;
-  gap: 2rem;
+  gap: 2.5rem;
   align-items: center;
-  padding: 2.5rem 0 0;
+  padding: 3rem 0 3.5rem;
 }
 
 .hero__copy { position: relative; z-index: 1; }
 
 .hero__copy .label {
   color: var(--brand);
-  margin-bottom: 1.1rem;
-  letter-spacing: var(--track-slogan);
+  margin-bottom: 1.25rem;
+  letter-spacing: var(--track-wide);
 }
 
 .hero h1 {
   margin: 0 0 1rem;
-  font-size: clamp(2.5rem, 6vw, 4.1rem);
+  font-size: clamp(2.35rem, 5.5vw, 3.75rem);
   font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   color: var(--ink-deep);
   text-wrap: balance;
-  max-width: 11ch;
+  max-width: 12ch;
 }
 
 .hero h1 em {
@@ -455,13 +455,12 @@ h1, h2, .section-head h2 {
 }
 
 .hero__lead {
-  margin: 0 0 2rem;
-  max-width: 28rem;
-  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  margin: 0 0 1.75rem;
+  max-width: 30rem;
+  font-size: 1.05rem;
   font-weight: 300;
   color: var(--ink-muted);
-  line-height: 1.55;
-  letter-spacing: 0.01em;
+  line-height: 1.6;
 }
 
 .hero__ctas {
@@ -480,8 +479,7 @@ h1, h2, .section-head h2 {
   border-radius: 0;
   overflow: hidden;
   box-shadow: none;
-  border: none;
-  border-top: 1px solid var(--border);
+  border: 1px solid var(--border);
   text-decoration: none;
   color: inherit;
   transition: none;
@@ -496,7 +494,7 @@ h1, h2, .section-head h2 {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 62%, rgba(20, 20, 20, 0.32) 100%);
+  background: linear-gradient(180deg, transparent 55%, rgba(20, 20, 20, 0.28) 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -560,32 +558,28 @@ a.hero__tag:hover {
 
 @media (min-width: 900px) {
   .hero__grid {
-    grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 1.28fr);
-    gap: 2.25rem;
-    align-items: end;
-    padding: 3.25rem 0 0;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 3rem;
+    align-items: center;
+    padding: 4rem 0 4.5rem;
   }
 
   .hero__copy {
-    padding-bottom: 3.25rem;
-  }
-
-  .hero--spotlight .hero__frame {
-    min-height: min(70vh, 38rem);
+    padding-bottom: 0;
   }
 
   .hero--spotlight .hero__frame img {
-    aspect-ratio: auto;
-    min-height: min(70vh, 38rem);
-    height: 100%;
+    aspect-ratio: 16 / 11;
+    min-height: 0;
+    height: auto;
     object-fit: cover;
   }
 
   .hero--spotlight .hero__frame video.hero__video,
   .hero--spotlight .hero__frame .site-video__el.hero__video {
-    aspect-ratio: auto;
-    min-height: min(70vh, 38rem);
-    height: 100%;
+    aspect-ratio: 1280 / 704;
+    min-height: 0;
+    height: auto;
     object-fit: cover;
     object-position: center center;
   }
@@ -602,11 +596,11 @@ a.hero__tag:hover {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0;
-  padding: 1.65rem 0;
+  padding: 1.25rem 0;
 }
 
 .brand-strip__item {
-  padding: 0.85rem 1.1rem;
+  padding: 0.85rem 1rem;
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -617,9 +611,9 @@ a.hero__tag:hover {
 
 .brand-strip__item strong {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 500;
-  letter-spacing: var(--track-slogan);
+  letter-spacing: var(--track-wide);
   text-transform: uppercase;
   color: var(--brand);
   margin-bottom: 0.3rem;
@@ -628,7 +622,7 @@ a.hero__tag:hover {
 .brand-strip__item span {
   font-size: 0.92rem;
   font-weight: 300;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--ink-muted);
 }
 
@@ -639,7 +633,7 @@ a.hero__tag:hover {
   }
 
   .brand-strip__item {
-    padding: 1.85rem 1.35rem;
+    padding: 1.5rem 1.15rem;
     border-bottom: none;
     border-right: 1px solid var(--border);
   }
@@ -667,9 +661,7 @@ a.hero__tag:hover {
 
 .page-minimal .cta-band {
   background: color-mix(in srgb, var(--brand-soft) 70%, #fff);
-  border: none;
-  border-top: 1px solid rgba(224, 78, 38, 0.12);
-  border-bottom: 1px solid rgba(224, 78, 38, 0.12);
+  border: 1px solid rgba(224, 78, 38, 0.12);
   box-shadow: none;
 }
 
@@ -708,19 +700,19 @@ a.hero__tag:hover {
 
 .section-head h2 {
   margin: 0.65rem 0 0.75rem;
-  font-size: clamp(1.95rem, 3.6vw, 2.85rem);
+  font-size: clamp(1.85rem, 3.5vw, 2.65rem);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
   color: var(--ink-deep);
 }
 
 .section-head p {
   margin: 0;
   color: var(--ink-muted);
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   font-weight: 300;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 /* -- Configurador -- */
@@ -1061,8 +1053,8 @@ a.hero__tag:hover {
 }
 
 .collection-card--feature .collection-card__name h3 {
-  font-size: clamp(1.55rem, 3vw, 2.1rem);
-  letter-spacing: -0.03em;
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  letter-spacing: -0.02em;
 }
 
 .collections--classic .collection-card {
@@ -1151,25 +1143,23 @@ a.hero__tag:hover {
 .cta-band {
   position: relative;
   overflow: hidden;
-  padding: clamp(3rem, 6vw, 4.75rem) 0;
+  padding: clamp(2.75rem, 5vw, 3.75rem) 1.75rem;
   background: var(--brand-soft);
-  border: none;
-  border-top: 1px solid rgba(224, 78, 38, 0.14);
-  border-bottom: 1px solid rgba(224, 78, 38, 0.14);
-  text-align: left;
+  border: 1px solid rgba(224, 78, 38, 0.12);
+  text-align: center;
 }
 
 .cta-band h2 {
   margin: 0 0 0.75rem;
-  font-size: clamp(1.85rem, 3.4vw, 2.65rem);
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--ink-deep);
-  max-width: 18ch;
+  max-width: none;
 }
 
 .cta-band p {
-  margin: 0 0 1.75rem;
+  margin: 0 auto 1.75rem;
   max-width: 32rem;
   font-weight: 300;
   color: var(--ink-muted);
@@ -1282,10 +1272,10 @@ a.hero__tag:hover {
 
 .catalog-hero h1 {
   margin: 0 0 1rem;
-  font-size: clamp(2.25rem, 4.8vw, 3.5rem);
+  font-size: clamp(2.1rem, 4.5vw, 3.25rem);
   font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   color: var(--ink-deep);
   max-width: 14ch;
 }
@@ -1298,10 +1288,10 @@ a.hero__tag:hover {
 .catalog-hero__lead {
   margin: 0;
   max-width: 36rem;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 300;
   color: var(--ink-muted);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .catalog-hero__aside {
@@ -2680,7 +2670,7 @@ body.page-minimal:not(.page-rich) .section--warm {
 }
 
 .company-stat {
-  padding: 1.5rem 1.15rem;
+  padding: 1.35rem 1rem;
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
@@ -2691,9 +2681,9 @@ body.page-minimal:not(.page-rich) .section--warm {
 
 .company-stat strong {
   display: block;
-  font-size: clamp(1.65rem, 3.2vw, 2.25rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
   color: var(--ink-deep);
   margin-bottom: 0.3rem;
 }
@@ -2709,7 +2699,7 @@ body.page-minimal:not(.page-rich) .section--warm {
   .company-stats__inner { grid-template-columns: repeat(4, 1fr); }
 
   .company-stat {
-    padding: 2rem 1.35rem;
+    padding: 1.75rem 1.15rem;
     border-bottom: none;
     border-right: 1px solid var(--border);
   }
@@ -3381,10 +3371,10 @@ body.page-minimal:not(.page-rich) .section--warm {
 
 .s3d-hero h1 {
   margin: 0 0 1rem;
-  font-size: clamp(2.25rem, 5vw, 3.55rem);
+  font-size: clamp(2.1rem, 4.8vw, 3.35rem);
   font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   color: var(--ink-deep);
 }
 
@@ -3396,10 +3386,10 @@ body.page-minimal:not(.page-rich) .section--warm {
 .s3d-hero__lead {
   margin: 0 0 1.75rem;
   max-width: 32rem;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 300;
   color: var(--ink-muted);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .s3d-hero__ctas {
@@ -3864,8 +3854,8 @@ body.has-cookie-banner .back-to-top {
 /* -- Reveal no scroll -- */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(12px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
 }
 
 .reveal-on-scroll.is-visible {
