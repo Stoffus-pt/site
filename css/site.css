@@ -1985,12 +1985,12 @@ body.page-minimal:not(.page-rich) .section--warm {
   pointer-events: none;
 }
 
-.fabric-chair.is-loading .fabric-chair__loading,
-.fabric-chair.is-fabric-loading .fabric-chair__loading {
+#fabric-chair.is-loading .fabric-chair__loading,
+#fabric-chair.is-fabric-loading .fabric-chair__loading {
   opacity: 1;
 }
 
-.fabric-chair.is-ready .fabric-chair__loading {
+#fabric-chair.is-ready .fabric-chair__loading {
   opacity: 0;
 }
 

@@ -32,6 +32,9 @@
   var fabricMeshes = [];
   var animationId = 0;
   var loadToken = 0;
+  var dracoLoader = null;
+  var gltfLoader = null;
+  var DRACO_DECODER = 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/';
 
   function studioBase() {
     var tex = (window.StoffusSite && window.StoffusSite.textureRemote) || 'https://stoffus.pt/Studio3D/assets/textures/';
@@ -116,10 +119,11 @@
     var lower = String(node.name || '').toLowerCase();
     if (lower.includes('tabua') || lower.includes('base')) return false;
     if (node.userData && node.userData.isStoffusLeg) return true;
-    var legWords = ['leg', 'pé', 'pe', 'foot', 'feet', 'metal', 'wood', 'inox', 'chrome', 'rodape'];
+    var legWords = ['leg', 'pé', 'foot', 'feet', 'metal', 'wood', 'inox', 'chrome', 'rodape'];
     for (var i = 0; i < legWords.length; i++) {
       if (lower.includes(legWords[i])) return true;
     }
+    if (/\bpe\b/.test(lower) || /(^|[_-])pe($|[_-])/.test(lower)) return true;
     return false;
   }
 
@@ -145,14 +149,22 @@
   }
 
   function fitChair(root) {
+    root.position.set(0, 0, 0);
+    root.scale.setScalar(1);
+    root.updateMatrixWorld(true);
+
     var box = new THREE.Box3().setFromObject(root);
     var size = box.getSize(new THREE.Vector3());
-    var center = box.getCenter(new THREE.Vector3());
-    root.position.sub(center);
     var maxDim = Math.max(size.x, size.y, size.z) || 1;
     var scale = 1.35 / maxDim;
+
     root.scale.setScalar(scale);
-    root.position.y -= box.min.y * scale;
+    root.updateMatrixWorld(true);
+
+    box.setFromObject(root);
+    var center = box.getCenter(new THREE.Vector3());
+    root.position.set(-center.x, -box.min.y, -center.z);
+    root.updateMatrixWorld(true);
   }
 
   function setLoading(on) {
@@ -323,8 +335,28 @@
       });
   }
 
+  function ensureGltfLoader() {
+    if (!THREE.GLTFLoader) return null;
+    if (!gltfLoader) {
+      if (THREE.DRACOLoader) {
+        dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath(DRACO_DECODER);
+        dracoLoader.setDecoderConfig({ type: 'js' });
+      }
+      gltfLoader = new THREE.GLTFLoader();
+      gltfLoader.setCrossOrigin('anonymous');
+      if (dracoLoader) gltfLoader.setDRACOLoader(dracoLoader);
+    }
+    return gltfLoader;
+  }
+
   function loadChair(chairId) {
-    if (!THREE.GLTFLoader) return Promise.reject(new Error('GLTFLoader'));
+    var loader = ensureGltfLoader();
+    if (!loader) {
+      root.classList.add('is-error');
+      if (loadingEl) loadingEl.textContent = 'Visualizador 3D indisponível neste browser.';
+      return Promise.reject(new Error('GLTFLoader'));
+    }
     currentChairId = CHAIRS[chairId] ? chairId : 'osaka';
     if (modelSelect) modelSelect.value = currentChairId;
 
@@ -347,7 +379,6 @@
     }
 
     return new Promise(function (resolve, reject) {
-      var loader = new THREE.GLTFLoader();
       loader.load(
         chairModelUrl(currentChairId),
         function (gltf) {
@@ -503,7 +534,7 @@
   };
 
   initScene();
-  loadChair('osaka');
+  loadChair('osaka').catch(function () {});
 
   fetch('data/fabrics.json')
     .then(function (res) {
