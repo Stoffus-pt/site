@@ -1,6 +1,8 @@
 (function () {
   var grid = document.getElementById('fabrics-grid');
   var filters = document.getElementById('fabrics-filters');
+  var searchEl = document.getElementById('fabrics-search');
+  var paginationEl = document.getElementById('fabrics-pagination');
   var countEl = document.getElementById('fabrics-count');
   var emptyEl = document.getElementById('fabrics-empty');
   var modal = document.getElementById('fabric-modal');
@@ -13,7 +15,6 @@
   var modalCode = document.getElementById('fabric-modal-code');
   var modalColors = document.getElementById('fabric-modal-colors');
   var modalConfig = document.getElementById('fabric-modal-config');
-  var modalMockup = document.getElementById('fabric-modal-mockup');
   var viewer = document.getElementById('fabric-viewer');
   var viewerImg = document.getElementById('fabric-viewer-img');
   var viewerCanvas = document.getElementById('fabric-viewer-canvas');
@@ -25,6 +26,7 @@
 
   if (!grid || !filters || !modal) return;
 
+  var PAGE_SIZE = 18;
   var SPEC_LABELS = [
     { key: 'composicao', label: 'Composição' },
     { key: 'largura', label: 'Largura' },
@@ -51,7 +53,10 @@
   var TEXTURE_LABELS = { default: 'Tecido' };
   var COLLECTIONS = [];
   var currentFilter = 'all';
+  var searchQuery = '';
+  var currentPage = 1;
   var lastFocus = null;
+  var mediaObserver = null;
 
   function textureRemoteBase() {
     return (window.StoffusSite && window.StoffusSite.textureRemote) || 'https://stoffus.pt/Studio3D/assets/textures/';
@@ -172,39 +177,92 @@
     });
   }
 
-  function renderCard(col) {
+  function collectionVideo(col) {
+    if (col.video) return col.video;
+    if (col.previewVideo) return col.previewVideo;
+    return '';
+  }
+
+  function renderCard(col, index) {
     var gama = gamaFor(col);
     var textureLabel = TEXTURE_LABELS[col.texture] || TEXTURE_LABELS.default;
     var colors = colorCount(col);
-    var codeRange = col.prefix + col.start + ' – ' + col.prefix + col.end;
+    var videoSrc = collectionVideo(col);
+    var primaryTexture = textureUrl(col, 1);
 
     var card = document.createElement('article');
-    card.className = 'fabric-card';
+    card.className = 'fabric-showcase';
     card.dataset.gama = gama.filter;
     card.dataset.id = col.id;
+    card.style.setProperty('--fabric-delay', ((index % 6) * 0.75) + 's');
 
-    card.innerHTML =
-      '<button type="button" class="fabric-card__swatch" data-open-fabric="' + col.id + '" aria-label="Ver cores de ' + col.name + '">' +
-        '<img src="' + cardThumb(col) + '" alt="Amostra ' + col.name + '" loading="lazy" decoding="async" />' +
-        '<span class="fabric-card__gama" data-gama-prefix="' + col.prefix + '">' + gama.label + '</span>' +
-        '<span class="fabric-card__hint">Ver cores</span>' +
-      '</button>' +
-      '<div class="fabric-card__body">' +
-        '<h3 class="fabric-card__title">' + col.name + '</h3>' +
-        '<p class="fabric-card__meta">' + textureLabel + ' · ' + colors + ' cores</p>' +
-        '<p class="fabric-card__codes">' + codeRange + '</p>' +
-        '<button type="button" class="fabric-card__link" data-open-fabric="' + col.id + '">Ver paleta de cores</button>' +
-        '<a class="fabric-card__config" href="#" data-fabric-id="' + fabricIdFor(col, 1) + '">Ver no configurador</a>' +
-      '</div>';
-
-    var img = card.querySelector('.fabric-card__swatch img');
-    if (img) {
-      bindImageFallback(img, cardThumb(col), cardThumbFallback(col));
+    var mediaHtml = '';
+    if (videoSrc) {
+      mediaHtml +=
+        '<video class="fabric-showcase__video" muted loop playsinline preload="metadata" poster="' + cardThumb(col) + '">' +
+          '<source src="' + videoSrc + '" type="video/mp4" />' +
+        '</video>';
     }
 
-    bindFabricConfiguratorClick(card.querySelector('.fabric-card__config'), fabricIdFor(col, 1));
+    card.innerHTML =
+      '<button type="button" class="fabric-showcase__btn" data-open-fabric="' + col.id + '" aria-label="Abrir colecção ' + col.name + '">' +
+        '<div class="fabric-showcase__media">' +
+          mediaHtml +
+          '<img class="fabric-showcase__texture' + (videoSrc ? ' fabric-showcase__texture--fallback' : '') + '" src="' + primaryTexture + '" alt="" loading="lazy" decoding="async" />' +
+          '<span class="fabric-showcase__shade" aria-hidden="true"></span>' +
+        '</div>' +
+        '<div class="fabric-showcase__caption">' +
+          '<span class="fabric-showcase__gama" data-gama-prefix="' + col.prefix + '">' + gama.label + '</span>' +
+          '<h3 class="fabric-showcase__title">' + col.name + '</h3>' +
+          '<p class="fabric-showcase__meta">' + textureLabel + ' · ' + colors + ' cores</p>' +
+        '</div>' +
+      '</button>';
 
+    var img = card.querySelector('.fabric-showcase__texture');
+    if (img) {
+      bindImageFallback(img, primaryTexture, cardThumbFallback(col));
+    }
+
+    bindShowcaseMedia(card);
     return card;
+  }
+
+  function bindShowcaseMedia(card) {
+    var media = card.querySelector('.fabric-showcase__media');
+    var video = card.querySelector('.fabric-showcase__video');
+    if (!media) return;
+
+    if (video) {
+      video.addEventListener('loadeddata', function () {
+        media.classList.add('has-video');
+      });
+      card.addEventListener('mouseenter', function () {
+        video.play().catch(function () {});
+      });
+      card.addEventListener('mouseleave', function () {
+        video.pause();
+        video.currentTime = 0;
+      });
+    }
+
+    if (mediaObserver) {
+      mediaObserver.observe(media);
+    }
+  }
+
+  function initMediaObserver() {
+    if (!('IntersectionObserver' in window)) return;
+    mediaObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var video = entry.target.querySelector('.fabric-showcase__video');
+        if (!video) return;
+        if (entry.isIntersecting) {
+          video.play().catch(function () {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.4 });
   }
 
   function getCollectionById(id) {
@@ -226,10 +284,6 @@
     }
     if (modalConfig) {
       modalConfig.setAttribute('data-fabric-id', fabricIdFor(col, fileIndex));
-    }
-
-    if (window.StoffusFabricMockup && typeof window.StoffusFabricMockup.apply === 'function') {
-      window.StoffusFabricMockup.apply(col, fileIndex);
     }
 
     modalColors.querySelectorAll('.fabric-color').forEach(function (el) {
@@ -358,20 +412,65 @@
     }
   }
 
+  function normalizeSearch(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function matchesSearch(col, query) {
+    if (!query) return true;
+    var hay = [col.name, col.id, col.prefix, col.gamaLabel, col.gama].join(' ').toLowerCase();
+    return hay.indexOf(query) !== -1;
+  }
+
   function getFiltered() {
-    if (currentFilter === 'all') return COLLECTIONS.slice();
+    var query = normalizeSearch(searchQuery);
     return COLLECTIONS.filter(function (col) {
       var gama = gamaFor(col);
-      return gama.filter === currentFilter;
+      if (currentFilter !== 'all' && gama.filter !== currentFilter) return false;
+      return matchesSearch(col, query);
     });
+  }
+
+  function renderPagination(totalPages) {
+    if (!paginationEl) return;
+    if (totalPages <= 1) {
+      paginationEl.hidden = true;
+      paginationEl.innerHTML = '';
+      return;
+    }
+
+    paginationEl.hidden = false;
+    var html = '';
+
+    if (currentPage > 1) {
+      html += '<button type="button" class="fabrics-pagination__btn" data-page="' + (currentPage - 1) + '" aria-label="Página anterior">‹</button>';
+    }
+
+    for (var p = 1; p <= totalPages; p++) {
+      html += '<button type="button" class="fabrics-pagination__btn' + (p === currentPage ? ' is-active' : '') + '" data-page="' + p + '"' +
+        (p === currentPage ? ' aria-current="page"' : '') + '>' + p + '</button>';
+    }
+
+    if (currentPage < totalPages) {
+      html += '<button type="button" class="fabrics-pagination__btn" data-page="' + (currentPage + 1) + '" aria-label="Página seguinte">›</button>';
+    }
+
+    paginationEl.innerHTML = html;
   }
 
   function renderGrid() {
     var items = getFiltered();
-    grid.innerHTML = '';
+    var totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
 
-    items.forEach(function (col) {
-      grid.appendChild(renderCard(col));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    var start = (currentPage - 1) * PAGE_SIZE;
+    var pageItems = items.slice(start, start + PAGE_SIZE);
+
+    grid.innerHTML = '';
+    pageItems.forEach(function (col, index) {
+      grid.appendChild(renderCard(col, start + index));
     });
 
     if (countEl) {
@@ -381,6 +480,8 @@
     if (emptyEl) {
       emptyEl.hidden = items.length > 0;
     }
+
+    renderPagination(totalPages);
   }
 
   function bindUi() {
@@ -396,12 +497,31 @@
       if (!btn) return;
 
       currentFilter = btn.dataset.filter;
+      currentPage = 1;
       filters.querySelectorAll('[data-filter]').forEach(function (el) {
         el.classList.toggle('is-active', el === btn);
         el.setAttribute('aria-pressed', el === btn ? 'true' : 'false');
       });
       renderGrid();
     });
+
+    if (searchEl) {
+      searchEl.addEventListener('input', function () {
+        searchQuery = searchEl.value;
+        currentPage = 1;
+        renderGrid();
+      });
+    }
+
+    if (paginationEl) {
+      paginationEl.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-page]');
+        if (!btn) return;
+        currentPage = Number(btn.dataset.page || 1);
+        renderGrid();
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
 
     modal.addEventListener('click', function (e) {
       if (e.target.closest('[data-fabric-close]')) {
@@ -495,23 +615,6 @@
         if (fabricId) modalConfig.href = fabricConfiguratorUrl(fabricId);
       });
     }
-
-    if (modalMockup) {
-      modalMockup.addEventListener('click', function () {
-        var col = getCollectionById(modal.dataset.collectionId || '');
-        var activeBtn = modalColors.querySelector('.fabric-color.is-active');
-        var fileIndex = activeBtn ? Number(activeBtn.dataset.fileIndex || 1) : 1;
-        if (!col) {
-          var hash = location.hash.slice(1);
-          col = getCollectionById(hash);
-        }
-        if (col && window.StoffusFabricMockup) {
-          window.StoffusFabricMockup.setFromCollection(col, fileIndex);
-          window.StoffusFabricMockup.highlight();
-        }
-        closeModal();
-      });
-    }
   }
 
   function init(data) {
@@ -521,6 +624,7 @@
       return col && col.show !== false;
     }));
 
+    initMediaObserver();
     bindUi();
     renderGrid();
 

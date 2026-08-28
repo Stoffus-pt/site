@@ -105,66 +105,36 @@
       </div>
     </div>
 
-    <section class="section section--warm fabric-mockup-section" id="fabric-mockup" aria-labelledby="fabric-mockup-title">
+    <section class="section section--warm fabrics-catalog" aria-labelledby="fabrics-title">
       <div class="container">
-        <div class="section-head section-head--center">
-          <span class="label">Visualizador</span>
-          <h2 id="fabric-mockup-title">Explore a textura</h2>
-          <p>Alterne colecções e cores numa amostra digital de alta definição. Para ver num modelo real, use o configurador 3D.</p>
-        </div>
-
-        <div class="fabric-mockup">
-          <div class="fabric-mockup__preview">
-            <div class="fabric-mockup__swatch" id="fabric-mockup-swatch">
-              <img id="fabric-mockup-img" src="" alt="Pré-visualização do tecido seleccionado" decoding="async" />
-              <div class="fabric-mockup__swatch-light" aria-hidden="true"></div>
-              <div class="fabric-mockup__swatch-frame" aria-hidden="true"></div>
-            </div>
-            <div class="fabric-mockup__meta">
-              <p class="fabric-mockup__caption" id="fabric-mockup-caption">Escolha uma colecção</p>
-              <p class="fabric-mockup__hint">Referência visual — confirme sempre a amostra física.</p>
-            </div>
-          </div>
-
-          <div class="fabric-mockup__controls">
-            <div class="fabric-mockup__field">
-              <label class="fabric-mockup__label" for="fabric-mockup-collection">Colecção</label>
-              <select class="fabric-mockup__select" id="fabric-mockup-collection"></select>
-            </div>
-
-            <div class="fabric-mockup__field">
-              <span class="fabric-mockup__label" id="fabric-mockup-colors-label">Cor</span>
-              <div class="fabric-mockup__colors" id="fabric-mockup-colors" role="group" aria-labelledby="fabric-mockup-colors-label"></div>
-            </div>
-
-            <div class="fabric-mockup__actions">
-              <a class="btn btn--brand btn--lg" id="fabric-mockup-config" href="#">Ver no configurador 3D</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--warm" aria-labelledby="fabrics-title">
-      <div class="container">
-        <div class="catalog-toolbar">
-          <div class="catalog-toolbar__head">
+        <div class="fabrics-toolbar">
+          <div class="fabrics-toolbar__head">
             <h2 id="fabrics-title">Colecções de revestimento</h2>
-            <p id="fabrics-count" class="catalog-toolbar__count">28 colecções</p>
+            <p id="fabrics-count" class="fabrics-toolbar__count">28 colecções</p>
           </div>
 
-          <div class="catalog-filters" id="fabrics-filters" role="group" aria-label="Filtrar por gama">
-            <button type="button" class="catalog-filter is-active" data-filter="all" aria-pressed="true">Todas</button>
-            <button type="button" class="catalog-filter" data-filter="bliss" aria-pressed="false">Bliss</button>
-            <button type="button" class="catalog-filter" data-filter="delta" aria-pressed="false">Delta</button>
-            <button type="button" class="catalog-filter" data-filter="fashion" aria-pressed="false">Fashion</button>
-            <button type="button" class="catalog-filter" data-filter="pele" aria-pressed="false">Pele genuína</button>
+          <div class="fabrics-toolbar__controls">
+            <label class="fabrics-search" for="fabrics-search">
+              <span class="visually-hidden">Pesquisar colecção</span>
+              <svg class="icon" aria-hidden="true" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
+              <input type="search" id="fabrics-search" placeholder="Pesquisar colecção…" autocomplete="off" />
+            </label>
+
+            <div class="catalog-filters" id="fabrics-filters" role="group" aria-label="Filtrar por gama">
+              <button type="button" class="catalog-filter is-active" data-filter="all" aria-pressed="true">Todas</button>
+              <button type="button" class="catalog-filter" data-filter="bliss" aria-pressed="false">Bliss</button>
+              <button type="button" class="catalog-filter" data-filter="delta" aria-pressed="false">Delta</button>
+              <button type="button" class="catalog-filter" data-filter="fashion" aria-pressed="false">Fashion</button>
+              <button type="button" class="catalog-filter" data-filter="pele" aria-pressed="false">Pele genuína</button>
+            </div>
           </div>
         </div>
 
-        <div class="fabrics-grid" id="fabrics-grid" aria-live="polite"></div>
+        <div class="fabrics-showcase" id="fabrics-grid" aria-live="polite"></div>
 
-        <p class="catalog-empty" id="fabrics-empty" hidden>Nenhuma colecção nesta gama.</p>
+        <p class="catalog-empty" id="fabrics-empty" hidden>Nenhuma colecção encontrada.</p>
+
+        <nav class="fabrics-pagination" id="fabrics-pagination" aria-label="Paginação do catálogo" hidden></nav>
       </div>
     </section>
 
@@ -251,7 +221,6 @@
         <footer class="fabric-modal__foot">
           <p class="fabric-modal__note">As cores no ecrã são referência — confirme a amostra física na visita.</p>
           <a class="btn btn--brand" id="fabric-modal-config" href="#">Experimentar no configurador</a>
-          <button type="button" class="btn btn--outline" id="fabric-modal-mockup">Ver amostra grande</button>
         </footer>
       </div>
     </div>
@@ -396,7 +365,6 @@
   <script src="js/leads.js"></script>
   <script src="js/site.js"></script>
   <script src="js/cms-loader.js"></script>
-  <script src="js/fabric-mockup.js"></script>
   <script src="js/tecidos.js"></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FurnitureStore","name":"Stoffus","description":"Indústria portuguesa de sofás - Eleganza Collection","url":"https://stoffus.pt","telephone":"+351-239-700-799","email":"geral@stoffus.pt","address":{"@type":"PostalAddress","streetAddress":"Parque de Negócios 7/8","addressLocality":"Montemor-o-Velho","postalCode":"3140-258","addressCountry":"PT"}}</script>
 </body>
