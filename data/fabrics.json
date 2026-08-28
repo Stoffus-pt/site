@@ -1,10 +1,10 @@
 {
   "meta": {
-    "syncedAt": "2026-07-22T17:09:38.436Z",
-    "catalogSource": "C:/Users/User/Desktop/Stoffus 3D/data/catalog/catalog-draft.json",
+    "syncedAt": "2026-08-28T16:59:18.208Z",
+    "catalogSource": "C:/Users/User/Desktop/Stoffus 3D/data/catalog/catalog-published.json",
     "overrideSource": "data/fabrics-site.json",
-    "catalogVersion": null,
-    "collectionCount": 29
+    "catalogVersion": "2026.08.27a-83defb2a4b39",
+    "collectionCount": 31
   },
   "gamas": {
     "B": {
@@ -80,6 +80,28 @@
       }
     },
     {
+      "id": "boris",
+      "name": "Boris",
+      "prefix": "B",
+      "start": 6114,
+      "end": 6120,
+      "texture": "alinhado",
+      "textureFolder": "Boris",
+      "gama": "bliss",
+      "gamaLabel": "Bliss",
+      "colorCount": 7,
+      "show": true,
+      "cover": null,
+      "description": null,
+      "specs": {
+        "composicao": "",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    {
       "id": "carmen",
       "name": "Carmen",
       "prefix": "B",
@@ -95,6 +117,28 @@
       "description": null,
       "specs": {
         "composicao": "100% Pes",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    {
+      "id": "elegance",
+      "name": "Elegance",
+      "prefix": "B",
+      "start": 6121,
+      "end": 6127,
+      "texture": "default",
+      "textureFolder": "Elegance",
+      "gama": "bliss",
+      "gamaLabel": "Bliss",
+      "colorCount": 7,
+      "show": true,
+      "cover": null,
+      "description": null,
+      "specs": {
+        "composicao": "",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -193,8 +237,8 @@
       "id": "ifrane",
       "name": "Ifrane",
       "prefix": "B",
-      "start": 4036,
-      "end": 4042,
+      "start": 1136,
+      "end": 1142,
       "texture": "aveludado",
       "textureFolder": "Ifrane",
       "gama": "bliss",
@@ -322,28 +366,6 @@
       }
     },
     {
-      "id": "mirage",
-      "name": "Mirage",
-      "prefix": "B",
-      "start": 4099,
-      "end": 4105,
-      "texture": "aveludado",
-      "textureFolder": "Mirage",
-      "gama": "bliss",
-      "gamaLabel": "Bliss",
-      "colorCount": 7,
-      "show": false,
-      "cover": null,
-      "description": null,
-      "specs": {
-        "composicao": "100% Pes",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
-      }
-    },
-    {
       "id": "pisa",
       "name": "Pisa",
       "prefix": "B",
@@ -359,6 +381,28 @@
       "description": null,
       "specs": {
         "composicao": "100% Pes",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    {
+      "id": "polar",
+      "name": "Polar",
+      "prefix": "B",
+      "start": 6128,
+      "end": 6134,
+      "texture": "default",
+      "textureFolder": "Polar",
+      "gama": "bliss",
+      "gamaLabel": "Bliss",
+      "colorCount": 7,
+      "show": true,
+      "cover": null,
+      "description": null,
+      "specs": {
+        "composicao": "",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -469,6 +513,28 @@
       "description": null,
       "specs": {
         "composicao": "100% Pes",
+        "largura": "",
+        "peso": "",
+        "abrasao": "",
+        "borboto": ""
+      }
+    },
+    {
+      "id": "stratos",
+      "name": "Stratos",
+      "prefix": "B",
+      "start": 6135,
+      "end": 6141,
+      "texture": "default",
+      "textureFolder": "Stratos",
+      "gama": "bliss",
+      "gamaLabel": "Bliss",
+      "colorCount": 7,
+      "show": true,
+      "cover": null,
+      "description": null,
+      "specs": {
+        "composicao": "",
         "largura": "",
         "peso": "",
         "abrasao": "",
@@ -601,28 +667,6 @@
       "description": null,
       "specs": {
         "composicao": "100% Pes",
-        "largura": "",
-        "peso": "",
-        "abrasao": "",
-        "borboto": ""
-      }
-    },
-    {
-      "id": "barbados",
-      "name": "Barbados",
-      "prefix": "F",
-      "start": 4001,
-      "end": 4007,
-      "texture": "default",
-      "textureFolder": "Barbados",
-      "gama": "fashion",
-      "gamaLabel": "Fashion",
-      "colorCount": 7,
-      "show": true,
-      "cover": null,
-      "description": null,
-      "specs": {
-        "composicao": "",
         "largura": "",
         "peso": "",
         "abrasao": "",
