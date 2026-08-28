@@ -31,7 +31,8 @@
   var fabricMaterial = null;
   var fabricMeshes = [];
   var animationId = 0;
-  var loadToken = 0;
+  var chairLoadToken = 0;
+  var fabricLoadToken = 0;
   var dracoLoader = null;
   var gltfLoader = null;
   var DRACO_DECODER = 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/';
@@ -272,7 +273,7 @@
 
   function applyFabric(col, fileIndex) {
     if (!col || !chairRoot) return Promise.resolve();
-    var token = ++loadToken;
+    var token = ++fabricLoadToken;
     var colName = col.textureFolder || col.name;
     var physics = fabricPhysics(col);
     var loader = new THREE.TextureLoader();
@@ -282,7 +283,7 @@
 
     return loadFirstTexture(loader, mapUrls(colName, fileIndex, 'base'))
       .then(function (colorTex) {
-        if (token !== loadToken) return;
+        if (token !== fabricLoadToken) return;
         colorTex.encoding = THREE.sRGBEncoding;
         applyTextureRepeat(colorTex);
 
@@ -311,7 +312,7 @@
         applyFabricMaterial();
 
         return loadFirstTexture(loader, mapUrls(colName, fileIndex, 'normal')).then(function (normalTex) {
-          if (token !== loadToken || !fabricMaterial) return;
+          if (token !== fabricLoadToken || !fabricMaterial) return;
           applyTextureRepeat(normalTex);
           fabricMaterial.normalMap = normalTex;
           fabricMaterial.normalScale = physics.normalScale;
@@ -320,9 +321,9 @@
         }).catch(function () {});
       })
       .then(function () {
-        if (token !== loadToken) return;
+        if (token !== fabricLoadToken) return;
         return loadFirstTexture(loader, mapUrls(colName, fileIndex, 'ambient')).then(function (aoTex) {
-          if (token !== loadToken || !fabricMaterial) return;
+          if (token !== fabricLoadToken || !fabricMaterial) return;
           applyTextureRepeat(aoTex);
           fabricMaterial.aoMap = aoTex;
           fabricMaterial.aoMapIntensity = 0.95;
@@ -331,7 +332,7 @@
         }).catch(function () {});
       })
       .finally(function () {
-        if (token === loadToken) root.classList.remove('is-fabric-loading');
+        if (token === fabricLoadToken) root.classList.remove('is-fabric-loading');
       });
   }
 
@@ -360,7 +361,7 @@
     currentChairId = CHAIRS[chairId] ? chairId : 'osaka';
     if (modelSelect) modelSelect.value = currentChairId;
 
-    var token = ++loadToken;
+    var token = ++chairLoadToken;
     setLoading(true);
 
     if (chairRoot) {
@@ -382,7 +383,7 @@
       loader.load(
         chairModelUrl(currentChairId),
         function (gltf) {
-          if (token !== loadToken) return;
+          if (token !== chairLoadToken) return;
           chairRoot = gltf.scene;
           collectFabricMeshes(chairRoot);
           fitChair(chairRoot);
@@ -394,7 +395,7 @@
         },
         undefined,
         function (err) {
-          if (token !== loadToken) return;
+          if (token !== chairLoadToken) return;
           setLoading(false);
           root.classList.add('is-error');
           if (loadingEl) loadingEl.textContent = 'Não foi possível carregar o modelo 3D.';
@@ -446,6 +447,14 @@
 
     resize();
     window.addEventListener('resize', resize);
+    if (typeof ResizeObserver !== 'undefined') {
+      var stage = canvas.closest('.fabric-chair__stage');
+      if (stage) {
+        new ResizeObserver(function () {
+          resize();
+        }).observe(stage);
+      }
+    }
 
     function tick() {
       animationId = requestAnimationFrame(tick);
