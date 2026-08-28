@@ -2,14 +2,14 @@
   var root = document.getElementById('fabric-mockup');
   if (!root) return;
 
-  var scene = document.getElementById('fabric-mockup-scene');
+  var mockupBox = root.querySelector('.fabric-mockup');
   var textureImg = document.getElementById('fabric-mockup-img');
   var captionEl = document.getElementById('fabric-mockup-caption');
   var collectionSelect = document.getElementById('fabric-mockup-collection');
   var colorsEl = document.getElementById('fabric-mockup-colors');
   var configBtn = document.getElementById('fabric-mockup-config');
 
-  if (!scene || !textureImg || !collectionSelect || !colorsEl) return;
+  if (!textureImg || !collectionSelect || !colorsEl) return;
 
   var COLLECTIONS = [];
   var activeCol = null;
@@ -128,7 +128,7 @@
       collectionSelect.value = col.id;
     }
     renderColors(col);
-    root.classList.add('is-ready');
+    if (mockupBox) mockupBox.classList.add('is-ready');
 
     if (options.scroll) {
       root.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
