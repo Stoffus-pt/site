@@ -13,6 +13,7 @@
   var modalCode = document.getElementById('fabric-modal-code');
   var modalColors = document.getElementById('fabric-modal-colors');
   var modalConfig = document.getElementById('fabric-modal-config');
+  var modalMockup = document.getElementById('fabric-modal-mockup');
   var viewer = document.getElementById('fabric-viewer');
   var viewerImg = document.getElementById('fabric-viewer-img');
   var viewerCanvas = document.getElementById('fabric-viewer-canvas');
@@ -227,6 +228,10 @@
       modalConfig.setAttribute('data-fabric-id', fabricIdFor(col, fileIndex));
     }
 
+    if (window.StoffusFabricMockup && typeof window.StoffusFabricMockup.apply === 'function') {
+      window.StoffusFabricMockup.apply(col, fileIndex);
+    }
+
     modalColors.querySelectorAll('.fabric-color').forEach(function (el) {
       el.classList.toggle('is-active', el === btn);
     });
@@ -287,6 +292,8 @@
   function openModal(col) {
     if (!col) return;
 
+    modal.dataset.collectionId = col.id;
+
     var gama = gamaFor(col);
     var textureLabel = TEXTURE_LABELS[col.texture] || TEXTURE_LABELS.default;
     var colors = colorCount(col);
@@ -307,6 +314,7 @@
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'fabric-color';
+        btn.dataset.fileIndex = String(fileIndex);
         btn.setAttribute('aria-label', col.name + ' ' + code);
         btn.innerHTML =
           '<img src="' + textureUrl(col, fileIndex) + '" alt="" loading="lazy" decoding="async" />' +
@@ -485,6 +493,23 @@
       modalConfig.addEventListener('click', function () {
         var fabricId = modalConfig.getAttribute('data-fabric-id');
         if (fabricId) modalConfig.href = fabricConfiguratorUrl(fabricId);
+      });
+    }
+
+    if (modalMockup) {
+      modalMockup.addEventListener('click', function () {
+        var col = getCollectionById(modal.dataset.collectionId || '');
+        var activeBtn = modalColors.querySelector('.fabric-color.is-active');
+        var fileIndex = activeBtn ? Number(activeBtn.dataset.fileIndex || 1) : 1;
+        if (!col) {
+          var hash = location.hash.slice(1);
+          col = getCollectionById(hash);
+        }
+        if (col && window.StoffusFabricMockup) {
+          window.StoffusFabricMockup.setFromCollection(col, fileIndex);
+          window.StoffusFabricMockup.highlight();
+        }
+        closeModal();
       });
     }
   }
