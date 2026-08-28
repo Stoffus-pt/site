@@ -32,7 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($label === '' || $href === '') {
             continue;
         }
-        $clean[] = ['label' => $label, 'href' => $href];
+        $entry = ['label' => $label, 'href' => $href];
+        if (!empty($item['exposicao'])) {
+            $entry['exposicao'] = true;
+        }
+        $clean[] = $entry;
     }
 
     if (!is_dir(CMS_DIR . '/data')) {
@@ -104,6 +108,10 @@ function cms_build_nav_html(array $nav, bool $mobile): string
     $out = '';
     foreach ($nav as $item) {
         $label = htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8');
+        if (!empty($item['exposicao'])) {
+            $out .= '<a href="#" data-stoffus-exposicao target="_blank" rel="noopener noreferrer">' . $label . '</a>';
+            continue;
+        }
         $href = htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8');
         $out .= '<a href="' . $href . '">' . $label . '</a>';
     }

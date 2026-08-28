@@ -12,6 +12,11 @@
         "href": "novidades.html"
     },
     {
+        "label": "Entrega imediata",
+        "href": "#",
+        "exposicao": true
+    },
+    {
         "label": "Tecidos",
         "href": "tecidos.html"
     },

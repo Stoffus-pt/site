@@ -626,6 +626,17 @@ a.hero__tag:hover {
   color: var(--ink-muted);
 }
 
+.brand-strip__item--link a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.brand-strip__item--link a:hover {
+  color: var(--brand);
+}
+
 @media (min-width: 768px) {
   .brand-strip__inner {
     grid-template-columns: repeat(4, 1fr);

@@ -5,6 +5,7 @@
   var onlineTextures = 'https://stoffus.pt/Studio3D/assets/textures/';
 
   var onlineConfigurator = 'https://stoffus.pt/Studio3D/app.html';
+  var onlineExposicao = 'https://stoffus.pt/Studio3D/exposicao.php';
 
   // Com ABRIR-CMS.bat (router na raiz): /Studio3D/app.html funciona em local.
   // Pré-visualização GitHub Pages: configurador continua no stoffus.pt.
@@ -20,6 +21,20 @@
       return onlineConfigurator;
     }
     return '/Studio3D/app.html';
+  }
+
+  function exposicaoBase() {
+    if (isGithubPreview) {
+      return onlineExposicao;
+    }
+    if (isLocal) {
+      var port = location.port || '';
+      if (port === '8080') {
+        return '/Studio3D/exposicao.php';
+      }
+      return onlineExposicao;
+    }
+    return '/Studio3D/exposicao.php';
   }
 
   function textureRemoteBase() {
@@ -98,6 +113,7 @@
       }
     },
     configurator: configuratorBase(),
+    exposicao: exposicaoBase(),
     configuratorForModel: function (modelId) {
       if (!modelId) return configuratorBase();
       var cfg = encodeCfg(modelId);
@@ -122,6 +138,9 @@
       document.querySelectorAll('[data-stoffus-configurator-model]').forEach(function (el) {
         var id = el.getAttribute('data-stoffus-configurator-model') || '';
         el.setAttribute('href', global.StoffusSite.configuratorForModel(id));
+      });
+      document.querySelectorAll('[data-stoffus-exposicao]').forEach(function (el) {
+        el.setAttribute('href', exposicaoBase());
       });
     },
     downloads: {
