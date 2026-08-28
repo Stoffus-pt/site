@@ -1959,12 +1959,10 @@ body.page-minimal:not(.page-rich) .section--warm {
 .fabric-chair__stage {
   position: relative;
   min-height: min(62vh, 520px);
-  background:
-    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(26, 26, 26, 0.06), transparent 70%),
-    linear-gradient(180deg, #f3f0eb 0%, #e8e4de 100%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
 }
 
 #fabric-chair-canvas {
