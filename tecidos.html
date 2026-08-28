@@ -105,6 +105,45 @@
       </div>
     </div>
 
+    <section class="section fabric-chair-section" id="fabric-chair" aria-labelledby="fabric-chair-title">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="label">Visualizador 3D</span>
+          <h2 id="fabric-chair-title">Experimente o tecido na cadeira</h2>
+          <p>Modelo real em alta definição — rode, aproxime e alterne colecções e cores.</p>
+        </div>
+
+        <div class="fabric-chair">
+          <div class="fabric-chair__stage">
+            <canvas id="fabric-chair-canvas" aria-label="Pré-visualização 3D da cadeira com tecido seleccionado"></canvas>
+            <p class="fabric-chair__loading" id="fabric-chair-loading">A carregar modelo 3D…</p>
+          </div>
+
+          <aside class="fabric-chair__panel">
+            <div class="fabric-chair__field">
+              <label class="fabric-chair__label" for="fabric-chair-model">Cadeira</label>
+              <select class="fabric-chair__select" id="fabric-chair-model"></select>
+            </div>
+
+            <div class="fabric-chair__field">
+              <label class="fabric-chair__label" for="fabric-chair-collection">Colecção</label>
+              <select class="fabric-chair__select" id="fabric-chair-collection"></select>
+            </div>
+
+            <div class="fabric-chair__field">
+              <span class="fabric-chair__label" id="fabric-chair-colors-label">Cor</span>
+              <div class="fabric-chair__colors" id="fabric-chair-colors" role="group" aria-labelledby="fabric-chair-colors-label"></div>
+            </div>
+
+            <p class="fabric-chair__caption" id="fabric-chair-caption"></p>
+
+            <a class="btn btn--brand btn--lg" id="fabric-chair-config" href="#">Ver no configurador 3D</a>
+            <p class="fabric-chair__note">Referência digital PBR — confirme sempre a amostra física.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
     <section class="section section--warm fabrics-catalog" aria-labelledby="fabrics-title">
       <div class="container">
         <div class="fabrics-toolbar">
@@ -130,11 +169,9 @@
           </div>
         </div>
 
-        <div class="fabrics-showcase" id="fabrics-grid" aria-live="polite"></div>
+        <div class="fabrics-grid" id="fabrics-grid" aria-live="polite"></div>
 
-        <p class="catalog-empty" id="fabrics-empty" hidden>Nenhuma colecção encontrada.</p>
-
-        <nav class="fabrics-pagination" id="fabrics-pagination" aria-label="Paginação do catálogo" hidden></nav>
+        <p class="catalog-empty" id="fabrics-empty" hidden>Nenhuma colecção nesta gama.</p>
       </div>
     </section>
 
@@ -359,12 +396,16 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="js/config.js"></script>
   <script src="js/seo.js"></script>
   <script src="js/cookies.js"></script>
   <script src="js/leads.js"></script>
   <script src="js/site.js"></script>
   <script src="js/cms-loader.js"></script>
+  <script src="js/fabric-chair-viewer.js"></script>
   <script src="js/tecidos.js"></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FurnitureStore","name":"Stoffus","description":"Indústria portuguesa de sofás - Eleganza Collection","url":"https://stoffus.pt","telephone":"+351-239-700-799","email":"geral@stoffus.pt","address":{"@type":"PostalAddress","streetAddress":"Parque de Negócios 7/8","addressLocality":"Montemor-o-Velho","postalCode":"3140-258","addressCountry":"PT"}}</script>
 </body>
