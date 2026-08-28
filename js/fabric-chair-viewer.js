@@ -157,7 +157,7 @@
     var box = new THREE.Box3().setFromObject(root);
     var size = box.getSize(new THREE.Vector3());
     var maxDim = Math.max(size.x, size.y, size.z) || 1;
-    var scale = 1.35 / maxDim;
+    var scale = 1.0 / maxDim;
 
     root.scale.setScalar(scale);
     root.updateMatrixWorld(true);
@@ -166,6 +166,33 @@
     var center = box.getCenter(new THREE.Vector3());
     root.position.set(-center.x, -box.min.y, -center.z);
     root.updateMatrixWorld(true);
+  }
+
+  function frameCamera(root) {
+    if (!camera || !root) return;
+
+    var box = new THREE.Box3().setFromObject(root);
+    var center = box.getCenter(new THREE.Vector3());
+    var size = box.getSize(new THREE.Vector3());
+    var maxDim = Math.max(size.x, size.y, size.z, 0.01);
+
+    if (controls) controls.target.copy(center);
+
+    var fovRad = camera.fov * (Math.PI / 180);
+    var distance = (maxDim * 0.55) / Math.tan(fovRad * 0.5);
+    distance *= 1.5;
+
+    var offset = new THREE.Vector3(0.58, 0.32, 1.05).normalize();
+    camera.position.copy(center).add(offset.multiplyScalar(distance));
+    camera.near = Math.max(0.01, distance / 100);
+    camera.far = Math.max(50, distance * 20);
+    camera.updateProjectionMatrix();
+
+    if (controls) {
+      controls.minDistance = distance * 0.5;
+      controls.maxDistance = distance * 2.8;
+      controls.update();
+    }
   }
 
   function setLoading(on) {
@@ -387,6 +414,7 @@
           chairRoot = gltf.scene;
           collectFabricMeshes(chairRoot);
           fitChair(chairRoot);
+          frameCamera(chairRoot);
           scene.add(chairRoot);
           setLoading(false);
           root.classList.add('is-ready');
@@ -421,17 +449,13 @@
 
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(38, 1, 0.01, 100);
-    camera.position.set(0.85, 0.72, 1.45);
+    camera = new THREE.PerspectiveCamera(42, 1, 0.01, 100);
 
     if (THREE.OrbitControls) {
       controls = new THREE.OrbitControls(camera, canvas);
       controls.enableDamping = true;
       controls.dampingFactor = 0.06;
-      controls.minDistance = 0.75;
-      controls.maxDistance = 2.8;
       controls.maxPolarAngle = Math.PI * 0.495;
-      controls.target.set(0, 0.42, 0);
     }
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0x9a9590, 0.62));
