@@ -157,7 +157,7 @@
     var box = new THREE.Box3().setFromObject(root);
     var size = box.getSize(new THREE.Vector3());
     var maxDim = Math.max(size.x, size.y, size.z) || 1;
-    var scale = 0.88 / maxDim;
+    var scale = 1.35 / maxDim;
 
     root.scale.setScalar(scale);
     root.updateMatrixWorld(true);
@@ -452,7 +452,7 @@
 
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(42, 1, 0.01, 100);
+    camera = new THREE.PerspectiveCamera(48, 1, 0.01, 100);
 
     if (THREE.OrbitControls) {
       controls = new THREE.OrbitControls(camera, canvas);
@@ -500,6 +500,7 @@
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    if (chairRoot) frameCamera(chairRoot);
   }
 
   function buildCollectionSelect() {
