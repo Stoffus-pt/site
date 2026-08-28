@@ -157,7 +157,7 @@
     var box = new THREE.Box3().setFromObject(root);
     var size = box.getSize(new THREE.Vector3());
     var maxDim = Math.max(size.x, size.y, size.z) || 1;
-    var scale = 1.0 / maxDim;
+    var scale = 0.88 / maxDim;
 
     root.scale.setScalar(scale);
     root.updateMatrixWorld(true);
@@ -174,23 +174,26 @@
     var box = new THREE.Box3().setFromObject(root);
     var center = box.getCenter(new THREE.Vector3());
     var size = box.getSize(new THREE.Vector3());
-    var maxDim = Math.max(size.x, size.y, size.z, 0.01);
 
     if (controls) controls.target.copy(center);
 
-    var fovRad = camera.fov * (Math.PI / 180);
-    var distance = (maxDim * 0.55) / Math.tan(fovRad * 0.5);
-    distance *= 1.5;
+    var aspect = Math.max(camera.aspect || 1, 0.25);
+    var vFov = camera.fov * (Math.PI / 180);
+    var hFov = 2 * Math.atan(Math.tan(vFov * 0.5) * aspect);
 
-    var offset = new THREE.Vector3(0.58, 0.32, 1.05).normalize();
+    var distHeight = (size.y * 0.52) / Math.tan(vFov * 0.5);
+    var distWidth = (size.x * 0.52) / Math.tan(hFov * 0.5);
+    var distance = Math.max(distHeight, distWidth, size.z * 0.8) * 2.35;
+
+    var offset = new THREE.Vector3(0.52, 0.22, 1.08).normalize();
     camera.position.copy(center).add(offset.multiplyScalar(distance));
     camera.near = Math.max(0.01, distance / 100);
     camera.far = Math.max(50, distance * 20);
     camera.updateProjectionMatrix();
 
     if (controls) {
-      controls.minDistance = distance * 0.5;
-      controls.maxDistance = distance * 2.8;
+      controls.minDistance = distance * 0.55;
+      controls.maxDistance = distance * 3.2;
       controls.update();
     }
   }
