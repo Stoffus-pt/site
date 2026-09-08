@@ -21,7 +21,7 @@
     if (video) {
       video.setAttribute(
         'aria-label',
-        (model.type === 'pet' ? '' : (model.type === 'banqueta' ? 'Banqueta ' : (model.type === 'pouf' ? 'Puff ' : 'Sofá '))) +
+        (model.type === 'pet' ? '' : (model.type === 'banqueta' ? 'Banqueta ' : ((model.type === 'pouf' || model.type === 'pouff') ? 'Puff ' : (model.type === 'armchair' ? 'Poltrona ' : 'Sofá ')))) +
           model.name + ' — Eleganza Collection'
       );
     }

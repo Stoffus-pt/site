@@ -185,7 +185,7 @@
     var showConfig = model.configurator !== false && model.type !== 'pet';
     var isPet = model.type === 'pet';
     var isBanqueta = model.type === 'banqueta';
-    var isPouf = model.type === 'pouf';
+    var isPouf = model.type === 'pouf' || model.type === 'pouff';
 
     var productLabel = isPet
       ? model.name

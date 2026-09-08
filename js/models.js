@@ -114,7 +114,8 @@
   function productAltPrefix(model) {
     if (model.type === 'pet') return '';
     if (model.type === 'banqueta') return 'Banqueta ';
-    if (model.type === 'pouf') return 'Puff ';
+    if (model.type === 'pouff' || model.type === 'pouf') return 'Puff ';
+    if (model.type === 'armchair') return 'Poltrona ';
     return 'Sofá ';
   }
 
