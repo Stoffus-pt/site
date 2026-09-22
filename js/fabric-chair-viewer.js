@@ -141,7 +141,12 @@
         return;
       }
       if (node.name === 'shadow_plane') return;
-      if (node.material && node.material.name === 'Color M08') return;
+      if (
+        node.material &&
+        (node.material.name === 'Color M08' || node.material.name === 'Color M09')
+      ) {
+        return;
+      }
       fabricMeshes.push(node);
       if (node.geometry && node.geometry.attributes.uv && !node.geometry.attributes.uv2) {
         node.geometry.setAttribute('uv2', new THREE.BufferAttribute(node.geometry.attributes.uv.array, 2));
